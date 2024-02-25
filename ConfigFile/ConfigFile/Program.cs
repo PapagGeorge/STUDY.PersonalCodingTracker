@@ -14,15 +14,15 @@ namespace ConfigFile
             //    Console.WriteLine(simpleConfiguration.PageSize);
             //}
 
-            ComplexConfiguration? complexConfiguration = ConfigurationManager.GetSection("ComplexConfigurationSection") as ComplexConfiguration;
-            if (complexConfiguration != null )
-            {
-                foreach (ComplexConfigurationElement item in complexConfiguration.ConfigurationCollections)
-                {
-                    Console.WriteLine(item.Name);
-                    Console.WriteLine(item.Doom);
-                }
-            }
+            //ComplexConfiguration? complexConfiguration = ConfigurationManager.GetSection("ComplexConfigurationSection") as ComplexConfiguration;
+            //if (complexConfiguration != null )
+            //{
+            //    foreach (ComplexConfigurationElement item in complexConfiguration.ConfigurationCollections)
+            //    {
+            //        Console.WriteLine(item.Name);
+            //        Console.WriteLine(item.Doom);
+            //    }
+            //}
         }
 
 

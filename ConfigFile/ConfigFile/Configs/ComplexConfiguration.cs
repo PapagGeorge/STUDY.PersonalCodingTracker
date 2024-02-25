@@ -9,7 +9,7 @@ namespace ConfigFile.Configs
 {
     public class ComplexConfigurationElement : ConfigurationElement
     {
-        [ConfigurationProperty("name")]
+        [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
         public string Name
         {
             get => this["name"].ToString() ?? string.Empty;

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAdapterUsingDataTable",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAdapterUsingDataSet", "DataAdapterUsingDataSet\DataAdapterUsingDataSet.csproj", "{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAdapterStoredProcedure", "DataAdapterStoredProcedure\DataAdapterStoredProcedure.csproj", "{A99EAD6C-BE12-4CFD-BBC0-10D4515AB7F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99EAD6C-BE12-4CFD-BBC0-10D4515AB7F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A99EAD6C-BE12-4CFD-BBC0-10D4515AB7F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A99EAD6C-BE12-4CFD-BBC0-10D4515AB7F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A99EAD6C-BE12-4CFD-BBC0-10D4515AB7F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

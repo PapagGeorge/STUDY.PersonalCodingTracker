@@ -12,13 +12,11 @@ namespace DI_Practise
         static void Main(string[] args)
         {
             var host = Host.CreateDefaultBuilder().ConfigureServices(services =>
-            {
-                services.AddTransient<IApplication2, Application2>();
-                services.AddTransient<IApplication, Application>();
-                services.AddTransient<IClassFromAnotherProject, ClassFromAnotherProject>();
-                services.GetServices();
-
-
+            { services.AddTransient<IApplication2, Application2>();
+              services.AddTransient<IApplication, Application>();
+              services.AddTransient<IClassFromAnotherProject, ClassFromAnotherProject>();
+              services.GetServices();
+            
             }).Build();
 
             var app = host.Services.GetRequiredService<IApplication>();

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataReader", "ADO.NET Intro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAdapterUsingDataTable", "DataAdapter\DataAdapterUsingDataTable.csproj", "{3A9A8277-CB3F-4D60-A4DA-0AD506854400}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAdapterUsingDataSet", "DataAdapterUsingDataSet\DataAdapterUsingDataSet.csproj", "{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3A9A8277-CB3F-4D60-A4DA-0AD506854400}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A9A8277-CB3F-4D60-A4DA-0AD506854400}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A9A8277-CB3F-4D60-A4DA-0AD506854400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A409CE1-9104-4AAB-9E21-12DE0CCB9751}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

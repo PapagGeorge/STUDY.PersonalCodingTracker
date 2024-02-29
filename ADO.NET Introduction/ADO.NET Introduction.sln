@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetWithDataTable", "Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoredProcedureWithoutParameters", "StoredProcedureWithoutParameters\StoredProcedureWithoutParameters.csproj", "{AC6042CA-518F-4D92-8A45-ACAC8A58EE8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoredProcedureWithInputParameters", "StoredProcedureWithInputParameters\StoredProcedureWithInputParameters.csproj", "{2A9BAD88-6E60-4587-B816-13DB2E4335E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AC6042CA-518F-4D92-8A45-ACAC8A58EE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC6042CA-518F-4D92-8A45-ACAC8A58EE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC6042CA-518F-4D92-8A45-ACAC8A58EE8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A9BAD88-6E60-4587-B816-13DB2E4335E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9BAD88-6E60-4587-B816-13DB2E4335E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9BAD88-6E60-4587-B816-13DB2E4335E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9BAD88-6E60-4587-B816-13DB2E4335E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

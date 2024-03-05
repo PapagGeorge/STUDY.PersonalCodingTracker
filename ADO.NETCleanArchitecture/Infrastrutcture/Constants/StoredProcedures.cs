@@ -8,6 +8,6 @@ namespace Infrastrutcture.Constants
 {
     public static class StoredProcedures
     {
-        public const string BulkInsertStudents = "usp_bulkInsertStudents";
+        public const string BulkInsertStudents = "spBulkInsertStudents";
     }
 }

@@ -1,28 +1,67 @@
 ﻿using Domain.Entities;
+using Infrastrutcture.Constants;
 using Infrastrutcture.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Infrastrutcture.Repositories
 {
     public class StudentRepository : BaseRepository, IStudentRepository
     {
-        public StudentRepository (DatabaseConfiguration _databaseConfiguration) : base (_databaseConfiguration)
+        public StudentRepository (DataBaseConfiguration _databaseConfiguration) : base (_databaseConfiguration)
         {
 
         }
         
         public void BulkInsertStudentsWithProcedure(IEnumerable<Student> students)
         {
-            throw new NotImplementedException();
+            using(var Connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.BulkInsertStudents, Connection);
+                command.CommandType = CommandType.StoredProcedure;
+                
+                DataTable studentTable = new DataTable();
+                studentTable.Columns.Add("Name", typeof(string));
+                studentTable.Columns.Add("Age", typeof(int));
+                studentTable.Columns.Add("IsCool", typeof (bool));
+
+                foreach (var student in students)
+                {
+                    studentTable.Rows.Add(student.Name, student.Age, student.IsCool);
+                }
+
+                var parameter = command.Parameters.AddWithValue("@StudentData", studentTable);
+                parameter.SqlDbType = SqlDbType.Structured;
+                parameter.TypeName = "dbo.Students";
+                command.ExecuteNonQuery();
+                
+            }
         }
 
         public void BulkInsertStudentsWithText(IEnumerable<Student> students)
         {
-            throw new NotImplementedException();
+            DataTable studentTable = new DataTable ();
+            studentTable.Columns.Add ("Name", typeof(string));
+            studentTable.Columns.Add ("Age", typeof(int));
+            studentTable.Columns.Add("IsCool", typeof(bool));
+
+            foreach (var student in students)
+            {
+                studentTable.Rows.Add(student.Name, student.Age, student.IsCool);
+            }
+
+            using (var connection = GetSqlConnection())
+            {
+                using var bulkCopy = new SqlBulkCopy(connection);
+
+                bulkCopy.DestinationTableName = Tables.Student;
+                bulkCopy.ColumnMappings.Add("Name", "Name");
+                bulkCopy.ColumnMappings.Add("Age", "Age");
+                bulkCopy.ColumnMappings.Add("IsCool", "IsCool");
+
+                bulkCopy.WriteToServer(studentTable);
+            }
+            Console.WriteLine("Bulk Insert Completed");
         }
 
         public IEnumerable<Student> GetAllStudentsWithProcedure()

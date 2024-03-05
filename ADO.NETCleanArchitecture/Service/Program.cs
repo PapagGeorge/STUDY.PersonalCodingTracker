@@ -22,7 +22,7 @@ namespace Service
             }).Build();
 
             var app = host.Services.GetRequiredService<IApplication>();
-            app.Run();
+            app.Stop();
 
             Console.ReadKey();
                

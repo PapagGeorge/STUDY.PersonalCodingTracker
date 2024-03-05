@@ -32,7 +32,7 @@ namespace Infrastrutcture.Repositories
 
                 var parameter = command.Parameters.AddWithValue("@StudentData", studentTable);
                 parameter.SqlDbType = SqlDbType.Structured;
-                parameter.TypeName = "dbo.Students";
+                parameter.TypeName = "dbo.Student";
                 command.ExecuteNonQuery();
 
             }
@@ -72,13 +72,28 @@ namespace Infrastrutcture.Repositories
                 SqlCommand command = new SqlCommand(StoredProcedures.GetAllStudents, connection);
                 command.CommandType = CommandType.StoredProcedure;
                 SqlDataReader dataReader = command.ExecuteReader();
+
+                Func<SqlDataReader, string, bool> getBoolean = (reader, columnName) =>
+                {
+                    int columnIndex = reader.GetOrdinal(columnName);
+
+                    if (!reader.IsDBNull(columnIndex))
+                    {
+                        return reader.GetBoolean(columnIndex);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                };
+
                 while (dataReader.Read())
                 {
                     Student student = new Student()
                     {
-                        Name = dataReader["Name"].ToString() ?? String.Empty,
+                        Name = dataReader["Name"].ToString() ?? string.Empty,
                         Age = Convert.ToInt32(dataReader["Age"]),
-                        IsCool = GetBoolean(dataReader, "IsCool")
+                        IsCool = getBoolean(dataReader, "IsCool")
                     };
                     students.Add(student);
                 }
@@ -87,42 +102,112 @@ namespace Infrastrutcture.Repositories
             }
         }
 
-        public bool GetBoolean(SqlDataReader reader, string columnName)
-        {
-            int columnIndex = reader.GetOrdinal(columnName);
-
-            if (!reader.IsDBNull(columnIndex))
-            {
-                
-                return reader.GetBoolean(columnIndex);
-            }
-            else
-            {
-                
-                return false; 
-            }
-        }
-
-
-
         public IEnumerable<Student> GetAllStudentsWithText()
         {
-            throw new NotImplementedException();
+            List<Student> students = new List<Student>();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Students", connection);
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                Func<SqlDataReader, string, bool> getBoolean = (reader, columnName) =>
+                {
+                    int columnIndex = dataReader.GetOrdinal(columnName);
+
+                    if (!reader.IsDBNull(columnIndex))
+                    {
+                        return reader.GetBoolean(columnIndex);
+                    }
+                    else { return false; }
+                };
+                
+
+                while(dataReader.Read())
+                {
+                    Student student = new Student()
+                    {
+                        Name = dataReader["Name"].ToString() ?? string.Empty,
+                        Age = Convert.ToInt32(dataReader["Age"]),
+                        IsCool = getBoolean(dataReader, "IsCool")
+                    };
+                    students.Add(student);
+                }
+                return students;
+            }
         }
 
         public IEnumerable<Student> GetCoolStudentsWithProcedure()
         {
-            throw new NotImplementedException();
+            List <Student> _students = new List<Student>(); 
+            using(var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.GetCoolStudents, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter parameter = new SqlParameter("@IsCool", 1);
+                parameter.SqlDbType = SqlDbType.Bit;
+                command.Parameters.Add(parameter);
+
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    Student student = new Student()
+                    {
+                        Name = dataReader["Name"].ToString() ?? string.Empty,
+                        Age = Convert.ToInt32(dataReader["Age"]),
+                        IsCool = dataReader.GetBoolean(dataReader.GetOrdinal("IsCool"))
+                    };
+                    _students.Add(student);
+                }
+                return _students;
+            }
         }
 
         public IEnumerable<Student> GetCoolStudentsWithText()
         {
-            throw new NotImplementedException();
+            List <Student> _students = new List <Student>();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand("SELECT * FROM dbo.Students WHERE IsCool=1", connection);
+                SqlDataReader dataReader = command.ExecuteReader();
+                dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    Student _student = new Student()
+                    {
+                        Name = dataReader["Name"].ToString() ?? string.Empty,
+                        Age = Convert.ToInt32(dataReader["Age"]),
+                        IsCool = dataReader.GetBoolean(dataReader.GetOrdinal("IsCool"))
+
+                    };
+                    _students.Add(_student);
+
+                }
+                return _students;
+            }
         }
 
         public Student GetStudentWithProcedure(int id)
         {
-            throw new NotImplementedException();
+            Student _student = new Student();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.GetStudentById, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter parameter = new SqlParameter();
+                command.Parameters.AddWithValue("Id", id);
+
+                SqlDataReader dataReader = command.ExecuteReader();
+
+                while(dataReader.Read())
+                { 
+                    _student.Name = dataReader["Name"].ToString() ?? string.Empty;
+                    _student.Age = Convert.ToInt32(dataReader["Age"]);
+                    _student.IsCool = dataReader.GetBoolean(dataReader.GetOrdinal("IsCool"));
+                }
+            }
+            return _student;
         }
 
         public Student GetStudentWithText(int id)

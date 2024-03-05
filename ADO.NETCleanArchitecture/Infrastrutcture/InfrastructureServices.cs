@@ -9,7 +9,7 @@ namespace Infrastrutcture
     {
         public static IServiceCollection InfraServices (this IServiceCollection services)
         {
-            var databaseConfiguration = (DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection");
+            var databaseConfiguration = (DataBaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection");
 
             services.AddSingleton<IStudentRepository, StudentRepository>();
             services.AddSingleton(databaseConfiguration);

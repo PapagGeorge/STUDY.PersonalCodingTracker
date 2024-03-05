@@ -2,7 +2,7 @@
 
 namespace Infrastrutcture
 {
-    public class DatabaseConfiguration : ConfigurationSection
+    public class DataBaseConfiguration : ConfigurationSection
     {
         [ConfigurationProperty("connectionString")]
         public string ConnectionString

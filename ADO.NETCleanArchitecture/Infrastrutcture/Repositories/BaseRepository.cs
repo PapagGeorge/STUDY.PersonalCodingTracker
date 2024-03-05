@@ -6,9 +6,9 @@ namespace Infrastrutcture.Repositories
 {
     public abstract class BaseRepository
     {
-        private readonly DatabaseConfiguration _databaseConfiguration;
+        private readonly DataBaseConfiguration _databaseConfiguration;
 
-        protected BaseRepository(DatabaseConfiguration databaseConfiguration)
+        protected BaseRepository(DataBaseConfiguration databaseConfiguration)
         {
             _databaseConfiguration = databaseConfiguration;
         }

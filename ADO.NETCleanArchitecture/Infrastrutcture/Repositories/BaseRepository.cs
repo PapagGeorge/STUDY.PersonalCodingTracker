@@ -1,18 +1,14 @@
-﻿
-
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 namespace Infrastrutcture.Repositories
 {
     public abstract class BaseRepository
     {
         private readonly DataBaseConfiguration _databaseConfiguration;
-
-        protected BaseRepository(DataBaseConfiguration databaseConfiguration)
+        protected BaseRepository (DataBaseConfiguration databaseConfiguration)
         {
             _databaseConfiguration = databaseConfiguration;
         }
-
         protected SqlConnection GetSqlConnection()
         {
             var connection = new SqlConnection(_databaseConfiguration.ConnectionString);
@@ -20,4 +16,5 @@ namespace Infrastrutcture.Repositories
             return connection;
         }
     }
+
 }

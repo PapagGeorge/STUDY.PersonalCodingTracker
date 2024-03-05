@@ -1,11 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Infrastrutcture.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -39,11 +34,16 @@ namespace Application.Services
 
         public void Run()
         {
+            IEnumerable <Student> _students = _studentRepository.GetAllStudentsWithProcedure();
             if (_students is null || !_students.Any())
             {
                 throw new Exception("Students should not be null or empty");
             }
-            _studentRepository.BulkInsertStudentsWithProcedure(_students);
+            foreach (Student student in _students)
+            {
+                Console.WriteLine($"Name: {student.Name}  Age:{student.Age}  IsCool:{student.IsCool}");
+            }
+            
         }
 
         public void Stop()

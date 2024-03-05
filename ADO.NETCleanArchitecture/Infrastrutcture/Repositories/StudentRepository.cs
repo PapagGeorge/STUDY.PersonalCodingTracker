@@ -8,22 +8,22 @@ namespace Infrastrutcture.Repositories
 {
     public class StudentRepository : BaseRepository, IStudentRepository
     {
-        public StudentRepository (DataBaseConfiguration _databaseConfiguration) : base (_databaseConfiguration)
+        public StudentRepository(DataBaseConfiguration _databaseConfiguration) : base(_databaseConfiguration)
         {
 
         }
-        
+
         public void BulkInsertStudentsWithProcedure(IEnumerable<Student> students)
         {
-            using(var Connection = GetSqlConnection())
+            using (var Connection = GetSqlConnection())
             {
                 SqlCommand command = new SqlCommand(StoredProcedures.BulkInsertStudents, Connection);
                 command.CommandType = CommandType.StoredProcedure;
-                
+
                 DataTable studentTable = new DataTable();
                 studentTable.Columns.Add("Name", typeof(string));
                 studentTable.Columns.Add("Age", typeof(int));
-                studentTable.Columns.Add("IsCool", typeof (bool));
+                studentTable.Columns.Add("IsCool", typeof(bool));
 
                 foreach (var student in students)
                 {
@@ -34,15 +34,15 @@ namespace Infrastrutcture.Repositories
                 parameter.SqlDbType = SqlDbType.Structured;
                 parameter.TypeName = "dbo.Students";
                 command.ExecuteNonQuery();
-                
+
             }
         }
 
         public void BulkInsertStudentsWithText(IEnumerable<Student> students)
         {
-            DataTable studentTable = new DataTable ();
-            studentTable.Columns.Add ("Name", typeof(string));
-            studentTable.Columns.Add ("Age", typeof(int));
+            DataTable studentTable = new DataTable();
+            studentTable.Columns.Add("Name", typeof(string));
+            studentTable.Columns.Add("Age", typeof(int));
             studentTable.Columns.Add("IsCool", typeof(bool));
 
             foreach (var student in students)
@@ -66,8 +66,44 @@ namespace Infrastrutcture.Repositories
 
         public IEnumerable<Student> GetAllStudentsWithProcedure()
         {
-            throw new NotImplementedException();
+            List<Student> students = new List<Student>();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.GetAllStudents, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlDataReader dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Student student = new Student()
+                    {
+                        Name = dataReader["Name"].ToString() ?? String.Empty,
+                        Age = Convert.ToInt32(dataReader["Age"]),
+                        IsCool = GetBoolean(dataReader, "IsCool")
+                    };
+                    students.Add(student);
+                }
+                
+                return students;
+            }
         }
+
+        public bool GetBoolean(SqlDataReader reader, string columnName)
+        {
+            int columnIndex = reader.GetOrdinal(columnName);
+
+            if (!reader.IsDBNull(columnIndex))
+            {
+                
+                return reader.GetBoolean(columnIndex);
+            }
+            else
+            {
+                
+                return false; 
+            }
+        }
+
+
 
         public IEnumerable<Student> GetAllStudentsWithText()
         {
@@ -134,4 +170,6 @@ namespace Infrastrutcture.Repositories
             throw new NotImplementedException();
         }
     }
+    
 }
+

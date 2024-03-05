@@ -3,6 +3,10 @@ using Application;
 using Infrastrutcture;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Interfaces;
+using Domain.Entities;
+using Infrastrutcture.Constants;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 
 namespace Service

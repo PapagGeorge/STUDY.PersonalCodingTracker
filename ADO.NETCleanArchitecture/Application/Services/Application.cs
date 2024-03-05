@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Infrastrutcture.Interfaces;
+using System.Collections.Generic;
 
 namespace Application.Services
 {
@@ -29,17 +30,17 @@ namespace Application.Services
             {
                 throw new Exception("Students should not be null or empty");
             }
-            _studentRepository.BulkInsertStudentsWithText(_students);
+            _studentRepository.BulkInsertStudentsWithProcedure(_students);
         }
 
         public void Run()
         {
-            IEnumerable <Student> _students = _studentRepository.GetAllStudentsWithProcedure();
+            IEnumerable <Student> _students = _studentRepository.GetCoolStudentsWithProcedure();
             if (_students is null || !_students.Any())
             {
                 throw new Exception("Students should not be null or empty");
             }
-            foreach (Student student in _students)
+            foreach (var student in _students)
             {
                 Console.WriteLine($"Name: {student.Name}  Age:{student.Age}  IsCool:{student.IsCool}");
             }
@@ -48,7 +49,9 @@ namespace Application.Services
 
         public void Stop()
         {
-            Console.WriteLine("Stop");
+            int _id = 4;
+            Student student = _studentRepository.GetStudentWithProcedure(_id);
+            Console.WriteLine($"Student with Id {_id}: Name: {student.Name}, Age: {student.Age}, IsCool: {student.IsCool}");
         }
     }
 }

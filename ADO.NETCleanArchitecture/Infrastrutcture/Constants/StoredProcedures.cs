@@ -8,8 +8,11 @@
         public const string GetStudentById = "SpGetStudentById";
         public const string HardDeleteSetudent = "SpHardDeleteStudent";
         public const string InsertStudent = "SpInsertStudent";
+        public const string UpdateStudent = "SpUpdateStudent";
 
         
+
+
 
 
     }

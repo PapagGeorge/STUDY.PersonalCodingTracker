@@ -252,7 +252,8 @@ namespace Infrastrutcture.Repositories
         {
             using( var connection = GetSqlConnection())
             {
-                SqlCommand command = new SqlCommand($"DELETE FROM dbo.Students WHERE Id={id}", connection);
+                SqlCommand command = new SqlCommand("DELETE FROM dbo.Students WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
                 command.ExecuteNonQuery();
             }
         }
@@ -273,18 +274,42 @@ namespace Infrastrutcture.Repositories
 
         public void InsertStudentWithText(Student student)
         {
-            throw new NotImplementedException();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand("INSERT INTO dbo.Students (Name, Age, IsCool) VALUES (@Name, @Age, @IsCool)", connection);
+                command.Parameters.AddWithValue("@Name", student.Name);
+                command.Parameters.AddWithValue("@Age", student.Age);
+                command.Parameters.AddWithValue("@IsCool", student.IsCool);
+                command.ExecuteNonQuery();
+            }
         }
     
 
-        public void UpdateStudentWithProcedure(Student student)
+        public void UpdateStudentWithProcedure(Student student, int studentId)
         {
-            throw new NotImplementedException();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.UpdateStudent, connection);
+                command.Parameters.AddWithValue("@Id", studentId).SqlDbType=SqlDbType.Int;
+                command.Parameters.AddWithValue("@Name", student.Name).SqlDbType = SqlDbType.VarChar;
+                command.Parameters.AddWithValue("@Age", student.Age).SqlDbType = SqlDbType.Int;
+                command.Parameters.AddWithValue("@IsCool",student.IsCool).SqlDbType = SqlDbType.Bit;
+                command.ExecuteNonQuery();
+            }
         }
 
-        public void UpdateStudentWithText(Student student)
+        public void UpdateStudentWithText(Student student, int studentId)
         {
-            throw new NotImplementedException();
+            using (var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand("UPDATE dbo.Students SET Name = @Name, Age = @Age, IsCool = @IsCool WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Name", student.Name);
+                command.Parameters.AddWithValue("@Age", student.Age);
+                command.Parameters.AddWithValue("@IsCool", student.IsCool);
+                command.Parameters.AddWithValue("@Id", studentId);
+                command.ExecuteNonQuery();
+
+            }
         }
 
         public void SoftDeleteAStudentWithProcedure(int id)

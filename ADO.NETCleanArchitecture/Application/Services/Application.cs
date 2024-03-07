@@ -50,7 +50,7 @@ namespace Application.Services
         public void Stop()
         {
             int _id = 4;
-            Student student = _studentRepository.GetStudentWithProcedure(_id);
+            Student student = _studentRepository.GetStudentWithText(_id);
             Console.WriteLine($"Student with Id {_id}: Name: {student.Name}, Age: {student.Age}, IsCool: {student.IsCool}");
         }
     }

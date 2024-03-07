@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Azure;
+using Domain.Entities;
 using Infrastrutcture.Constants;
 using Infrastrutcture.Interfaces;
 using Microsoft.Data.SqlClient;
@@ -212,7 +213,26 @@ namespace Infrastrutcture.Repositories
 
         public Student GetStudentWithText(int id)
         {
-            throw new NotImplementedException();
+            
+            using(var connection = GetSqlConnection())
+            {
+                Student _student = new Student();
+                SqlCommand command = new SqlCommand($"SELECT * FROM dbo.Students WHERE id ={id}", connection);
+                SqlDataReader dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    
+                    {
+                        _student.Name = dataReader["Name"].ToString() ?? string.Empty;
+                        _student.Age = Convert.ToInt32(dataReader["Age"]);
+                        _student.IsCool = dataReader.GetBoolean(dataReader.GetOrdinal("IsCool"));
+                    }
+                    
+                }
+                return _student;
+
+                
+            }
         }
 
         public void HardDeleteAStudentWithProcedure(int id)

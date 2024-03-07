@@ -237,20 +237,52 @@ namespace Infrastrutcture.Repositories
 
         public void HardDeleteAStudentWithProcedure(int id)
         {
-            throw new NotImplementedException();
+            using( var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.HardDeleteSetudent, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter parameter = command.Parameters.AddWithValue("@Id", id);
+                parameter.SqlDbType = SqlDbType.Int;
+                command.ExecuteNonQuery();
+
+            }
         }
 
         public void HardDeleteAStudentWithText(int id)
         {
-            throw new NotImplementedException();
+            using( var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand($"DELETE FROM dbo.Students WHERE Id={id}", connection);
+                command.ExecuteNonQuery();
+            }
         }
 
         public void InsertStudentWithProcedure(Student student)
         {
-            throw new NotImplementedException();
+            using(var connection = GetSqlConnection())
+            {
+                SqlCommand command = new SqlCommand(StoredProcedures.InsertStudent, connection);
+                command.Parameters.Add("@Name", SqlDbType.VarChar, 255).Value = student.Name;
+                command.Parameters.Add("@Age", SqlDbType.Int).Value = student.Age;
+                command.Parameters.Add("@IsCool", SqlDbType.Bit).Value = student.IsCool;
+
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public void InsertStudentWithText(Student student)
+        {
+            throw new NotImplementedException();
+        }
+    
+
+        public void UpdateStudentWithProcedure(Student student)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateStudentWithText(Student student)
         {
             throw new NotImplementedException();
         }
@@ -261,16 +293,6 @@ namespace Infrastrutcture.Repositories
         }
 
         public void SoftDeleteAStudentWithText(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStudentWithProcedure(Student student)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStudentWithText(Student student)
         {
             throw new NotImplementedException();
         }

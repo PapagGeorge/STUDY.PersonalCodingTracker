@@ -6,7 +6,11 @@
         public const string GetAllStudents = "SpGetAllStudents";
         public const string GetCoolStudents = "SpGetCoolStudents";
         public const string GetStudentById = "SpGetStudentById";
+        public const string HardDeleteSetudent = "SpHardDeleteStudent";
+        public const string InsertStudent = "SpInsertStudent";
 
         
+
+
     }
 }

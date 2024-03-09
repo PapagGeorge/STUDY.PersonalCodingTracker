@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TCPData;
 using TCPExtensions;
+using System.Linq;
 
 
 namespace LinqPractise
@@ -9,6 +10,8 @@ namespace LinqPractise
     {
         static void Main(string[] args)
         {
+
+            //Console.WriteLine("----------Filter() Extension Method Called----------");
             //List<Employee> employees = Data.GetEmployees();
 
             //var filteredEmployees = employees.Filter(emp => emp.AnnualSalary < 40000);
@@ -23,16 +26,48 @@ namespace LinqPractise
             //    Console.WriteLine();
             //}
 
-            List <Department> departments = Data.GetDepartments();
 
-            var filteredDepartments = departments.Filter(dpt => dpt.ShortName == "HR");
 
-            foreach (var department in filteredDepartments)
-            {
-                Console.WriteLine($"Department Id: { department.Id}");
-                Console.WriteLine($"Departments Short Name: {department.ShortName}");
-                Console.WriteLine($"Separtment Long Name: {department.LongName}");
-            }
+
+
+            //Console.WriteLine("----------Filter() Extension Method Called----------");
+
+            //List <Department> departments = Data.GetDepartments();
+
+            //var filteredDepartments = departments.Filter(dpt => dpt.ShortName == "HR");
+
+            //foreach (var department in filteredDepartments)
+            //{
+            //    Console.WriteLine($"Department Id: { department.Id}");
+            //    Console.WriteLine($"Departments Short Name: {department.ShortName}");
+            //    Console.WriteLine($"Separtment Long Name: {department.LongName}");
+            //}
+
+
+
+
+
+            //Console.WriteLine("----------Using Where()----------");
+            //List<Department> departments = Data.GetDepartments();
+            //var filteredDepartments = departments.Where(dpt => dpt.ShortName == "HR" || dpt.ShortName == "TE");
+
+            //foreach (var department in filteredDepartments)
+            //{
+            //    Console.WriteLine($"Department Id: {department.Id}");
+            //    Console.WriteLine($"Departments Short Name: {department.ShortName}");
+            //    Console.WriteLine($"Separtment Long Name: {department.LongName}");
+            //    Console.WriteLine();
+            //}
+
+
+
+
+            
+            
+
+
+
+
         }
     }
 }

@@ -77,10 +77,39 @@ namespace LinqPractise
             //                     Manager = emp.IsManager,
             //                     Department = dpt.LongName
             //                 };
+            //foreach (var employee in resultList)
+            //{
+            //    Console.WriteLine($"First Name: {employee.FirstName}");
+            //    Console.WriteLine($"Last Name: {employee.LastName}");
+            //    Console.WriteLine($"Annual Salary: {employee.AnnualSalary}");
+            //    Console.WriteLine($"Is Manager: {employee.Manager}");
+            //    Console.WriteLine($"Department Id: {employee.Department}");
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine();
+            //var averageAnnualSalary = resultList.Average(emp=> emp.AnnualSalary);
+            //Console.WriteLine($"Average Annual Salary: {averageAnnualSalary}");
+            //Console.WriteLine();
+            //var maxAnnualSalary = resultList.Max(emp =>  emp.AnnualSalary);
+            //Console.WriteLine($"Max Annual Salary: {maxAnnualSalary}");
 
 
 
 
+            Console.WriteLine("----------Linq query syntax----------");
+            List<Employee> employeeList = Data.GetEmployees();
+            List<Department> departmentList = Data.GetDepartments();
+
+            var results = employeeList.Select(e => new
+            {
+                FullName = e.FirstName + " " + e.LastName,
+                AnnualSalary = e.AnnualSalary
+            }).Where(e => e.AnnualSalary > 40000);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}");
+            }
         }
     }
 }

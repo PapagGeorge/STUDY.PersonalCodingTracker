@@ -62,8 +62,21 @@ namespace LinqPractise
 
 
 
-            
-            
+            //Console.WriteLine("----------Linq query syntax----------");
+            //List<Employee> employees = Data.GetEmployees();
+            //List<Department> departments = Data.GetDepartments();
+
+            //var resultList = from emp in employees
+            //                 join dpt in departments
+            //                 on emp.DepartmentId equals dpt.Id
+            //                 select new
+            //                 {
+            //                     FirstName = emp.FirstName,
+            //                     LastName = emp.LastName,
+            //                     AnnualSalary = emp.AnnualSalary,
+            //                     Manager = emp.IsManager,
+            //                     Department = dpt.LongName
+            //                 };
 
 
 

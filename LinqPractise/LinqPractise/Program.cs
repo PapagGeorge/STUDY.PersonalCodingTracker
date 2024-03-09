@@ -96,20 +96,41 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------Linq query syntax----------");
+            //Console.WriteLine("----------Select and Where Operators - Method Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = employeeList.Select(e => new
+            //{
+            //    FullName = e.FirstName + " " + e.LastName,
+            //    AnnualSalary = e.AnnualSalary
+            //}).Where(e => e.AnnualSalary > 40000);
+
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}");
+            //}
+
+
+
+
+            Console.WriteLine("----------Using Query Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
+            var result = from emp in employeeList
+                         where emp.AnnualSalary > 40000
+                         select new
+                         {
+                             FullName = emp.FirstName + " " + emp.LastName,
+                             AnnualSalary = emp.AnnualSalary
 
-            var results = employeeList.Select(e => new
+                         };
+            foreach (var res in result)
             {
-                FullName = e.FirstName + " " + e.LastName,
-                AnnualSalary = e.AnnualSalary
-            }).Where(e => e.AnnualSalary > 40000);
-
-            foreach (var result in results)
-            {
-                Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}");
+                Console.WriteLine($"Full Name: {res.FullName}, Annual Salary: {res.AnnualSalary}");
             }
         }
+
+
     }
 }

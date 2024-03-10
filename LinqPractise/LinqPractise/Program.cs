@@ -177,26 +177,53 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------GroupJoin using Method Syntax----------");
+            //Console.WriteLine("----------GroupJoin using Method Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = departmentList.GroupJoin(employeeList,
+            //    department => department.Id, employee => employee.DepartmentId,
+            //    (department, employeesGroup) => new
+            //    {
+            //        Employees = employeesGroup,
+            //        DepartmentName = department.LongName
+            //    });
+
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine($"Department Name: {result.DepartmentName}");
+            //    foreach(var item in result.Employees)
+            //    {
+            //        Console.WriteLine($"First Name: {item.FirstName}, Last Name: {item.LastName}");
+            //    }
+            //}
+
+
+
+
+            Console.WriteLine("----------GroupJoin using Query Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
 
-            var results = departmentList.GroupJoin(employeeList,
-                department => department.Id, employee => employee.DepartmentId,
-                (department, employeesGroup) => new
-                {
-                    Employees = employeesGroup,
-                    DepartmentName = department.LongName
-                });
+            var results = from dept in departmentList
+                          join emp in employeeList
+                          on dept.Id equals emp.DepartmentId
+                          into employeeGroup
+                          select new
+                          {
+                              Employees = employeeGroup,
+                              Department = dept.LongName
+                          };
 
             foreach (var result in results)
             {
-                Console.WriteLine($"Department Name: {result.DepartmentName}");
-                foreach(var item in result.Employees)
+                Console.WriteLine($"Department Name: {result.Department}");
+                foreach (var item in result.Employees)
                 {
                     Console.WriteLine($"First Name: {item.FirstName}, Last Name: {item.LastName}");
                 }
             }
+            
 
         }
 

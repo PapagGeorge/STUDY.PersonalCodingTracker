@@ -77,6 +77,13 @@ namespace TCPData
                 LongName = "Technology"
             };
             departments.Add(department);
+            department = new Department()
+            {
+                Id = 4,
+                ShortName = "SA",
+                LongName = "Sales"
+            };
+            departments.Add(department);
 
             return departments;
         }

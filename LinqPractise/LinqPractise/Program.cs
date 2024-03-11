@@ -327,6 +327,7 @@ namespace LinqPractise
 
 
 
+
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
             

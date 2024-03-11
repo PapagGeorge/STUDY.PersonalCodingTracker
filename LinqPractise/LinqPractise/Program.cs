@@ -328,8 +328,7 @@ namespace LinqPractise
 
 
 
-
-            //    Console.WriteLine("----------All function Method Syntax-------- -"); 
+ //    Console.WriteLine("----------All function Method Syntax-------- -"); 
 
             //    List<Employee> employeeList = Data.GetEmployees();
             //    List<Department> departmentList = Data.GetDepartments();
@@ -347,9 +346,6 @@ namespace LinqPractise
             //    }
             //}
 
-
-
-
             Console.WriteLine("----------Any function Method Syntax-------- -");
 
             List<Employee> employeeList = Data.GetEmployees();
@@ -366,8 +362,6 @@ namespace LinqPractise
             {
                 Console.WriteLine("No eployee has a salary greater than 20000");
             }
-
-
 
 
         }

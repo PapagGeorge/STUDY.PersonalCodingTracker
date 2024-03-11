@@ -44,36 +44,85 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------OfType filter operation-----");
-            ArrayList mixedCollection = Data.GetHeterogeneousDataCollection();
+            //Console.WriteLine("------OfType filter operation-----");
+            //ArrayList mixedCollection = Data.GetHeterogeneousDataCollection();
 
-            var stringResult = from item in mixedCollection.OfType<string>()
-                               select item;
+            //var stringResult = from item in mixedCollection.OfType<string>()
+            //                   select item;
 
-            foreach( var item in stringResult )
+            //foreach( var item in stringResult )
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Console.WriteLine();
+
+
+            //var intResult = from item in mixedCollection.OfType<int>()
+            //                select item;
+            //foreach(var item in intResult )
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Console.WriteLine();
+
+            //var employeeResult = from employee in mixedCollection.OfType<Employee>()
+            //                     select employee;
+            //foreach( var employee in employeeResult )
+            //{
+            //    Console.WriteLine($"{employee.FirstName} {employee.LastName}");
+            //}
+            //Console.WriteLine();
+
+
+
+
+            //Console.WriteLine("------ElementAt and ElementAtOrDefault-----");
+            //var result = employeeList.ElementAt(2);
+            //Console.WriteLine($"Full Name: {result.FirstName} {result.LastName}");
+
+            //var result2 = employeeList.ElementAtOrDefault(9);
+            //if (result2 != null )
+            //{
+            //    Console.WriteLine($"Full Name: {result2.FirstName} {result2.LastName}");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("There is no element at this position");
+            //}
+            //Console.WriteLine();
+
+
+
+
+
+            Console.WriteLine("------First, FirstOrDefault, Last, LastOrDefault Operatiors-----");
+            string nameToSearch = "Mike";
+
+            var result = employeeList.First(emp => emp.FirstName.ToLower() == "bob");
+            Console.WriteLine($"Full Name: {result.FirstName} {result.LastName}");
+
+            var result2 = employeeList.FirstOrDefault(emp => emp.FirstName == nameToSearch);
+            if (result2 != null)
             {
-                Console.WriteLine(item);
+                Console.WriteLine($"Full Name {result2.FirstName} {result2.LastName}");
             }
-            Console.WriteLine();
-
-
-            var intResult = from item in mixedCollection.OfType<int>()
-                            select item;
-            foreach(var item in intResult )
+            else
             {
-                Console.WriteLine(item);
+                Console.WriteLine($"There is not an employee with a name {nameToSearch}");
             }
-            Console.WriteLine();
 
-            var employeeResult = from employee in mixedCollection.OfType<Employee>()
-                                 select employee;
-            foreach( var employee in employeeResult )
+            var result3 = employeeList.Last(emp => emp.Id == 2);
+            Console.WriteLine($"Full Name: {result3.FirstName} {result3.LastName}");
+
+            var result4 = employeeList.LastOrDefault(emp => emp.FirstName == "John");
+            if (result4 != null)
             {
-                Console.WriteLine($"{employee.FirstName} {employee.LastName}");
+                Console.WriteLine($"Full Name {result4.FirstName} {result4.LastName}");
             }
-            Console.WriteLine();
-
-
+            else
+            {
+                Console.WriteLine("there is not such a name in the list");
+            }
         }
 
         

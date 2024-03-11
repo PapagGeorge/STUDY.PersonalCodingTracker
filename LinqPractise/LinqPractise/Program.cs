@@ -227,24 +227,46 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------OrderBy using Method Syntax----------");
+            //Console.WriteLine("----------OrderBy using Method Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = departmentList.Join(employeeList, department => department.Id, employee => employee.DepartmentId,
+            //    (department, employee) => new
+            //    {
+            //        DepartmentId = department.Id,
+            //        FullName = employee.FirstName + " " + employee.LastName,
+            //        AnnualSalary = employee.AnnualSalary,
+            //        DepartmentName = department.LongName
+            //    }).OrderBy(department => department.DepartmentId).ThenByDescending(employee => employee.AnnualSalary);
+
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
+            //}
+
+
+
+
+            Console.WriteLine("----------OrderBy using Query Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
 
-            var results = departmentList.Join(employeeList, department => department.Id, employee => employee.DepartmentId,
-                (department, employee) => new
-                {
-                    DepartmentId = department.Id,
-                    FullName = employee.FirstName + " " + employee.LastName,
-                    AnnualSalary = employee.AnnualSalary,
-                    DepartmentName = department.LongName
-                }).OrderBy(department => department.DepartmentId);
-
+            var results = from department in departmentList
+                          join employee in employeeList
+                          on department.Id equals employee.DepartmentId
+                          orderby employee.AnnualSalary, employee.FirstName descending
+                          select new
+                          {
+                              DepartmentId = department.Id,
+                              FullName = employee.FirstName + " " + employee.LastName,
+                              AnnualSalary = employee.AnnualSalary,
+                              DepartmentName = department.LongName
+                          };
             foreach (var result in results)
             {
                 Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
             }
-
         }
 
 

@@ -27,7 +27,7 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Any() operation-----");
+            Console.WriteLine("------Using Any() operation-----");
             var salaryToCompare = 20000;
             bool isAnySalaryGreater = employeeList.Any(employee => employee.AnnualSalary > salaryToCompare);
 

@@ -154,7 +154,7 @@ namespace LinqPractise
 
 
 
-                    //    Console.WriteLine("----------Using query syntax for the same query----------");
+                    //    Console.WriteLine("----------Using query syntax for for Join operation----------");
                     //    List<Employee> employeeList = Data.GetEmployees();
                     //    List<Department> departmentList = Data.GetDepartments();
 
@@ -201,29 +201,49 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------GroupJoin using Query Syntax----------");
+            //Console.WriteLine("----------GroupJoin using Query Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = from dept in departmentList
+            //              join emp in employeeList
+            //              on dept.Id equals emp.DepartmentId
+            //              into employeeGroup
+            //              select new
+            //              {
+            //                  Employees = employeeGroup,
+            //                  Department = dept.LongName
+            //              };
+
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine($"Department Name: {result.Department}");
+            //    foreach (var item in result.Employees)
+            //    {
+            //        Console.WriteLine($"First Name: {item.FirstName}, Last Name: {item.LastName}");
+            //    }
+            //}
+
+
+
+
+            Console.WriteLine("----------OrderBy using Method Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
 
-            var results = from dept in departmentList
-                          join emp in employeeList
-                          on dept.Id equals emp.DepartmentId
-                          into employeeGroup
-                          select new
-                          {
-                              Employees = employeeGroup,
-                              Department = dept.LongName
-                          };
+            var results = departmentList.Join(employeeList, department => department.Id, employee => employee.DepartmentId,
+                (department, employee) => new
+                {
+                    DepartmentId = department.Id,
+                    FullName = employee.FirstName + " " + employee.LastName,
+                    AnnualSalary = employee.AnnualSalary,
+                    DepartmentName = department.LongName
+                }).OrderBy(department => department.DepartmentId);
 
             foreach (var result in results)
             {
-                Console.WriteLine($"Department Name: {result.Department}");
-                foreach (var item in result.Employees)
-                {
-                    Console.WriteLine($"First Name: {item.FirstName}, Last Name: {item.LastName}");
-                }
+                Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
             }
-            
 
         }
 

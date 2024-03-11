@@ -154,25 +154,25 @@ namespace LinqPractise
 
 
 
-                    //    Console.WriteLine("----------Using query syntax for for Join operation----------");
-                    //    List<Employee> employeeList = Data.GetEmployees();
-                    //    List<Department> departmentList = Data.GetDepartments();
+            //    Console.WriteLine("----------Using query syntax for for Join operation----------");
+            //    List<Employee> employeeList = Data.GetEmployees();
+            //    List<Department> departmentList = Data.GetDepartments();
 
-                    //var results = from dept in departmentList
-                    //              join emp in employeeList
-                    //              on dept.Id equals emp.DepartmentId
-                    //              select new
-                    //              {
-                    //                  FullName = emp.FirstName + " " + emp.LastName,
-                    //                  AnnualSalary = emp.AnnualSalary,
-                    //                  DepartmentName = dept.LongName
-                    //              };
+            //var results = from dept in departmentList
+            //              join emp in employeeList
+            //              on dept.Id equals emp.DepartmentId
+            //              select new
+            //              {
+            //                  FullName = emp.FirstName + " " + emp.LastName,
+            //                  AnnualSalary = emp.AnnualSalary,
+            //                  DepartmentName = dept.LongName
+            //              };
 
-                    //    foreach (var result in results)
-                    //    {
-                    //        Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
-                    //    }
-                    //}
+            //    foreach (var result in results)
+            //    {
+            //        Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
+            //    }
+            //}
 
 
 
@@ -248,24 +248,63 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------OrderBy using Query Syntax----------");
+            //Console.WriteLine("----------OrderBy using Query Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = from department in departmentList
+            //              join employee in employeeList
+            //              on department.Id equals employee.DepartmentId
+            //              orderby employee.AnnualSalary, employee.FirstName descending
+            //              select new
+            //              {
+            //                  DepartmentId = department.Id,
+            //                  FullName = employee.FirstName + " " + employee.LastName,
+            //                  AnnualSalary = employee.AnnualSalary,
+            //                  DepartmentName = department.LongName
+            //              };
+            //foreach (var result in results)
+            //{
+            //    Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
+            //}
+
+
+
+
+            //Console.WriteLine("----------GroupBy using Method Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = employeeList.GroupBy(employee => employee.DepartmentId);
+            //foreach (var empGroup in results)
+            //{
+            //    Console.WriteLine($"Department Id: {empGroup.Key}"); //empGroup.Key is the key that was used for grouping - employee.DepartmentId
+            //    foreach (Employee emp in empGroup)
+            //    {
+            //        Console.WriteLine($"Employee Full Name: {emp.FirstName} {emp.LastName}");
+            //    }
+            //}
+
+
+
+
+
+
+
+            Console.WriteLine("----------GroupBy using Query Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
 
-            var results = from department in departmentList
-                          join employee in employeeList
-                          on department.Id equals employee.DepartmentId
-                          orderby employee.AnnualSalary, employee.FirstName descending
-                          select new
-                          {
-                              DepartmentId = department.Id,
-                              FullName = employee.FirstName + " " + employee.LastName,
-                              AnnualSalary = employee.AnnualSalary,
-                              DepartmentName = department.LongName
-                          };
-            foreach (var result in results)
+            var results = from employee in employeeList
+                          group employee by employee.DepartmentId;
+            
+            foreach(var empGroup in results)
             {
-                Console.WriteLine($"Full Name: {result.FullName}, Annual Salary: {result.AnnualSalary}, Department Name: {result.DepartmentName}");
+                Console.WriteLine($"Department Id: {empGroup.Key}");
+                foreach(Employee emp in empGroup)
+                {
+                    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}, Annual Salary: {emp.AnnualSalary}, Department Id: {emp.DepartmentId}");
+                }
             }
         }
 

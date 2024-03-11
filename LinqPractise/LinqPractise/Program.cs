@@ -310,6 +310,7 @@ namespace LinqPractise
 
 
 
+
             //Console.WriteLine("----------ToLookUp using Method Syntax----------");
             //List<Employee> employeeList = Data.GetEmployees();
             //List<Department> departmentList = Data.GetDepartments();
@@ -326,7 +327,6 @@ namespace LinqPractise
 
 
 
-            Console.WriteLine("----------ToLookUp using Method Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
             

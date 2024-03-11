@@ -328,10 +328,6 @@ namespace LinqPractise
 
 
 
-            
-
-            Console.WriteLine("----------All function Method Syntax-------- -");
-
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
             

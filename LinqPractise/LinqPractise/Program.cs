@@ -328,24 +328,48 @@ namespace LinqPractise
 
 
 
-            
 
-            Console.WriteLine("----------All function Method Syntax-------- -");
+            //    Console.WriteLine("----------All function Method Syntax-------- -"); 
+
+            //    List<Employee> employeeList = Data.GetEmployees();
+            //    List<Department> departmentList = Data.GetDepartments();
+
+            //    var annualSalaryCompare = 2000;
+            //    bool isTrueAll =  employeeList.All(emp => emp.AnnualSalary >  annualSalaryCompare);
+
+            //    if(isTrueAll )
+            //    {
+            //        Console.WriteLine("All employee salaries exceed 2000");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Not all employee salaries exceed 2000");
+            //    }
+            //}
+
+
+
+
+            Console.WriteLine("----------Any function Method Syntax-------- -");
 
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
-            
-            var annualSalaryCompare = 2000;
-            bool isTrueAll =  employeeList.All(emp => emp.AnnualSalary >  annualSalaryCompare);
 
-            if(isTrueAll )
+            var salaryCompare = 2000;
+            bool isAnySalary = employeeList.Any(emp => emp.AnnualSalary > salaryCompare);
+
+            if(isAnySalary)
             {
-                Console.WriteLine("All employee salaries exceed 2000");
+                Console.WriteLine("At least one employee recieves more than 2000 as a salary");
             }
             else
             {
-                Console.WriteLine("Not all employee salaries exceed 2000");
+                Console.WriteLine("No eployee has a salary greater than 20000");
             }
+
+
+
+
         }
 
 

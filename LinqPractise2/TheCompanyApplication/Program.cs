@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TCPData;
 
@@ -27,20 +28,55 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Using Any() operation-----");
-            var salaryToCompare = 20000;
-            bool isAnySalaryGreater = employeeList.Any(employee => employee.AnnualSalary > salaryToCompare);
+            //Console.WriteLine("------Using Any() operation-----");
+            //var salaryToCompare = 20000;
+            //bool isAnySalaryGreater = employeeList.Any(employee => employee.AnnualSalary > salaryToCompare);
 
-            if(isAnySalaryGreater)
+            //if(isAnySalaryGreater)
+            //{
+            //    Console.WriteLine("At least one salary is greater than 20000");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No Salary is greater than 20000");
+            //}
+
+
+
+
+            Console.WriteLine("------OfType filter operation-----");
+            ArrayList mixedCollection = Data.GetHeterogeneousDataCollection();
+
+            var stringResult = from item in mixedCollection.OfType<string>()
+                               select item;
+
+            foreach( var item in stringResult )
             {
-                Console.WriteLine("At least one salary is greater than 20000");
+                Console.WriteLine(item);
             }
-            else
+            Console.WriteLine();
+
+
+            var intResult = from item in mixedCollection.OfType<int>()
+                            select item;
+            foreach(var item in intResult )
             {
-                Console.WriteLine("No Salary is greater than 20000");
+                Console.WriteLine(item);
             }
+            Console.WriteLine();
+
+            var employeeResult = from employee in mixedCollection.OfType<Employee>()
+                                 select employee;
+            foreach( var employee in employeeResult )
+            {
+                Console.WriteLine($"{employee.FirstName} {employee.LastName}");
+            }
+            Console.WriteLine();
+
+
         }
 
+        
     }
     
 

@@ -310,18 +310,36 @@ namespace LinqPractise
 
 
 
+            //Console.WriteLine("----------ToLookUp using Method Syntax----------");
+            //List<Employee> employeeList = Data.GetEmployees();
+            //List<Department> departmentList = Data.GetDepartments();
+
+            //var results = employeeList.OrderBy(x => x.DepartmentId).ToLookup(employee => employee.DepartmentId);
+            //foreach (var groupEmp in results)
+            //{
+            //    Console.WriteLine($"Department Id: {groupEmp.Key}");
+            //    foreach(var emp in groupEmp)
+            //    {
+            //        Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}, Annual Salary: {emp.AnnualSalary}, Department Id: {emp.DepartmentId}");
+            //    }
+            //}
+
+
+
             Console.WriteLine("----------ToLookUp using Method Syntax----------");
             List<Employee> employeeList = Data.GetEmployees();
             List<Department> departmentList = Data.GetDepartments();
+            
+            var annualSalaryCompare = 2000;
+            bool isTrueAll =  employeeList.All(emp => emp.AnnualSalary >  annualSalaryCompare);
 
-            var results = employeeList.OrderBy(x => x.DepartmentId).ToLookup(employee => employee.DepartmentId);
-            foreach (var groupEmp in results)
+            if(isTrueAll )
             {
-                Console.WriteLine($"Department Id: {groupEmp.Key}");
-                foreach(var emp in groupEmp)
-                {
-                    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}, Annual Salary: {emp.AnnualSalary}, Department Id: {emp.DepartmentId}");
-                }
+                Console.WriteLine("All employee salaries exceed 2000");
+            }
+            else
+            {
+                Console.WriteLine("Not all employee salaries exceed 2000");
             }
         }
 

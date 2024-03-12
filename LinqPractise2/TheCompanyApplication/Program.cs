@@ -95,34 +95,52 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------First, FirstOrDefault, Last, LastOrDefault Operatiors-----");
-            string nameToSearch = "Mike";
+            //Console.WriteLine("------First, FirstOrDefault, Last, LastOrDefault Operatiors-----");
+            //string nameToSearch = "Mike";
 
-            var result = employeeList.First(emp => emp.FirstName.ToLower() == "bob");
-            Console.WriteLine($"Full Name: {result.FirstName} {result.LastName}");
+            //var result = employeeList.First(emp => emp.FirstName.ToLower() == "bob");
+            //Console.WriteLine($"Full Name: {result.FirstName} {result.LastName}");
 
-            var result2 = employeeList.FirstOrDefault(emp => emp.FirstName == nameToSearch);
-            if (result2 != null)
+            //var result2 = employeeList.FirstOrDefault(emp => emp.FirstName == nameToSearch);
+            //if (result2 != null)
+            //{
+            //    Console.WriteLine($"Full Name {result2.FirstName} {result2.LastName}");
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"There is not an employee with a name {nameToSearch}");
+            //}
+
+            //var result3 = employeeList.Last(emp => emp.Id == 2);
+            //Console.WriteLine($"Full Name: {result3.FirstName} {result3.LastName}");
+
+            //var result4 = employeeList.LastOrDefault(emp => emp.FirstName == "John");
+            //if (result4 != null)
+            //{
+            //    Console.WriteLine($"Full Name {result4.FirstName} {result4.LastName}");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("there is not such a name in the list");
+            //}
+
+
+
+
+            Console.WriteLine("------Single, SingleOrDefault Operataions-----");
+            var result = employeeList.Single(emp => emp.Id == 2);
+            Console.WriteLine($"Full Name {result.FirstName} {result.LastName}");
+
+            var result2 = departmentList.SingleOrDefault(dep => dep.Id == 8);
+            if(result2 != null)
             {
-                Console.WriteLine($"Full Name {result2.FirstName} {result2.LastName}");
+                Console.WriteLine($"Department unique Id: {result2.LongName}");
             }
             else
             {
-                Console.WriteLine($"There is not an employee with a name {nameToSearch}");
+                Console.WriteLine("there is no department with such an Id");
             }
 
-            var result3 = employeeList.Last(emp => emp.Id == 2);
-            Console.WriteLine($"Full Name: {result3.FirstName} {result3.LastName}");
-
-            var result4 = employeeList.LastOrDefault(emp => emp.FirstName == "John");
-            if (result4 != null)
-            {
-                Console.WriteLine($"Full Name {result4.FirstName} {result4.LastName}");
-            }
-            else
-            {
-                Console.WriteLine("there is not such a name in the list");
-            }
         }
 
         

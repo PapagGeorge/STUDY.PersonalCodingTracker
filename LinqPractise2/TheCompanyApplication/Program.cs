@@ -173,29 +173,63 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Concat Operator-----");
-            List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };
-            List<int> numbers2 = new List<int> { 6, 7, 8, 9, 10 };
+            //Console.WriteLine("------Concat Operator-----");
+            //List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };
+            //List<int> numbers2 = new List<int> { 6, 7, 8, 9, 10 };
 
-            var result = numbers.Concat(numbers2);
-            foreach (var number in result)
-            {
-                Console.WriteLine(number);
-            }
-            Console.WriteLine();
+            //var result = numbers.Concat(numbers2);
+            //foreach (var number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
+            //Console.WriteLine();
 
-            List<Employee> empListToConcat = new List<Employee> { new Employee { FirstName = "John", LastName = "Coltrane", Id = 100,
-            IsManager = true, AnnualSalary = 100000, DepartmentId = 100} };
+            //List<Employee> empListToConcat = new List<Employee> { new Employee { FirstName = "John", LastName = "Coltrane", Id = 100,
+            //IsManager = true, AnnualSalary = 100000, DepartmentId = 100} };
 
-            var result2 = employeeList.Concat(empListToConcat);
-            foreach(var employee in result2 )
-            {
-                Console.WriteLine($"Full Name: {employee.FirstName} {employee.LastName}");
-            }
+            //var result2 = employeeList.Concat(empListToConcat);
+            //foreach(var employee in result2 )
+            //{
+            //    Console.WriteLine($"Full Name: {employee.FirstName} {employee.LastName}");
+            //}
+
+
+
+
+            Console.WriteLine("------Aggregate Operator-----");
+            //Let's say we want to find the total annual salaries of employees plus their bonuses
+            //that depend on if isManager is true or false.
+            //decimal totalAnnualSalary = employeeList.Aggregate<Employee, decimal>(0, (totAnnualSalary, emp) =>
+            //{
+            //    decimal bonus = (emp.IsManager) ? 0.04m : 0.02m;
+            //    totAnnualSalary = (emp.AnnualSalary + (emp.AnnualSalary * bonus)) + totAnnualSalary;
+            //    return totAnnualSalary;
+            //});
+
+            //Console.WriteLine($"Total annual salaries of all employees (including bonus): {totalAnnualSalary}");
+
+            //Let's say we want to write for each employee their full name and their annual salaries including bonus.
+            //string data = employeeList.Aggregate<Employee, string, string>("Employee annual salary (including bonus): ", (message, emp) =>
+            //{
+            //    decimal bonus = (emp.IsManager) ? 0.04m : 0.02m;
+            //    message += $"{emp.FirstName} {emp.LastName} - {emp.AnnualSalary + (emp.AnnualSalary * bonus)}, ";
+            //    return message;
+            //}, message => message.Substring(0, message.Length -2));
+            //Console.WriteLine(data);
+            //Console.ReadKey();
+
+
+
+
 
         }
 
-        
+
+
+
+
+
+
     }
     
 

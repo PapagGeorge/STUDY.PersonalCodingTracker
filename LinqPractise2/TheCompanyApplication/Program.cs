@@ -253,6 +253,119 @@ namespace TheCompanyApplication
 
 
 
+            //Console.WriteLine("------DefaultIfEmpty Operator-----");
+            //List <Employee> empList = new List<Employee>();
+            //empList.DefaultIfEmpty(new Employee { Id = 0 }); //Default value if the list is empty
+
+            //var result = empList.ElementAt(0);
+            //if(result.Id == 0)
+            //{
+            //    Console.WriteLine("The list is empty");
+            //}
+            //Console.WriteLine();
+
+
+
+
+            //Console.WriteLine("------Empty Operator-----");
+            //List<Employee> empList = Enumerable.Empty<Employee>().ToList();
+            //empList.Add(new Employee { Id = 1, FirstName = "Mike", LastName = "Johnson" });
+            //foreach (var item in empList)
+            //{
+            //    Console.WriteLine($"{item.FirstName} {item.LastName}");
+            //}
+
+
+
+
+            //Console.WriteLine("------Range Operator-----");
+            //var intCollection = Enumerable.Range(10, 5);
+            //foreach(var number in intCollection)
+            //{
+            //    Console.WriteLine(number);
+            //}
+
+
+
+
+            //Console.WriteLine("------Repeat Operator-----");
+            //var stringRepeated = Enumerable.Repeat<string>("Repeat message", 10).ToList();
+            //foreach (var message in stringRepeated)
+            //{
+            //    Console.WriteLine(message);
+            //}
+
+
+
+
+            //Console.WriteLine("------Distinct Operator-----");
+            //List<int> numbers = new List<int> { 1, 2, 2, 3, 4, 5, 5, 7, 14, 16, 16, 19, 19, 25, 33, 36, 39, 39, 39 };
+            //var distinctNumbers = numbers.Distinct();
+            //foreach(int number in distinctNumbers)
+            //{
+            //    Console.WriteLine(number);
+            //}
+
+
+
+
+            //Console.WriteLine("------Except Operator-----");
+            //IEnumerable<int> numberCollection1 = new List<int> { 1, 2, 3, 4, 5, 6 };
+            //IEnumerable<int> numberCollection2 = new List<int> { 3, 4, 5, 6, 7 , 8 };
+            //IEnumerable result = numberCollection1.Except(numberCollection2);
+
+            //foreach(int number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
+
+            //List<Employee> newListEmployee = new List<Employee>();
+            //Employee employee = new Employee
+            //{
+            //    Id = 1,
+            //    FirstName = "Bob",
+            //    LastName = "Jones",
+            //    AnnualSalary = 60000.3m,
+            //    IsManager = true,
+            //    DepartmentId = 1
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 2,
+            //    FirstName = "Sarah",
+            //    LastName = "Jameson",
+            //    AnnualSalary = 80000.1m,
+            //    IsManager = true,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 3,
+            //    FirstName = "Mike",
+            //    LastName = "Johnson",
+            //    AnnualSalary = 50000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 4,
+            //    FirstName = "Marry",
+            //    LastName = "Jane",
+            //    AnnualSalary = 20000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 3
+            //};
+            //newListEmployee.Add(employee);
+
+            //var newEmployees = newListEmployee.Except(employeeList, new EmployeeComparer());
+            //foreach(var emp in newEmployees)
+            //{
+            //    Console.WriteLine($"Full Name {emp.FirstName} {emp.LastName}");
+            //}
 
         }
 

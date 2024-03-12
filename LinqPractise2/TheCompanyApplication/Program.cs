@@ -505,9 +505,50 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Take While-----"); //The TakeWhile operator is used to return elements from a sequence until a specified condition is no longer met
-            var result = employeeList.TakeWhile(emp => emp.AnnualSalary > 50000);
-            foreach (var emp in result)
+            //Console.WriteLine("------TakeWhile-----"); //The TakeWhile operator is used to return elements from a sequence until a specified condition is no longer met
+            //var result = employeeList.TakeWhile(emp => emp.AnnualSalary > 50000);
+            //foreach (var emp in result)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            //}
+
+
+
+            //Console.WriteLine("------ToList()-----");//The ToList() method in LINQ is used to convert an IEnumerable<T> sequence into a List<T>.
+            //                                         //It materializes the sequence into a concrete list object.
+
+            //List<Employee> empList = (from emp in employeeList
+            //                         where emp.IsManager == true
+            //                         select emp).ToList();
+            //foreach (Employee emp in empList)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            //}
+
+
+
+
+            //Console.WriteLine("------ToDictionary()-----");
+            //Dictionary<int, Employee> employeeDict = (from emp in employeeList
+            //                                          where emp.AnnualSalary > 50000
+            //                                          select emp).ToDictionary<Employee, int>(emp => emp.Id);
+
+            //foreach (KeyValuePair<int, Employee> emp in employeeDict)
+            //{
+            //    int id = emp.Key;
+            //    Employee employee = emp.Value;
+            //    Console.WriteLine($"Full Name: {employee.FirstName} {employee.LastName} Id: {id}");
+            //}
+
+
+
+
+            Console.WriteLine("------ToArray()-----");
+            Employee[] results = (from emp in employeeList
+                                 where emp.AnnualSalary > 50000
+                                 select emp).ToArray();
+
+            foreach (Employee emp in results)
             {
                 Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
             }

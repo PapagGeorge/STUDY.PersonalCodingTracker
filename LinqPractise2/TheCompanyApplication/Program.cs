@@ -196,7 +196,7 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Aggregate Operator-----");
+            //Console.WriteLine("------Aggregate Operator-----");
             //Let's say we want to find the total annual salaries of employees plus their bonuses
             //that depend on if isManager is true or false.
             //decimal totalAnnualSalary = employeeList.Aggregate<Employee, decimal>(0, (totAnnualSalary, emp) =>
@@ -217,6 +217,38 @@ namespace TheCompanyApplication
             //}, message => message.Substring(0, message.Length -2));
             //Console.WriteLine(data);
             //Console.ReadKey();
+
+
+
+
+
+
+            //Console.WriteLine("------Average Operator-----");
+            //var averageSalary = employeeList.Where(emp =>emp.DepartmentId == 2).Average(emp => emp.AnnualSalary);
+            //Console.WriteLine($"Average Salary ()Technology department: {averageSalary}");
+
+
+
+
+
+            //Console.WriteLine("------Count Operator-----");
+            //var count = employeeList.Count(emp => emp.DepartmentId == 2);
+            //Console.WriteLine($"Number of employees in Tecnology Department: {count}");
+
+
+
+
+
+            //Console.WriteLine("------Sum Operator-----");
+            //var annualSalariesSum = employeeList.Sum(emp => emp.AnnualSalary);
+            //Console.WriteLine($"Sum of all annual salaries: {annualSalariesSum}");
+
+
+
+
+            //Console.WriteLine("------Max Operator-----");
+            //var maxSalary = employeeList.Max(emp => emp.AnnualSalary);
+            //Console.WriteLine($"Employees Max Salary: {maxSalary}");
 
 
 

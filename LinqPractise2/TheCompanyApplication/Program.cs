@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TCPData;
 using TCPExtensions;
@@ -309,12 +310,12 @@ namespace TheCompanyApplication
 
 
 
-            //Console.WriteLine("------Except Operator-----");
+            //Console.WriteLine("------Except Operator-----");   ////This will keep the elements that are present in the first collection only
             //IEnumerable<int> numberCollection1 = new List<int> { 1, 2, 3, 4, 5, 6 };
-            //IEnumerable<int> numberCollection2 = new List<int> { 3, 4, 5, 6, 7 , 8 };
+            //IEnumerable<int> numberCollection2 = new List<int> { 3, 4, 5, 6, 7, 8 };
             //IEnumerable result = numberCollection1.Except(numberCollection2);
 
-            //foreach(int number in result)
+            //foreach (int number in result)
             //{
             //    Console.WriteLine(number);
             //}
@@ -362,11 +363,154 @@ namespace TheCompanyApplication
             //newListEmployee.Add(employee);
 
             //var newEmployees = newListEmployee.Except(employeeList, new EmployeeComparer());
-            //foreach(var emp in newEmployees)
+            //foreach (var emp in newEmployees)
             //{
             //    Console.WriteLine($"Full Name {emp.FirstName} {emp.LastName}");
             //}
 
+
+
+
+            //Console.WriteLine("------Intersect Operator-----"); ////This will return the elements that exist in both collections
+            //List<Employee> newListEmployee = new List<Employee>();
+            //Employee employee = new Employee
+            //{
+            //    Id = 1,
+            //    FirstName = "Bob",
+            //    LastName = "Jones",
+            //    AnnualSalary = 60000.3m,
+            //    IsManager = true,
+            //    DepartmentId = 1
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 2,
+            //    FirstName = "Sarah",
+            //    LastName = "Jameson",
+            //    AnnualSalary = 80000.1m,
+            //    IsManager = true,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 3,
+            //    FirstName = "Mike",
+            //    LastName = "Johnson",
+            //    AnnualSalary = 50000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 4,
+            //    FirstName = "Marry",
+            //    LastName = "Jane",
+            //    AnnualSalary = 20000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 3
+            //};
+            //newListEmployee.Add(employee);
+
+            //var commonElementsEmployeeList = newListEmployee.Intersect(employeeList, new EmployeeComparer());
+            //foreach (var emp in commonElementsEmployeeList)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}");
+            //}
+
+
+
+
+            //Console.WriteLine("------Union Operator-----"); //returns distinct elements from both collections
+            //List<Employee> newListEmployee = new List<Employee>();
+            //Employee employee = new Employee
+            //{
+            //    Id = 1,
+            //    FirstName = "Bob",
+            //    LastName = "Jones",
+            //    AnnualSalary = 60000.3m,
+            //    IsManager = true,
+            //    DepartmentId = 1
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 2,
+            //    FirstName = "Sarah",
+            //    LastName = "Jameson",
+            //    AnnualSalary = 80000.1m,
+            //    IsManager = true,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 3,
+            //    FirstName = "Mike",
+            //    LastName = "Johnson",
+            //    AnnualSalary = 50000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 2
+            //};
+            //newListEmployee.Add(employee);
+            //employee = new Employee
+            //{
+            //    Id = 4,
+            //    FirstName = "Marry",
+            //    LastName = "Jane",
+            //    AnnualSalary = 20000.2m,
+            //    IsManager = false,
+            //    DepartmentId = 3
+            //};
+            //newListEmployee.Add(employee);
+
+            //var distinctElementsCollection = newListEmployee.Union(employeeList, new EmployeeComparer());
+            //foreach (var emp in distinctElementsCollection)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}");
+            //}
+
+
+
+            //Console.WriteLine("------Skip Operator-----"); //skip a number of elements and return the remainder
+            //var result = employeeList.Skip(2);
+            //foreach (var emp in result)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName}");
+            //}
+
+
+
+
+            //Console.WriteLine("------SkipWhile Operator-----"); //used to bypass elements in a sequence until a condition is no longer met
+            //employeeList.Add(new Employee { Id = 5, FirstName = "John", LastName = "Coltrane", IsManager = true, AnnualSalary = 1000});
+            ////the new list element is included regardless the condition of the SkipWhile()
+            //var result = employeeList.SkipWhile(emp => emp.AnnualSalary > 50000);
+            //foreach (var emp in result)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            //}
+
+
+
+            //Console.WriteLine("------Take Operator-----"); //the Take operator is used to return a specified number of elements from the start of a sequence.
+            //                                               //It retrieves the first n elements from a sequence and discards the rest.
+            //var result = employeeList.Take(2);
+            //foreach (var emp in result)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            //}
+
+
+
+            Console.WriteLine("------Take While-----"); //The TakeWhile operator is used to return elements from a sequence until a specified condition is no longer met
+            var result = employeeList.TakeWhile(emp => emp.AnnualSalary > 50000);
+            foreach (var emp in result)
+            {
+                Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            }
         }
 
 

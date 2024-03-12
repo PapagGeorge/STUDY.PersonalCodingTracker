@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TCPData;
+using TCPExtensions;
 
 namespace TheCompanyApplication
 {
@@ -127,18 +128,69 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------Single, SingleOrDefault Operataions-----");
-            var result = employeeList.Single(emp => emp.Id == 2);
-            Console.WriteLine($"Full Name {result.FirstName} {result.LastName}");
+            //Console.WriteLine("------Single, SingleOrDefault Operataions-----");
+            //var result = employeeList.Single(emp => emp.Id == 2);
+            //Console.WriteLine($"Full Name {result.FirstName} {result.LastName}");
 
-            var result2 = departmentList.SingleOrDefault(dep => dep.Id == 8);
-            if(result2 != null)
+            //var result2 = departmentList.SingleOrDefault(dep => dep.Id == 8);
+            //if(result2 != null)
+            //{
+            //    Console.WriteLine($"Department unique Id: {result2.LongName}");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("there is no department with such an Id");
+            //}
+
+
+
+
+            //Console.WriteLine("------SequenceEqual-----");
+            //List <int> numbers = new List<int> { 1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 };
+            //List<int> numbers2 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            //bool areListstTheSame = numbers.SequenceEqual(numbers2);
+            //if(areListstTheSame)
+            //{
+            //    Console.WriteLine("Number lists are identical");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Number lists are different from each other");
+            //}
+
+            //List <Employee> employeesToCompare = Data.GetEmployees();
+            //var areEmployeeListsIdentical = employeeList.SequenceEqual(employeesToCompare, new EmployeeComparer());
+            //if (areEmployeeListsIdentical)
+            //{
+            //    Console.WriteLine("Employee Lists are identical");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Employee lists are different from each other");
+            //}
+
+
+
+
+            Console.WriteLine("------Concat Operator-----");
+            List<int> numbers = new List<int> { 1, 2, 3, 4, 5 };
+            List<int> numbers2 = new List<int> { 6, 7, 8, 9, 10 };
+
+            var result = numbers.Concat(numbers2);
+            foreach (var number in result)
             {
-                Console.WriteLine($"Department unique Id: {result2.LongName}");
+                Console.WriteLine(number);
             }
-            else
+            Console.WriteLine();
+
+            List<Employee> empListToConcat = new List<Employee> { new Employee { FirstName = "John", LastName = "Coltrane", Id = 100,
+            IsManager = true, AnnualSalary = 100000, DepartmentId = 100} };
+
+            var result2 = employeeList.Concat(empListToConcat);
+            foreach(var employee in result2 )
             {
-                Console.WriteLine("there is no department with such an Id");
+                Console.WriteLine($"Full Name: {employee.FirstName} {employee.LastName}");
             }
 
         }

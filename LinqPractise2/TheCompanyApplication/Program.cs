@@ -543,15 +543,15 @@ namespace TheCompanyApplication
 
 
 
-            Console.WriteLine("------ToArray()-----");
-            Employee[] results = (from emp in employeeList
-                                 where emp.AnnualSalary > 50000
-                                 select emp).ToArray();
+            //Console.WriteLine("------ToArray()-----");
+            //Employee[] results = (from emp in employeeList
+            //                     where emp.AnnualSalary > 50000
+            //                     select emp).ToArray();
 
-            foreach (Employee emp in results)
-            {
-                Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
-            }
+            //foreach (Employee emp in results)
+            //{
+            //    Console.WriteLine($"Full Name: {emp.FirstName} {emp.LastName} Id: {emp.Id}");
+            //}
         }
 
 

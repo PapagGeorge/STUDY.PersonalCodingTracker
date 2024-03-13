@@ -16,5 +16,6 @@ namespace EntityFrameworkCoreIntroduction.Models
         public EmployeeDetails EmployeeDetails { get; set; } //reference navigation property to dependent entity
         public int ManagerId { get; set; }
         public Manager Manager { get; set; }
+        public ICollection<EmployeeProject> EmployeeProjects { get; set; }
     }
 }

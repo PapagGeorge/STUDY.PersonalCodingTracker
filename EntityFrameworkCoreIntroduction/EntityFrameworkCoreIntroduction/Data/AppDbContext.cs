@@ -11,7 +11,7 @@ namespace EntityFrameworkCoreIntroduction.Data
 
         public AppDbContext()
         {
-            ConnectionString = "Data Source=DESKTOP;Database=CompanyManagement;Integrated Security=SSPI";
+            ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=CompanyManagement;Integrated Security=true";
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -7,6 +7,7 @@ namespace EntityFrameworkCoreIntroduction.Data
     {
         public DbSet <Employee> Employees { get; set; }
         public DbSet <Manager> Managers { get; set; }
+        public DbSet <EmployeeDetails> EmployeeDetails { get; set; }
         public string ConnectionString { get; }
 
         public AppDbContext()

@@ -259,18 +259,58 @@ using (var context = new AppDbContext())
     //Use await keyword to asynchronously wait for the completion of the operation.
 
 
-    var emp7 = new Employee()
-    {
-        EmpLastName = "Jane",
-        EmpFirstName = "Mary",
-        Salary = 20000,
-        ManagerId = 1,
-    };
+    //var emp7 = new Employee()
+    //{
+    //    EmpLastName = "Jane",
+    //    EmpFirstName = "Mary",
+    //    Salary = 20000,
+    //    ManagerId = 1,
+    //};
 
-    await AddEmpToDatabaseAsync(emp7);
-    await ReadAllEmployeesAsync();
-    await UpdateEmpSalaryAsync(2, 25000);
-    await DeleteEmpAsync(2);
+    //await AddEmpToDatabaseAsync(emp7);
+    //await ReadAllEmployeesAsync();
+    //await UpdateEmpSalaryAsync(2, 25000);
+    //await DeleteEmpAsync(2);
+
+
+
+
+    //Steps to implement a transaction:
+    //1.Begin a transaction.
+    //2.Perform Database operations within the transaction.
+    //3.Commit or Rollback the transaction.
+
+    Console.WriteLine("Update employee and manager details in transaction");
+    using(var transaction = context.Database.BeginTransaction())
+    {
+        //perform database operations
+        var employeeId = 1;
+        var employeeToUpdate = context.Employees.FirstOrDefault(emp => emp.EmployeeId == employeeId);
+        var employeeDetailsToUpdate = context.EmployeeDetails.FirstOrDefault(emd => emd.EmployeeId == employeeId);
+        
+        if(employeeToUpdate != null && employeeDetailsToUpdate != null)
+        {
+            try
+            {
+                employeeToUpdate.EmpLastName = "Michaels";
+                employeeDetailsToUpdate.Address = "France";
+                employeeToUpdate.ManagerId = 2;
+
+                context.SaveChanges();
+                transaction.Commit(); //Commit a transaction
+            }
+            catch (Exception ex) 
+            {
+                transaction.Rollback(); //Or RollBack a transaction
+                throw;
+            }
+        }
+        else
+        {
+            throw new Exception("Something went wrong");
+        }
+    }
+
 
 
 }
@@ -309,7 +349,7 @@ static async Task UpdateEmpSalaryAsync(int id, long newSalary)
         {
             Console.WriteLine($"There is no employee with id = {id}");
         }
-        context.SaveChangesAsync();
+        await context.SaveChangesAsync();
         Console.WriteLine("Employee's salary was updated");
     }
 }

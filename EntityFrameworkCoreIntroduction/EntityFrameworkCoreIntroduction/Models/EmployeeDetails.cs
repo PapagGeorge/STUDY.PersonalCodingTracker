@@ -7,6 +7,6 @@
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public int EmployeeId { get; set; }
-        public Employee Employee { get; set; } //reference navigation property
+        public virtual Employee Employee { get; set; } //reference navigation property
     }
 }

@@ -175,7 +175,7 @@ using (var context = new AppDbContext())
     //foreach(var project in emp5)
     //{
     //    Console.WriteLine($"Project Name: {project.Name}");
-        
+
     //    foreach (var empProj in project.EmployeeProjects)
     //    {
     //        Console.WriteLine($"Employee Id: {empProj.EmployeeId}, Employee Full Name:" +
@@ -199,18 +199,51 @@ using (var context = new AppDbContext())
     //}
 
 
-    //Explicit loading - one to many relationship
-    var managers = context.Managers.ToList();
-    
-    foreach(var manager in managers)
+    ////Explicit loading - one to many relationship
+    //var managers = context.Managers.ToList();
+
+    //foreach(var manager in managers)
+    //{
+    //    Console.WriteLine($"Manager Name: {manager.MngFirstName} {manager.MngLastName}");
+    //    context.Entry(manager).Collection(emp => emp.Employees).Load();
+    //    if (manager.Employees.Any())
+    //    {
+    //        foreach(var emp in manager.Employees)
+    //        {
+    //            Console.WriteLine($"Employee Full Name: {emp.EmpFirstName} {emp.EmpLastName}");
+    //        }
+    //    }
+    //}
+
+
+
+
+    //In case of Lazy Loading related data is loaded from the database
+    //when the navigation property is accessed.
+
+    //Two ways:
+    //i)Lazy Loading with proxies
+    //ii)Lazy Loading without proxies.
+    //We will demonstrate the first way.
+
+
+    //Install nuget package Microsoft.EntityFrameworkCore.Proxies
+    //Use UseLazyLoadingProxies() in OnConfiguring method.
+    //Entity framework core will enable lazy loading for any navigation property
+    //that is virtual.
+    //We need to make all navigation properties virtual.
+
+
+    var manager2 = context.Managers.ToList();
+    foreach (var manager in manager2)
     {
-        Console.WriteLine($"Manager Name: {manager.MngFirstName} {manager.MngLastName}");
-        context.Entry(manager).Collection(emp => emp.Employees).Load();
+        Console.WriteLine($"Manager Full Name: {manager.MngFirstName} {manager.MngLastName}");
+
         if (manager.Employees.Any())
         {
-            foreach(var emp in manager.Employees)
+            foreach(var employee in manager.Employees)
             {
-                Console.WriteLine($"Employee Full Name: {emp.EmpFirstName} {emp.EmpLastName}");
+                Console.WriteLine($"Employee Full Name: {employee.EmpFirstName} {employee.EmpLastName}");
             }
         }
     }

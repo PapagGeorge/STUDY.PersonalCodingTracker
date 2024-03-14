@@ -124,62 +124,94 @@ using (var context = new AppDbContext())
 
 
     //Retrieve and display all the Employees
-    Console.WriteLine("-----Display All Employees-----");
-    var employees = context.Employees.ToList();
-    foreach (var emp in employees)
-    {
-        Console.WriteLine($"Full Name: {emp.EmpFirstName} {emp.EmpLastName}\n");
-    }
+    //Console.WriteLine("-----Display All Employees-----");
+    //var employees = context.Employees.ToList();
+    //foreach (var emp in employees)
+    //{
+    //    Console.WriteLine($"Full Name: {emp.EmpFirstName} {emp.EmpLastName}\n");
+    //}
 
 
-    //Retrieve and display specific Employee
-    Console.WriteLine("-----Display Specific Employee-----");
-    var emp1 = context.Employees.Single(emp => emp.EmployeeId == 2);
-    Console.WriteLine($"Full Name: {emp1.EmpFirstName} {emp1.EmpLastName}\n");
+    ////Retrieve and display specific Employee
+    //Console.WriteLine("-----Display Specific Employee-----");
+    //var emp1 = context.Employees.Single(emp => emp.EmployeeId == 2);
+    //Console.WriteLine($"Full Name: {emp1.EmpFirstName} {emp1.EmpLastName}\n");
 
-    //Update Employee
-    Console.WriteLine("-----Updated Specific Employee-----");
-    var emp2 = context.Employees.Single(emp => emp.EmployeeId == 2);
-    emp2.EmpFirstName = "James";
-    context.SaveChanges();
-    Console.WriteLine($"Full Name: {emp2.EmpFirstName} {emp2.EmpLastName}\n");
+    ////Update Employee
+    //Console.WriteLine("-----Updated Specific Employee-----");
+    //var emp2 = context.Employees.Single(emp => emp.EmployeeId == 2);
+    //emp2.EmpFirstName = "James";
+    //context.SaveChanges();
+    //Console.WriteLine($"Full Name: {emp2.EmpFirstName} {emp2.EmpLastName}\n");
 
-    //Delete data from the database
-    Console.WriteLine("-----Display All Employees -----");
-    var emp3 = context.Employees.Single(emp => emp.EmployeeId == 3);
-    context.Employees.Remove(emp3);
-    foreach (var emp in employees)
-    {
-        Console.WriteLine($"Full Name: {emp.EmpFirstName} {emp.EmpLastName}\n");
-    }
-
-
-    //Eager loading is a technique used to load related entities along with the
-    //main entity being queried in a single database round-trip. Use the Include() or
-    //ThenInclude().
-    //In the Include and ThenInclude() method, you specify the navigation properties of the current entity
-    //for which you want to include related entities.
-    //The ThenIncule() allows us to include further related entities.
-
-    Console.WriteLine("-----Accessing EmployeeDetails property with eager loading-----");
-    var emp4 = context.Employees.Where(emp => emp.EmployeeId == 3).Include(emp => emp.EmployeeDetails)
-        .FirstOrDefault();
-
-    Console.WriteLine($"Employee's Address: {emp4.EmployeeDetails.Address}");
+    ////Delete data from the database
+    //Console.WriteLine("-----Display All Employees -----");
+    //var emp3 = context.Employees.Single(emp => emp.EmployeeId == 3);
+    //context.Employees.Remove(emp3);
+    //foreach (var emp in employees)
+    //{
+    //    Console.WriteLine($"Full Name: {emp.EmpFirstName} {emp.EmpLastName}\n");
+    //}
 
 
+    ////Eager loading is a technique used to load related entities along with the
+    ////main entity being queried in a single database round-trip. Use the Include() or
+    ////ThenInclude().
+    ////In the Include and ThenInclude() method, you specify the navigation properties of the current entity
+    ////for which you want to include related entities.
+    ////The ThenIncule() allows us to include further related entities.
 
-    Console.WriteLine("-----Eager Loading Many to Many relationship-----");
-    var emp5 = context.Projects.Include(ep => ep.EmployeeProjects).ThenInclude(emp => emp.Employee);
+    //Console.WriteLine("-----Accessing EmployeeDetails property with eager loading-----");
+    //var emp4 = context.Employees.Where(emp => emp.EmployeeId == 3).Include(emp => emp.EmployeeDetails)
+    //    .FirstOrDefault();
 
-    foreach(var project in emp5)
-    {
-        Console.WriteLine($"Project Name: {project.Name}");
+    //Console.WriteLine($"Employee's Address: {emp4.EmployeeDetails.Address}");
+
+
+
+    //Console.WriteLine("-----Eager Loading Many to Many relationship-----");
+    //var emp5 = context.Projects.Include(ep => ep.EmployeeProjects).ThenInclude(emp => emp.Employee);
+
+    //foreach(var project in emp5)
+    //{
+    //    Console.WriteLine($"Project Name: {project.Name}");
         
-        foreach (var empProj in project.EmployeeProjects)
+    //    foreach (var empProj in project.EmployeeProjects)
+    //    {
+    //        Console.WriteLine($"Employee Id: {empProj.EmployeeId}, Employee Full Name:" +
+    //            $" {empProj.Employee.EmpFirstName} {empProj.Employee.EmpLastName}");
+    //    }
+    //}
+
+
+
+    //Console.WriteLine("-----Explicit Loading-----");
+    ////Explicit loading is a technique in which related data is explicitly loaded
+    ////from the database at a later time.
+    ////We can use the Entry method of the DbContext class allong with the Collection or Reference methods.
+
+    //var emp6 = context.Employees.ToList();
+    //foreach (var emp in emp6)
+    //{
+    //    context.Entry(emp).Reference(emp => emp.EmployeeDetails).Load();
+    //    Console.WriteLine($"Employee Full Name: {emp.EmpFirstName} {emp.EmpLastName}, " +
+    //        $"Address: {emp.EmployeeDetails.Address}");
+    //}
+
+
+    //Explicit loading - one to many relationship
+    var managers = context.Managers.ToList();
+    
+    foreach(var manager in managers)
+    {
+        Console.WriteLine($"Manager Name: {manager.MngFirstName} {manager.MngLastName}");
+        context.Entry(manager).Collection(emp => emp.Employees).Load();
+        if (manager.Employees.Any())
         {
-            Console.WriteLine($"Employee Id: {empProj.EmployeeId}, Employee Full Name:" +
-                $" {empProj.Employee.EmpFirstName} {empProj.Employee.EmpLastName}");
+            foreach(var emp in manager.Employees)
+            {
+                Console.WriteLine($"Employee Full Name: {emp.EmpFirstName} {emp.EmpLastName}");
+            }
         }
     }
 

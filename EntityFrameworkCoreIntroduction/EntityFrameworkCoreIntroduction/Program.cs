@@ -1,9 +1,10 @@
 ﻿using EntityFrameworkCoreIntroduction.Data;
 using EntityFrameworkCoreIntroduction.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 
-using(var context = new AppDbContext())
+using (var context = new AppDbContext())
 {
 
     //var manager = new Manager()
@@ -151,5 +152,37 @@ using(var context = new AppDbContext())
     {
         Console.WriteLine($"Full Name: {emp.EmpFirstName} {emp.EmpLastName}\n");
     }
+
+
+    //Eager loading is a technique used to load related entities along with the
+    //main entity being queried in a single database round-trip. Use the Include() or
+    //ThenInclude().
+    //In the Include and ThenInclude() method, you specify the navigation properties of the current entity
+    //for which you want to include related entities.
+    //The ThenIncule() allows us to include further related entities.
+
+    Console.WriteLine("-----Accessing EmployeeDetails property with eager loading-----");
+    var emp4 = context.Employees.Where(emp => emp.EmployeeId == 3).Include(emp => emp.EmployeeDetails)
+        .FirstOrDefault();
+
+    Console.WriteLine($"Employee's Address: {emp4.EmployeeDetails.Address}");
+
+
+
+    Console.WriteLine("-----Eager Loading Many to Many relationship-----");
+    var emp5 = context.Projects.Include(ep => ep.EmployeeProjects).ThenInclude(emp => emp.Employee);
+
+    foreach(var project in emp5)
+    {
+        Console.WriteLine($"Project Name: {project.Name}");
+        
+        foreach (var empProj in project.EmployeeProjects)
+        {
+            Console.WriteLine($"Employee Id: {empProj.EmployeeId}, Employee Full Name:" +
+                $" {empProj.Employee.EmpFirstName} {empProj.Employee.EmpLastName}");
+        }
+    }
+
+
 
 }

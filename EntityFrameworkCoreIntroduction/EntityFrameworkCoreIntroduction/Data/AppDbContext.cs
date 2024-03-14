@@ -19,7 +19,7 @@ namespace EntityFrameworkCoreIntroduction.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(ConnectionString);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

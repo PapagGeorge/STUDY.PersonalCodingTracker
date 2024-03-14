@@ -234,20 +234,102 @@ using (var context = new AppDbContext())
     //We need to make all navigation properties virtual.
 
 
-    var manager2 = context.Managers.ToList();
-    foreach (var manager in manager2)
-    {
-        Console.WriteLine($"Manager Full Name: {manager.MngFirstName} {manager.MngLastName}");
+    //var manager2 = context.Managers.ToList();
+    //foreach (var manager in manager2)
+    //{
+    //    Console.WriteLine($"Manager Full Name: {manager.MngFirstName} {manager.MngLastName}");
 
-        if (manager.Employees.Any())
+    //    if (manager.Employees.Any())
+    //    {
+    //        foreach(var employee in manager.Employees)
+    //        {
+    //            Console.WriteLine($"Employee Full Name: {employee.EmpFirstName} {employee.EmpLastName}");
+    //        }
+    //    }
+    //}
+
+
+
+
+    //In synchronus programming the program waits for an operation
+    //to finish before moving to the next line of code.
+    //Asynchronus programming allows the execution of tasks concurrently.
+    //It makes efficient use of system resources and improves responsiveness.
+    //When calling asynchronous methods, use the async keyword.
+    //Use await keyword to asynchronously wait for the completion of the operation.
+
+
+    var emp7 = new Employee()
+    {
+        EmpLastName = "Jane",
+        EmpFirstName = "Mary",
+        Salary = 20000,
+        ManagerId = 1,
+    };
+
+    await AddEmpToDatabaseAsync(emp7);
+    await ReadAllEmployeesAsync();
+    await UpdateEmpSalaryAsync(2, 25000);
+    await DeleteEmpAsync(2);
+
+
+}
+static async Task AddEmpToDatabaseAsync(Employee emp)
+{
+    using(var context = new AppDbContext())
+    {
+        await context.Employees.AddAsync(emp);
+        await context.SaveChangesAsync();
+    }
+    Console.WriteLine("Employee was added to the database");
+}
+
+static async Task ReadAllEmployeesAsync()
+{
+    using(var context = new AppDbContext())
+    {
+        var allEmployees = await context.Employees.ToListAsync();
+        foreach (var emp in allEmployees)
         {
-            foreach(var employee in manager.Employees)
-            {
-                Console.WriteLine($"Employee Full Name: {employee.EmpFirstName} {employee.EmpLastName}");
-            }
+            Console.WriteLine($"Employee Full Name: {emp.EmpFirstName} {emp.EmpLastName}");
         }
     }
+}
 
+static async Task UpdateEmpSalaryAsync(int id, long newSalary)
+{
+    using(var context = new AppDbContext())
+    {
+        var emp1 = await context.Employees.SingleAsync(emp => emp.EmployeeId == id);
+        if(emp1 != null)
+        {
+            emp1.Salary = newSalary;
+        }
+        else
+        {
+            Console.WriteLine($"There is no employee with id = {id}");
+        }
+        context.SaveChangesAsync();
+        Console.WriteLine("Employee's salary was updated");
+    }
+}
 
+static async Task DeleteEmpAsync(int id)
+{
+    using(var context = new AppDbContext())
+    {
+        var emp = await context.Employees.FindAsync(id);
+        if(emp != null)
+        {
+            context.Employees.Remove(emp);
 
+        }
+        else
+        {
+            Console.WriteLine($"There is no employee with id = {id}");
+        }
+        await context.SaveChangesAsync();
+        Console.WriteLine("Employee was deleted");
+
+    }
 }

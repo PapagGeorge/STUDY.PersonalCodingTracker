@@ -16,7 +16,7 @@ namespace AsyncAwaitBasicExample
             var panFryingTask = DoTheFrying();
             var makeToastTask = MakeToastAsync();
 
-            
+            await Task.WhenAll(coffeeTask, panFryingTask, makeToastTask);
 
 
             sw.Stop();
@@ -43,8 +43,9 @@ namespace AsyncAwaitBasicExample
         static async Task DoTheFrying()
         {
             await HeatPanAsync();
-            await FryEggsAsync();
-            await FryBaconAsync();
+            var fryingEggsTask = FryEggsAsync();
+            var fryingBaconTask = FryBaconAsync();
+            await Task.WhenAll(fryingEggsTask, fryingBaconTask);
         }
         static async Task HeatPanAsync()
         {

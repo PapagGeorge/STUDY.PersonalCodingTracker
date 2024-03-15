@@ -11,20 +11,18 @@ namespace AsyncAwaitBasicExample
             sw.Start();
 
 
-            AddCoffeeIngredients();
-            var coffee = await MakeCoffeeAsync();
-            await HeatPanAsync();
-            var eggs = await FryEggsAsync();
-            var bacon = await FryBaconAsync();
-            var toast = await MakeToastAsync();
-            AddButterToToast(toast);
-            AddJamToToast(toast);
+            
+            var coffeeTask = MakeCoffeeAsync();
+            var panFryingTask = DoTheFrying();
+            var makeToastTask = MakeToastAsync();
+
+            
 
 
             sw.Stop();
             double seconds = sw.ElapsedMilliseconds / 1000;
             Console.WriteLine("Breakfast is Ready!");
-            Console.WriteLine($"It took {seconds} to make breakfast");
+            Console.WriteLine($"It took {seconds} seconds to make breakfast");
         }
 
         static void AddCoffeeIngredients()
@@ -35,13 +33,19 @@ namespace AsyncAwaitBasicExample
 
         static async Task<Coffee> MakeCoffeeAsync()
         {
+            AddCoffeeIngredients();
             Console.WriteLine("Started coffee making Machine...");
             await Task.Delay(1000);
             Console.WriteLine("Coffee is ready!");
             return new Coffee();
         }
 
-
+        static async Task DoTheFrying()
+        {
+            await HeatPanAsync();
+            await FryEggsAsync();
+            await FryBaconAsync();
+        }
         static async Task HeatPanAsync()
         {
             Console.WriteLine("Started heating the Pan");
@@ -68,9 +72,12 @@ namespace AsyncAwaitBasicExample
         static async Task<Toast> MakeToastAsync()
         {
             Console.WriteLine("Started Making Toast...");
+            var toast = new Toast();
+            AddButterToToast(toast);
+            AddJamToToast(toast);
             await Task.Delay(2000);
             Console.WriteLine("Toast is Ready!");
-            return new Toast();
+            return toast;
         }
 
         static void AddButterToToast(Toast toast)

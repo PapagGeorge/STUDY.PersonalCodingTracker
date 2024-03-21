@@ -3,13 +3,17 @@ using Infrastructure.Interfaces;
 using Microsoft.Data.SqlClient;
 using Infrastructure.Constants;
 using System.Data;
+using System.Transactions;
+using Infrastructure.Repositories;
 
 namespace Infrastructure.Repositories
 {
     public class BookRepository : BaseRepository, IBookRepository
     {
-        public BookRepository(DatabaseConfiguration databaseConfiguration) : base(databaseConfiguration)
+        private readonly IUserRepository _userRepository;
+        public BookRepository(DatabaseConfiguration databaseConfiguration, IUserRepository userRepository) : base(databaseConfiguration)
         {
+            _userRepository = userRepository;
         }
 
         public void DecreaseBookInventory(string isbn, int decreaseAmount)
@@ -87,7 +91,50 @@ namespace Infrastructure.Repositories
 
         public void RentBookToUser(string isbn, int userId)
         {
-            throw new NotImplementedException();
+            if (_userRepository.CanUserRentMoreBooks(userId))
+            {
+                using(var connection = GetSqlConnection())
+                {
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            var command1 = new SqlCommand(StoredProcedures.RentBookToUser, connection);
+                            command1.CommandType = CommandType.StoredProcedure;
+                            command1.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                            command1.Parameters.Add("@ISBN", SqlDbType.Int).Value = isbn;
+                            command1.ExecuteNonQuery();
+
+                            var command2 = new SqlCommand(StoredProcedures.SelectUsersRentedMoviesCount, connection);
+                            command2.CommandType = CommandType.StoredProcedure;
+                            command2.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+
+                            using (var reader = command2.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    var numberOfMoviesRented = reader.GetInt32(0);
+
+                                    if (numberOfMoviesRented >= 2)
+                                    {
+                                        _userRepository.RemoveUserRentability(userId);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"There is no user with id: {userId}");
+                                }
+                                
+                            }
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                        }
+                    }
+                }
+            }             
         }
 
         public void ReturnBookFromUser(string isbn, int userId)

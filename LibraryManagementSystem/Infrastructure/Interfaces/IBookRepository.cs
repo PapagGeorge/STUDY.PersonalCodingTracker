@@ -13,5 +13,6 @@ namespace Infrastructure.Interfaces
         void DecreaseBookInventory(string isbn);
         void RentBookToUser(string isbn, int userId);
         void ReturnBookFromUser(string isbn, int userId);
+        bool BookExists(string isbn);
     }
 }

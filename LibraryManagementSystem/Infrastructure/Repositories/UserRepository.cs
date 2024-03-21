@@ -15,33 +15,31 @@ namespace Infrastructure.Repositories
 
         public bool CanUserRentMoreBooks(int userId)
         {
-            using (var connection = GetSqlConnection())
-            {
-                var command = new SqlCommand(StoredProcedures.CanUserRentMoreBooks, connection);
-                command.CommandType = CommandType.StoredProcedure;
-                SqlParameter parameter = new SqlParameter()
+            bool canUserRentMoreBooks = false;
+            
+                using (var connection = GetSqlConnection())
                 {
-                    ParameterName = "@UserId",
-                    SqlDbType = SqlDbType.Int,
-                    Value = userId
-                };
-                command.Parameters.Add(parameter);
-
-                var reader = command.ExecuteReader();
-
-                while(reader.Read())
-                {
-                    int canUserRentBooks = reader.GetInt32(reader.GetOrdinal("User_Can_Rent_Books"));
-                    if (canUserRentBooks >= 2)
+                    var command = new SqlCommand(StoredProcedures.CanUserRentMoreBooks, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
                     {
-                        return false;
+                        ParameterName = "@UserId",
+                        SqlDbType = SqlDbType.Int,
+                        Value = userId
+                    };
+                    command.Parameters.Add(parameter);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            canUserRentMoreBooks = reader.GetBoolean(0);
+                            return canUserRentMoreBooks;
+                        }       
                     }
-
-                }
-                return true;
-
-                
-            }
+                }          
+            
+            return canUserRentMoreBooks;
         }
 
         public void DeleteUser(int userId)
@@ -88,7 +86,7 @@ namespace Infrastructure.Repositories
 
                 var reader = command.ExecuteReader();
 
-                if (reader.Read())
+                if (reader.HasRows)
                 {
                     user.UserFirstName = reader["User_First_Name"].ToString() ?? string.Empty;
                     user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
@@ -99,10 +97,7 @@ namespace Infrastructure.Repositories
                     user.UserCanRentBooks = reader.GetBoolean(reader.GetOrdinal("User_Can_Rent_Books"));
                     
                 }
-                else
-                {
-                    Console.WriteLine($"There was no user found with id = {id}");
-                }
+                
                 return user;
 
             }
@@ -133,7 +128,31 @@ namespace Infrastructure.Repositories
                 }
                 return userList;
 
-                throw new Exception($"There was no user found with mobile phone {mobilePhone}");
+                
+            }
+        }
+
+        public void RemoveUserRentability(int userId)
+        {
+            using(var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand(StoredProcedures.RemoveUserRentability, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                command.ExecuteNonQuery();
+
+            }
+        }
+
+        public void RestoreUserRentability(int userId)
+        {
+            using (var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand(StoredProcedures.RestoreUserRentability, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                command.ExecuteNonQuery();
+
             }
         }
     }

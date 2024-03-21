@@ -9,7 +9,9 @@ namespace Infrastructure.Interfaces
         void RegisterUser (User user);
         void DeleteUser (int userId);
         bool CanUserRentMoreBooks(int userId);
-        
+        void RemoveUserRentability(int userId);
+        void RestoreUserRentability(int userId);
+
 
     }
 }

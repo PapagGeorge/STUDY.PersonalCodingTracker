@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Infrastructure.Constants
 {
-    internal class StoredProcedures
+    public static class StoredProcedures
     {
+        #region CanUserRentMoreBooks
+        public const string CanUserRentMoreBooks = "SpCanUserRentMoreBooks";
+        #endregion
     }
 }

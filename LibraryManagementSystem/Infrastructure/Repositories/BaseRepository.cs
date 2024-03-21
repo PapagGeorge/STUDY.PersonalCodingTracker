@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories
             _databaseConfiguration = databaseConfiguration;
         }
 
-        SqlConnection GetSqlConnection()
+        protected SqlConnection GetSqlConnection()
         {
             var connection = new SqlConnection(_databaseConfiguration.ConnectionString);
             connection.Open();

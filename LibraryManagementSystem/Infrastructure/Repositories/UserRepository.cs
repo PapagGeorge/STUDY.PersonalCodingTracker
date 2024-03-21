@@ -3,6 +3,7 @@ using Infrastructure.Interfaces;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Infrastructure.Constants;
+using System.Threading.Channels;
 
 namespace Infrastructure.Repositories
 {
@@ -93,19 +94,47 @@ namespace Infrastructure.Repositories
                     user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
                     user.UserEmail = reader["User_Email"].ToString() ?? string.Empty;
                     user.UserMobilePhone = reader["User_Mobile_Phone"].ToString() ?? string.Empty;
-                    user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;            
+                    user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;
+                    user.UserNumberOfBooksRented = Convert.ToInt32(reader["User_Number_Of_Books_Rented"]);
+                    user.UserCanRentBooks = reader.GetBoolean(reader.GetOrdinal("User_Can_Rent_Books"));
+                    
                 }
                 else
                 {
                     Console.WriteLine($"There was no user found with id = {id}");
                 }
                 return user;
+
             }
         }
 
         public IEnumerable<User> SearchUsersByMobilePhone(string mobilePhone)
         {
-            throw new NotImplementedException();
+            using( var connection = GetSqlConnection())
+            {  
+                var userList = new List<User>();
+                var command = new SqlCommand(StoredProcedures.SearchUserByMobilePhone, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@MobilePhone", SqlDbType.VarChar, 50).Value = mobilePhone;
+
+                var reader = command.ExecuteReader();
+
+                while(reader.Read())
+                {
+                    var user = new User();
+                    user.UserFirstName = reader["User_First_Name"].ToString() ?? string.Empty;
+                    user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
+                    user.UserEmail = reader["User_Email"].ToString() ?? string.Empty;
+                    user.UserMobilePhone = reader["User_Mobile_Phone"].ToString() ?? string.Empty;
+                    user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;
+                    user.UserNumberOfBooksRented = Convert.ToInt32(reader["User_Number_Of_Books_Rented"]);
+                    user.UserCanRentBooks = reader.GetBoolean(reader.GetOrdinal("User_Can_Rent_Books"));
+                    userList.Add(user);
+                }
+                return userList;
+
+                throw new Exception($"There was no user found with mobile phone {mobilePhone}");
+            }
         }
     }
 }

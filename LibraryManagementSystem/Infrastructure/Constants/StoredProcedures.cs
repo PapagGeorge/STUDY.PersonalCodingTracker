@@ -22,5 +22,21 @@ namespace Infrastructure.Constants
         #region SearchUserByMobilePhone
         public const string SearchUserByMobilePhone = "SpSearchUserByMobilePhone";
         #endregion
+
+        #region
+        public const string IncreaseBookInventory = "SpIncreaseBookInventory";
+        #endregion
+
+        #region
+        public const string DecreaseBookInventory = "SpDecreaseBookInventory";
+        #endregion
+
+        #region
+        public const string InsertNewBook = "SpInsertNewBook";
+        #endregion
+        
+        #region
+        public const string CheckIfBookExists = "SpCheckIfBookExists";
+        #endregion
     }
 }

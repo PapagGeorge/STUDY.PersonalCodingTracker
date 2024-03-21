@@ -62,12 +62,45 @@ namespace Infrastructure.Repositories
 
         public void RegisterUser(User user)
         {
-            throw new NotImplementedException();
+            using(var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand(StoredProcedures.InsertUser, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@FirstName", SqlDbType.VarChar, 50).Value = user.UserFirstName;
+                command.Parameters.Add("@LastName", SqlDbType.VarChar, 50).Value = user.UserLastName;
+                command.Parameters.Add("@Email", SqlDbType.VarChar, 50).Value = user.UserEmail;
+                command.Parameters.Add("@MobilePhone", SqlDbType.VarChar, 50).Value = user.UserMobilePhone;
+                command.Parameters.Add("@Address", SqlDbType.VarChar, 50).Value = user.UserAddress;
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public User SearchUserById(string id)
         {
-            throw new NotImplementedException();
+            using(var connection = GetSqlConnection())
+            {
+                var user = new User();
+                var command = new SqlCommand(StoredProcedures.SearchUserById, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@UserId", SqlDbType.Int).Value = id;
+
+                var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    user.UserFirstName = reader["User_First_Name"].ToString() ?? string.Empty;
+                    user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
+                    user.UserEmail = reader["User_Email"].ToString() ?? string.Empty;
+                    user.UserMobilePhone = reader["User_Mobile_Phone"].ToString() ?? string.Empty;
+                    user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;            
+                }
+                else
+                {
+                    Console.WriteLine($"There was no user found with id = {id}");
+                }
+                return user;
+            }
         }
 
         public IEnumerable<User> SearchUsersByMobilePhone(string mobilePhone)

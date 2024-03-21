@@ -39,16 +39,25 @@ namespace Infrastructure.Repositories
                 }
                 return true;
 
-
-
-                
                 
             }
         }
 
-        public void DeleteUser(User user)
+        public void DeleteUser(int userId)
         {
-            throw new NotImplementedException();
+            using(var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand(StoredProcedures.DeleteUser, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter parameter = new SqlParameter()
+                {
+                    ParameterName = "user_id",
+                    SqlDbType = SqlDbType.Int,
+                    Value = userId
+                };
+                command.Parameters.Add(parameter);
+                command.ExecuteNonQuery();
+            }
         }
 
         public void RegisterUser(User user)

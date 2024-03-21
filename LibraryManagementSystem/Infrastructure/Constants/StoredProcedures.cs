@@ -38,5 +38,21 @@ namespace Infrastructure.Constants
         #region
         public const string CheckIfBookExists = "SpCheckIfBookExists";
         #endregion
+
+        #region RemoveUserRentability
+        public const string RemoveUserRentability = "SpRemoveUserRentability";
+        #endregion
+
+        #region RentBookToUser
+        public const string RentBookToUser = "SpRentBookToUser";
+        #endregion
+
+        #region RestoreUserRentability
+        public const string RestoreUserRentability = "SpRestoreUserRentability";
+        #endregion
+
+        #region SelectUsersRentedMoviesCount
+        public const string SelectUsersRentedMoviesCount = "SpSelectUsersRentedMoviesCount";
+        #endregion
     }
 }

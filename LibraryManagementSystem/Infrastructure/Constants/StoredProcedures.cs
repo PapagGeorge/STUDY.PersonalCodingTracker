@@ -54,5 +54,17 @@ namespace Infrastructure.Constants
         #region SelectUsersRentedMoviesCount
         public const string SelectUsersRentedMoviesCount = "SpSelectUsersRentedMoviesCount";
         #endregion
+
+        #region ReturnBookFromUser
+        public const string ReturnBookFromUser = "SpReturnBookFromUser";
+        #endregion
+
+        #region NumberOfCopiesInStock
+        public const string NumberOfCopiesInStock = "SpNumberOfCopiesInStock";
+        #endregion
+
+        #region SearchById
+        public const string SearchById = "SpSearchById";
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using Infrastructure.Constants;
 using System.Data;
 using System.Transactions;
 using Infrastructure.Repositories;
+using static System.Reflection.Metadata.BlobBuilder;
 
 
 namespace Infrastructure.Repositories
@@ -32,7 +33,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while decreasing book inventory: {ex.Message}");
+                throw new Exception($"An error occurred while decreasing book inventory: {ex.Message}");
             }
         }
 
@@ -51,7 +52,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while increasing book inventory: {ex.Message}");
+                throw new Exception($"An error occurred while increasing book inventory: {ex.Message}");
             }
         }
 
@@ -83,7 +84,7 @@ namespace Infrastructure.Repositories
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred while trying to insert a new book: {ex.Message}");
+                    throw new Exception($"An error occurred while trying to insert a new book: {ex.Message}");
                 }
             }
         }
@@ -106,16 +107,17 @@ namespace Infrastructure.Repositories
                             if (count >= 1)
                             {
                                 return true;
-                            }
+                            }           
                         }
+                        return false;
                     }
-                    return false;
+                    
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while trying to check if the book already exists: {ex.Message}");
-                return false;
+                throw new Exception($"An error occurred while trying to check if the book already exists: {ex.Message}");
+                
             }
         }
 
@@ -168,7 +170,11 @@ namespace Infrastructure.Repositories
                         }
                     }
                 }
-            }             
+            }
+            else
+            {
+                throw new Exception("An error occured. Please check if your userId and Book ISBN are valid.");
+            }
         }
 
         public bool IsBookInStock(string isbn)
@@ -193,15 +199,15 @@ namespace Infrastructure.Repositories
                             }
                             else
                             {
-                                Console.WriteLine($"Book with ISBN {isbn} is out of stock.");
+                                
                                 return false;
                             }
                         }
                         else
                         {
-                            Console.WriteLine($"Book with ISBN {isbn} does not exist.");
+                            throw new Exception($"Book with ISBN {isbn} was not found.");
                         }
-                        return false;
+                        
                     }
                 }
                 catch(Exception ex)
@@ -244,7 +250,7 @@ namespace Infrastructure.Repositories
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"There is no user with id: {userId}");
+                                    throw new Exception($"There is no user with id: {userId}");
                                 }
 
                             }
@@ -263,22 +269,194 @@ namespace Infrastructure.Repositories
 
         public Book SearchBookByIsbn(string isbn)
         {
-            throw new NotImplementedException();
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var book = new Book();
+                    var command = new SqlCommand(StoredProcedures.SearchBookByIsbn, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Isbn", SqlDbType.VarChar, 50).Value = isbn;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            book.ISBN = reader["ISBN"].ToString() ?? string.Empty;
+                            book.BookTitle = reader["Book_Title"].ToString() ?? string.Empty;
+                            book.BookAuthor = reader["Book_Author"].ToString() ?? string.Empty;
+                            book.BookYear = Convert.ToInt32(reader["Book_Year"]);
+                            book.BookGenre = reader["Book_Genre"].ToString() ?? string.Empty;
+                            book.BookPagesCount = Convert.ToInt32(reader["Book_Pages_Count"]);
+                            book.BookItemsInStock = Convert.ToInt32(reader["Book_Items_In_Stock"]);
+                            book.BookIsAvailabe = reader.GetBoolean(reader.GetOrdinal("Book_Is_Available"));
+
+                        }
+                        else
+                        {
+                            return book;
+                        }
+                    }
+                    return book;
+
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occured while trying to search for book with ISBN = {isbn}. {ex.Message}");
+                }
+            }
+                     
         }
 
-        public Book SearchBookByTitle(string title)
+        public IEnumerable<Book> SearchBookByTitle(string title)
         {
-            throw new NotImplementedException();
+            var books = new List<Book>();
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.SearchBookByTitle, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Title", SqlDbType.VarChar, 50).Value = title;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            var book = new Book();
+                            book.ISBN = reader["ISBN"].ToString() ?? string.Empty;
+                            book.BookTitle = reader["Book_Title"].ToString() ?? string.Empty;
+                            book.BookAuthor = reader["Book_Author"].ToString() ?? string.Empty;
+                            book.BookYear = Convert.ToInt32(reader["Book_Year"]);
+                            book.BookGenre = reader["Book_Genre"].ToString() ?? string.Empty;
+                            book.BookPagesCount = Convert.ToInt32(reader["Book_Pages_Count"]);
+                            book.BookItemsInStock = Convert.ToInt32(reader["Book_Items_In_Stock"]);
+                            book.BookIsAvailabe = reader.GetBoolean(reader.GetOrdinal("Book_Is_Available"));
+
+                            books.Add(book);
+                        }                      
+                    }             
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occured while trying to search for book with Title = {title}. {ex.Message}");
+                }
+                return books;
+            }
         }
 
         public IEnumerable<Book> ShowBooksForRental()
         {
-            throw new NotImplementedException();
+            var books = new List<Book>();
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.ShowBooksForRental, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            var book = new Book();
+                            book.ISBN = reader["ISBN"].ToString() ?? string.Empty;
+                            book.BookTitle = reader["Book_Title"].ToString() ?? string.Empty;
+                            book.BookAuthor = reader["Book_Author"].ToString() ?? string.Empty;
+                            book.BookYear = Convert.ToInt32(reader["Book_Year"]);
+                            book.BookGenre = reader["Book_Genre"].ToString() ?? string.Empty;
+                            book.BookPagesCount = Convert.ToInt32(reader["Book_Pages_Count"]);
+                            book.BookItemsInStock = Convert.ToInt32(reader["Book_Items_In_Stock"]);
+                            book.BookIsAvailabe = reader.GetBoolean(reader.GetOrdinal("Book_Is_Available"));
+
+                            books.Add(book);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occured while trying to search for available books. {ex.Message}");
+                }
+                return books;
+            }
         }
 
         public IEnumerable<Book> ShowRentedBooks()
         {
-            throw new NotImplementedException();
+            var books = new List<Book>();
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.ShowRentedBooks, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            var book = new Book();
+                            book.ISBN = reader["ISBN"].ToString() ?? string.Empty;
+                            book.BookTitle = reader["Book_Title"].ToString() ?? string.Empty;
+                            book.BookAuthor = reader["Book_Author"].ToString() ?? string.Empty;
+                            book.BookYear = Convert.ToInt32(reader["Book_Year"]);
+                            book.BookGenre = reader["Book_Genre"].ToString() ?? string.Empty;
+                            book.BookPagesCount = Convert.ToInt32(reader["Book_Pages_Count"]);
+                            book.BookItemsInStock = Convert.ToInt32(reader["Book_Items_In_Stock"]);
+                            book.BookIsAvailabe = reader.GetBoolean(reader.GetOrdinal("Book_Is_Available"));
+
+                            books.Add(book);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occured while trying to find all rented books. {ex.Message}");
+                }
+                return books;
+            }
+        }
+
+        public IEnumerable<Book> ShowNotRentedBooks()
+        {
+            var books = new List<Book>();
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.ShowNotRentedBooks, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            var book = new Book();
+                            book.ISBN = reader["ISBN"].ToString() ?? string.Empty;
+                            book.BookTitle = reader["Book_Title"].ToString() ?? string.Empty;
+                            book.BookAuthor = reader["Book_Author"].ToString() ?? string.Empty;
+                            book.BookYear = Convert.ToInt32(reader["Book_Year"]);
+                            book.BookGenre = reader["Book_Genre"].ToString() ?? string.Empty;
+                            book.BookPagesCount = Convert.ToInt32(reader["Book_Pages_Count"]);
+                            book.BookItemsInStock = Convert.ToInt32(reader["Book_Items_In_Stock"]);
+                            book.BookIsAvailabe = reader.GetBoolean(reader.GetOrdinal("Book_Is_Available"));
+
+                            books.Add(book);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occured while trying to find all not rented books. {ex.Message}");
+                }
+                return books;
+            }
         }
     }
 }

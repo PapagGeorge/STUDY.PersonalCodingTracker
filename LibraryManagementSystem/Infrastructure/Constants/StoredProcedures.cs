@@ -66,5 +66,27 @@ namespace Infrastructure.Constants
         #region SearchById
         public const string SearchById = "SpSearchById";
         #endregion
+
+        #region SearchBookByIsbn
+        public const string SearchBookByIsbn = "SpSearchBookByIsbn";
+        #endregion
+
+        #region SearchBookByTitle
+        public const string SearchBookByTitle = "SpSearchBookByTitle";
+        #endregion
+
+        #region ShowBooksForRental
+        public const string ShowBooksForRental = "SpShowBooksForRental";
+        #endregion
+        
+        #region ShowRentedBooks
+        public const string ShowRentedBooks = "SpShowRentedBooks";
+        #endregion
+
+        #region ShowNotRentedBooks
+        public const string ShowNotRentedBooks = "SpShowNotRentedBooks";
+        #endregion
+
+
     }
 }

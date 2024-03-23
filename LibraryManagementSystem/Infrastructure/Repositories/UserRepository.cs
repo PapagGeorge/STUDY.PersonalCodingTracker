@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public bool UserIdExists(string userId)
+        public bool UserIdExists(int userId)
         {
             try
             {

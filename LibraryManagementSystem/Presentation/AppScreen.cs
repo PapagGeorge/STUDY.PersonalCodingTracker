@@ -123,20 +123,20 @@ namespace Presentation
                         break;
 
                     case 4:
-                        string userIsbn = string.Empty;
-                        int userId = 0;
-                        while (string.IsNullOrEmpty(userIsbn) || userId == 0)
+                        string rentUserIsbn = string.Empty;
+                        int rentUserId = 0;
+                        while (string.IsNullOrEmpty(rentUserIsbn) || rentUserId == 0)
                         {
                             Console.Clear();
                             _application.AllBooks();
                             Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to rent.");
-                            userIsbn = Console.ReadLine();
+                            rentUserIsbn = Console.ReadLine();
 
                             Console.WriteLine("\nEnter your MyLibrary Id: ");
                             string _userId = Console.ReadLine();
-                            bool isUserIdInputANumber = int.TryParse(_userId, out userId);
+                            bool isUserIdInputANumber = int.TryParse(_userId, out rentUserId);
 
-                            if (string.IsNullOrEmpty(userIsbn) || userId == 0 || !isUserIdInputANumber)
+                            if (string.IsNullOrEmpty(rentUserIsbn) || rentUserId == 0 || !isUserIdInputANumber)
                             {
                                 Console.Clear();
                                 Console.WriteLine("\nThe information you entered is invalid. Press any key to try again.");
@@ -146,7 +146,7 @@ namespace Presentation
                             else
                             {
                                 Console.Clear();
-                                _application.RentBook(userIsbn, userId);
+                                _application.RentBook(rentUserIsbn, rentUserId);
                                 Console.WriteLine("\n\nPress any key to return to the Menu");
                                 Console.ReadKey();
 
@@ -159,6 +159,52 @@ namespace Presentation
 
                         break;
 
+                    case 5:
+                        string returnUserIsbn = string.Empty;
+                        int returnUserId = 0;
+                        while (string.IsNullOrEmpty(returnUserIsbn) || returnUserId == 0)
+                        {
+                            Console.Clear();
+                            
+                            _application.AllBooks();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to rent.");
+                            returnUserIsbn = Console.ReadLine();
+                            if (returnUserIsbn.ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.WriteLine("\nEnter your MyLibrary Id: ");
+                            string _returnUserId = Console.ReadLine();
+
+                            if (_returnUserId.ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+                            bool isUserIdInputANumber = int.TryParse(_returnUserId, out returnUserId);
+
+                            if (string.IsNullOrEmpty(returnUserIsbn) || returnUserId == 0 || !isUserIdInputANumber)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("\nThe information you entered is invalid. Press any key to try again.");
+                                Console.ReadKey();
+                            }
+
+                            else
+                            {
+                                Console.Clear();
+                                _application.ReturnBook(returnUserIsbn, returnUserId);
+                                Console.WriteLine("\n\nPress any key to return to the Menu");
+                                Console.ReadKey();
+
+                                break;
+
+                            }
+
+                        }
+
+                        break;
 
                     default:
                         break;

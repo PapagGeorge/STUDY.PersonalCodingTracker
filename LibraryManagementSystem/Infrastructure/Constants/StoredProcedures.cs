@@ -91,5 +91,9 @@ namespace Infrastructure.Constants
         public const string ShowAllBooks = "SpShowAllBooks";
         #endregion
 
+        #region CheckUserHasRentedBook
+        public const string CheckUserHasRentedBook = "SpCheckUserHasRentedBook";
+        #endregion
+
     }
 }

@@ -6,5 +6,6 @@
         void AvailableBooks();
         void AllBooks();
         void RentBook(string userIsbn, int userId);
+        void ReturnBook(string userIsbn, int userId);
     }
 }

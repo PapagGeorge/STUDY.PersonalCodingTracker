@@ -51,10 +51,6 @@ namespace Infrastructure.Constants
         public const string RestoreUserRentability = "SpRestoreUserRentability";
         #endregion
 
-        #region SelectUsersRentedMoviesCount
-        public const string SelectUsersRentedMoviesCount = "SpSelectUsersRentedMoviesCount";
-        #endregion
-
         #region ReturnBookFromUser
         public const string ReturnBookFromUser = "SpReturnBookFromUser";
         #endregion
@@ -86,7 +82,14 @@ namespace Infrastructure.Constants
         #region ShowNotRentedBooks
         public const string ShowNotRentedBooks = "SpShowNotRentedBooks";
         #endregion
+        
+        #region NumberOfBooksRentedByUser
+        public const string NumberOfBooksRentedByUser = "SpNumberOfBooksRentedByUser";
+        #endregion
 
+        #region ShowAllBooks
+        public const string ShowAllBooks = "SpShowAllBooks";
+        #endregion
 
     }
 }

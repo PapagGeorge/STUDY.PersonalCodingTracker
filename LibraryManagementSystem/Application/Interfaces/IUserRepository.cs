@@ -1,0 +1,18 @@
+﻿using Domain.Entities;
+
+namespace LibraryApplication.Interfaces
+{
+    public interface IUserRepository
+    {
+        User SearchUserById(string id);
+        IEnumerable<User> SearchUsersByMobilePhone(string mobilePhone);
+        void RegisterUser(User user);
+        void DeleteUser(int userId);  
+        void RemoveUserRentability(int userId);
+        void RestoreUserRentability(int userId);
+        bool UserIdExists(int userId);
+        int NumberOfBooksRentedByUser(int userId);
+
+
+    }
+}

@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Infrastructure.Interfaces;
+using LibraryApplication.Interfaces;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Infrastructure.Constants;
@@ -39,45 +39,31 @@ namespace Infrastructure.Repositories
                 throw new Exception($"An error occured. {ex.Message}");
             }
         }
-        public bool CanUserRentMoreBooks(int userId)
-        {
-            
-            try
-            {
-                using (var connection = GetSqlConnection())
-                {
-                    var command = new SqlCommand(StoredProcedures.CanUserRentMoreBooks, connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
-                    {
-                        ParameterName = "@UserId",
-                        SqlDbType = SqlDbType.Int,
-                        Value = userId
-                    };
-                    command.Parameters.Add(parameter);
+        
 
-                    using (var reader = command.ExecuteReader())
+        public int NumberOfBooksRentedByUser(int userId)
+        {
+            using(var connection = GetSqlConnection())
+            {
+                var command = new SqlCommand(StoredProcedures.NumberOfBooksRentedByUser, connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+
+                using(var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
                     {
-                        if (reader.HasRows)
-                        {
-                            reader.Read();
-                            return reader.GetBoolean(0);
-                            
-                        }
-                        else
-                        {
-                            throw new Exception($"No user was found with Id: {userId}");
-                            
-                        }
+                        reader.Read();
+                        var rentedBooksNumber = reader.GetInt32(reader.GetOrdinal("User_Number_Of_Books_Rented"));
+                        return rentedBooksNumber;
+                    }
+                    else
+                    {
+                        throw new Exception($"There was an error while trying to find the number of books rented " +
+                            $"by user with Id: {userId}.");
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occured: {ex.Message}");   
-            }
-            
-            
         }
 
         public void DeleteUser(int userId)

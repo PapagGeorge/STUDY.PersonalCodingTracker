@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Infrastructure.Interfaces
+namespace LibraryApplication.Interfaces
 {
     public interface IBookRepository
     {
@@ -15,6 +15,7 @@ namespace Infrastructure.Interfaces
         void RentBookToUser(string isbn, int userId);
         void ReturnBookFromUser(string isbn, int userId);
         bool BookExists(string isbn);
-        bool IsBookInStock (string isbn);
+        bool IsBookInStock(string isbn);
+        IEnumerable<Book> ShowAllBooks();
     }
 }

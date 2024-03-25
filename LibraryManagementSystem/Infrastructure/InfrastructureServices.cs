@@ -1,4 +1,4 @@
-﻿using Infrastructure.Interfaces;
+﻿using LibraryApplication.Interfaces;
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Repositories;
@@ -8,7 +8,7 @@ namespace Infrastructure
 {
     public static class InfrastructureServices
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection InfraServices(this IServiceCollection services)
         {
             var databaseConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
             services.AddSingleton(databaseConfiguration);

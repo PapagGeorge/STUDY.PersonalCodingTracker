@@ -470,5 +470,39 @@ namespace Infrastructure.Repositories
                 return books;
             }
         }
+
+        bool UserHasRentedBookIsbn(int userId, string isbn)
+        {
+            try
+            {
+                using (var connection = GetSqlConnection())
+                {
+                    var command = new SqlCommand(StoredProcedures.CheckUserHasRentedBook, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Isbn", SqlDbType.VarChar, 50).Value = isbn;
+                    command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        int copiesCount = reader.GetInt32(0);
+
+                        if (copiesCount > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"An error occured while trying to check if user with Id: {userId} has already" +
+                    $" rented book with ISBN: {isbn}. {ex.Message}");
+            }
+        }
     }
 }

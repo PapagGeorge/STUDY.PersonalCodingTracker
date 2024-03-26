@@ -163,7 +163,7 @@ namespace LibraryApplication.Services
                     return;
                 }
 
-                if (_bookRepository.UserHasRentedBookIsbn(userId, userIsbn))
+                if (_userRepository.UserHasRentedBookIsbn(userId, userIsbn))
                 {
                     Console.WriteLine($"It seems you have already rented a copy of book with ISBN: {userIsbn}. Please " +
                         $"consider renting another title.");
@@ -174,7 +174,7 @@ namespace LibraryApplication.Services
                 if(_userRepository.UserIdExists(userId) 
                     && userBooksAmountRentedBeforeRental < UserRentedBooksLimit.maxBooksRentedByUser
                     && _bookRepository.BookExists(userIsbn) && _bookRepository.IsBookInStock(userIsbn) 
-                    && !_bookRepository.UserHasRentedBookIsbn(userId, userIsbn))
+                    && !_userRepository.UserHasRentedBookIsbn(userId, userIsbn))
                 {
                     _bookRepository.RentBookToUser(userIsbn, userId);
                     int userBooksAmountRentedAfterRental = _userRepository.NumberOfBooksRentedByUser(userId);
@@ -221,14 +221,14 @@ namespace LibraryApplication.Services
                     return;
                 }
 
-                if (!_bookRepository.UserHasRentedBookIsbn(userId, userIsbn))
+                if (!_userRepository.UserHasRentedBookIsbn(userId, userIsbn))
                 {
                     Console.WriteLine($"It seems that book with ISBN: {userIsbn} is not rented by you. " +
                         $"Did you type the correct ISBN?");
                 }
 
                 if (_userRepository.UserIdExists(userId) && _bookRepository.BookExists(userIsbn)
-                    && _bookRepository.UserHasRentedBookIsbn(userId, userIsbn))
+                    && _userRepository.UserHasRentedBookIsbn(userId, userIsbn))
                 {
                     _bookRepository.ReturnBookFromUser(userIsbn, userId);
                     int userBooksAmountRentedAfterReturn = _userRepository.NumberOfBooksRentedByUser(userId);
@@ -252,5 +252,125 @@ namespace LibraryApplication.Services
                 Console.WriteLine($"An error occured. {ex.Message}");
             }
         }
+
+        public void RegisterUser(User user)
+        {
+            try
+            {
+                int countUsersBeforeNewRegistration = _userRepository.CountUsers();
+                _userRepository.RegisterUser(user);
+                int countUsersAfterNewRegistration = _userRepository.CountUsers();
+
+                if (countUsersAfterNewRegistration > countUsersBeforeNewRegistration)
+                {
+                    Console.WriteLine("User has been registered successfully with the following details: ");
+                    Console.WriteLine("\n\n------------------");
+                    Console.WriteLine($"First Name: {user.UserFirstName}");
+                    Console.WriteLine($"Last Name: {user.UserLastName}");
+                    Console.WriteLine($"Email: {user.UserEmail}");
+                    Console.WriteLine($"Mobile Phone: {user.UserMobilePhone}");
+                    Console.WriteLine($"Address: {user.UserAddress}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+        }
+
+        public void DeleteUser(int userId)
+        {
+            try
+            {
+                
+                var userToDelete = _userRepository.SearchUserById(userId);
+                while (true)
+                {
+                    if (userToDelete != null)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("You applied the user with the following details to be deleted.");
+                        
+
+                        Console.WriteLine($"\n\nUser MyLibrary Id: {userToDelete.UserId}");
+                        Console.WriteLine($"First Name: {userToDelete.UserFirstName}");
+                        Console.WriteLine($"Last Name: {userToDelete.UserLastName}");
+                        Console.WriteLine($"Email: {userToDelete.UserEmail}");
+                        Console.WriteLine($"Mobile Phone: {userToDelete.UserMobilePhone}");
+                        Console.WriteLine($"Address: {userToDelete.UserAddress}");
+                        Console.WriteLine($"Number of books rented at the moment: {userToDelete.UserNumberOfBooksRented}");
+
+                        Console.WriteLine("\n\nType (Yes) if you want to continue or (No) if you want to cancel.");
+
+                        string userInput = Console.ReadLine().Trim().ToUpper();
+
+                        int numberOfBooksOwnedByUserToBeDeleted = _userRepository.NumberOfBooksRentedByUser(userId);
+
+                        if(!_userRepository.UserIdExists(userId))
+                        {
+                            Console.WriteLine($"User with Id: {userId} does not exist.");
+                        }
+
+                        if (userInput == "NO")
+                        {
+                            Console.WriteLine("Operation to delete user was cancelled.");
+                            break;
+                        }
+
+                        if (numberOfBooksOwnedByUserToBeDeleted > 0)
+                        {
+                            Console.WriteLine($"User with MyLibrary Id: {userId} cannot be deleted because he owes " +
+                                $"{numberOfBooksOwnedByUserToBeDeleted} book(s).");
+                            break;
+                        }
+
+                        if (userInput == "YES" && numberOfBooksOwnedByUserToBeDeleted == 0 && _userRepository.UserIdExists(userId))
+                        {
+                            _userRepository.DeleteUser(userId);
+                            Console.WriteLine("User was deleted successfully");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Please insert a valid MyLibrary Id: {userId}");
+                        Console.WriteLine("Press Enter to try again.");
+                        Console.ReadKey();
+                        break;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+
+            
+        }
+        public void GetAllUsers()
+        {
+            List<User> allUsers = (List<User>)_userRepository.UserList();
+            if (allUsers != null && allUsers.Count > 0)
+            {
+                foreach (User user in allUsers)
+                {
+                    Console.WriteLine($"\n\nUser MyLibrary Id: {user.UserId}");
+                    Console.WriteLine($"First Name: {user.UserFirstName}");
+                    Console.WriteLine($"Last Name: {user.UserLastName}");
+                    Console.WriteLine($"Email: {user.UserEmail}");
+                    Console.WriteLine($"Mobile Phone: {user.UserMobilePhone}");
+                    Console.WriteLine($"Address: {user.UserAddress}");
+                    Console.WriteLine($"Number of books rented at the moment: {user.UserNumberOfBooksRented}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No users were found. Please try again later.");
+            }
+        
+        }
+
+
     }
 }

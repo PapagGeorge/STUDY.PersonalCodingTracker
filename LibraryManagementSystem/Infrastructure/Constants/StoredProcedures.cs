@@ -94,6 +94,14 @@ namespace Infrastructure.Constants
         #region CheckUserHasRentedBook
         public const string CheckUserHasRentedBook = "SpCheckUserHasRentedBook";
         #endregion
+        
+        #region CountUsers
+        public const string CountUsers = "SpCountUsers";
+        #endregion
+        
+        #region UserList
+        public const string UserList = "SpUserList";
+        #endregion
 
     }
 }

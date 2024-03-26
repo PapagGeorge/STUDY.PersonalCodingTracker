@@ -4,7 +4,7 @@ namespace LibraryApplication.Interfaces
 {
     public interface IUserRepository
     {
-        User SearchUserById(string id);
+        User SearchUserById(int id);
         IEnumerable<User> SearchUsersByMobilePhone(string mobilePhone);
         void RegisterUser(User user);
         void DeleteUser(int userId);  
@@ -12,6 +12,9 @@ namespace LibraryApplication.Interfaces
         void RestoreUserRentability(int userId);
         bool UserIdExists(int userId);
         int NumberOfBooksRentedByUser(int userId);
+        int CountUsers();
+        bool UserHasRentedBookIsbn(int userId, string isbn);
+        IEnumerable<User> UserList();
 
 
     }

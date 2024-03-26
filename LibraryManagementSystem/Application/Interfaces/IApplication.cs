@@ -1,4 +1,6 @@
-﻿namespace LibraryApplication.Interfaces
+﻿using Domain.Entities;
+
+namespace LibraryApplication.Interfaces
 {
     public interface IApplication
     {
@@ -7,5 +9,8 @@
         void AllBooks();
         void RentBook(string userIsbn, int userId);
         void ReturnBook(string userIsbn, int userId);
+        void RegisterUser(User user);
+        void DeleteUser(int userId);
+        void GetAllUsers();
     }
 }

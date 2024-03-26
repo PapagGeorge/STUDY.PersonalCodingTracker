@@ -17,7 +17,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                using(var connection = GetSqlConnection())
+                using (var connection = GetSqlConnection())
                 {
                     var command = new SqlCommand(StoredProcedures.SearchById, connection);
                     command.CommandType = CommandType.StoredProcedure;
@@ -39,17 +39,17 @@ namespace Infrastructure.Repositories
                 throw new Exception($"An error occured. {ex.Message}");
             }
         }
-        
+
 
         public int NumberOfBooksRentedByUser(int userId)
         {
-            using(var connection = GetSqlConnection())
+            using (var connection = GetSqlConnection())
             {
                 var command = new SqlCommand(StoredProcedures.NumberOfBooksRentedByUser, connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
 
-                using(var reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -76,7 +76,7 @@ namespace Infrastructure.Repositories
                     command.CommandType = CommandType.StoredProcedure;
                     SqlParameter parameter = new SqlParameter()
                     {
-                        ParameterName = "user_id",
+                        ParameterName = "@UserId",
                         SqlDbType = SqlDbType.Int,
                         Value = userId
                     };
@@ -92,7 +92,7 @@ namespace Infrastructure.Repositories
 
         public void RegisterUser(User user)
         {
-            if(string.IsNullOrEmpty(user.UserFirstName) || string.IsNullOrEmpty(user.UserLastName) || string.IsNullOrEmpty(user.UserMobilePhone))
+            if (string.IsNullOrEmpty(user.UserFirstName) || string.IsNullOrEmpty(user.UserLastName) || string.IsNullOrEmpty(user.UserMobilePhone))
             {
                 Console.WriteLine("One or more required fields are missing");
                 return;
@@ -118,7 +118,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public User SearchUserById(string id)
+        public User SearchUserById(int id)
         {
             try
             {
@@ -134,6 +134,7 @@ namespace Infrastructure.Repositories
                     if (reader.HasRows)
                     {
                         reader.Read();
+                        user.UserId = Convert.ToInt32(reader["User_Id"]);
                         user.UserFirstName = reader["User_First_Name"].ToString() ?? string.Empty;
                         user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
                         user.UserEmail = reader["User_Email"].ToString() ?? string.Empty;
@@ -141,22 +142,23 @@ namespace Infrastructure.Repositories
                         user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;
                         user.UserNumberOfBooksRented = Convert.ToInt32(reader["User_Number_Of_Books_Rented"]);
                         user.UserCanRentBooks = reader.GetBoolean(reader.GetOrdinal("User_Can_Rent_Books"));
-                        
+                        return user;
+
 
                     }
                     else
                     {
-                        throw new Exception($"No user was found with Id: {id}");
+                        return null;
                     }
-                    return user;
                     
-                    
+
+
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to search for user with Id: {id}. {ex.Message}");
-                
+
             }
         }
 
@@ -215,7 +217,7 @@ namespace Infrastructure.Repositories
                     command.ExecuteNonQuery();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"An error occured. {ex.Message}");
             }
@@ -236,6 +238,107 @@ namespace Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"An error occured. {ex.Message}");
+            }
+        }
+
+        public int CountUsers()
+        {
+            try
+            {
+                using (var connection = GetSqlConnection())
+                {
+                    var command = new SqlCommand(StoredProcedures.CountUsers, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        reader.Read();
+                        return reader.GetInt32(0);
+
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Failed to count users from User's table");
+            }
+        }
+
+        public bool UserHasRentedBookIsbn(int userId, string isbn)
+        {
+            try
+            {
+                using (var connection = GetSqlConnection())
+                {
+                    var command = new SqlCommand(StoredProcedures.CheckUserHasRentedBook, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Isbn", SqlDbType.VarChar, 50).Value = isbn;
+                    command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        reader.Read();
+                        int copiesCount = reader.GetInt32(0);
+
+                        if (copiesCount % 2 == 0)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to check if user with Id: {userId} has already" +
+                    $" rented book with ISBN: {isbn}. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<User> UserList()
+        {
+            try
+            {
+                using (var connection = GetSqlConnection())
+                {
+                    List<User> userList = new List<User>();
+                    var command = new SqlCommand(StoredProcedures.UserList, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var user = new User();
+                                user.UserId = Convert.ToInt32(reader["User_Id"]);
+                                user.UserFirstName = reader["User_First_Name"].ToString() ?? string.Empty;
+                                user.UserLastName = reader["User_Last_Name"].ToString() ?? string.Empty;
+                                user.UserEmail = reader["User_Email"].ToString() ?? string.Empty;
+                                user.UserMobilePhone = reader["User_Mobile_Phone"].ToString() ?? string.Empty;
+                                user.UserAddress = reader["User_Address"].ToString() ?? string.Empty;
+                                user.UserNumberOfBooksRented = Convert.ToInt32(reader["User_Number_Of_Books_Rented"]);
+                                user.UserCanRentBooks = reader.GetBoolean(reader.GetOrdinal("User_Can_Rent_Books"));
+                                userList.Add(user);
+                                
+                            }
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        return userList;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to load user list. {ex.Message}");
             }
         }
     }

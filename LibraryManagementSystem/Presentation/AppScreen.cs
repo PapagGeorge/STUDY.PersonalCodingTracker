@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Infrastructure;
 using LibraryApplication.Interfaces;
+using System.Text.RegularExpressions;
+using Domain.Entities;
 
 
 
@@ -119,6 +121,11 @@ namespace Presentation
                         break;
 
                     case 3:
+                        Console.Clear();
+                        Console.WriteLine("\n-----------------List of all MyLibrary Books-----------------\n\n");
+                        _application.AllBooks();
+                        Console.WriteLine("Press any key to return to the Menu");
+                        Console.ReadKey();
                         
                         break;
 
@@ -129,11 +136,23 @@ namespace Presentation
                         {
                             Console.Clear();
                             _application.AllBooks();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
                             Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to rent.");
                             rentUserIsbn = Console.ReadLine();
 
+                            if (rentUserIsbn.ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
                             Console.WriteLine("\nEnter your MyLibrary Id: ");
                             string _userId = Console.ReadLine();
+
+                            if (_userId.ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
                             bool isUserIdInputANumber = int.TryParse(_userId, out rentUserId);
 
                             if (string.IsNullOrEmpty(rentUserIsbn) || rentUserId == 0 || !isUserIdInputANumber)
@@ -168,7 +187,7 @@ namespace Presentation
                             
                             _application.AllBooks();
                             Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
-                            Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to rent.");
+                            Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to return.");
                             returnUserIsbn = Console.ReadLine();
                             if (returnUserIsbn.ToUpper() == "MENU")
                             {
@@ -206,10 +225,136 @@ namespace Presentation
 
                         break;
 
+                    case 6:
+
+                       
+                             
+                        while (true)
+                            
+                        {
+                            Console.Clear();
+
+                            User newUser = new User();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\nInsert the following information in order to register new user.");
+                            Console.WriteLine("Note: All fields are required.");
+                            
+
+                            Console.Write("\n\nFirst Name: ");
+                            string firstName = Console.ReadLine();
+
+                            Console.Write("Last Name: ");
+                            string lastName = Console.ReadLine();
+
+                            Console.Write("Email: ");
+                            string email = Console.ReadLine();
+
+                          
+                            if (!IsValidEmail(email))
+                            {
+                                Console.WriteLine("The email you entered is not valid. Please try again. " +
+                                    "Press any key to continue.");
+                                Console.ReadKey();
+                                continue;
+                            }
+
+                            Console.Write("Mobile Phone: ");
+                            string mobilePhone = Console.ReadLine();
+                            string pattern = @"^\d+$";
+                            bool isNumeric = Regex.IsMatch(mobilePhone, pattern);
+
+                            if (!isNumeric || mobilePhone.Length > 15)
+                            {
+                                Console.WriteLine("The mobile phone you entered is not valid. Please try again. " +
+                                    "Press any key to continue.");
+                                Console.ReadKey();
+                                continue;
+                            }
+
+                            Console.Write("Address: ");
+                            string address = Console.ReadLine();
+
+                            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName)
+                                || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(mobilePhone) || string.IsNullOrEmpty(address))
+                            {
+                                Console.WriteLine("\nThe information you entered is invalid. Press any key to try again.");
+                                Console.ReadKey();
+                                continue;
+                            }
+
+                            if (firstName.Trim().ToUpper() == "MENU" || lastName.Trim().ToUpper() == "MENU" ||
+                                email.Trim().ToUpper() == "MENU" || mobilePhone.Trim().ToUpper() == "MENU" ||
+                                address.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+
+
+                            else
+                            {
+                                Console.Clear();
+                                newUser.UserFirstName = firstName;
+                                newUser.UserLastName = lastName;
+                                newUser.UserEmail = email;
+                                newUser.UserMobilePhone = mobilePhone;
+                                newUser.UserAddress = address;
+                                _application.RegisterUser(newUser);
+                                Console.WriteLine("\n\nPress any key to return to the Menu");
+                                Console.ReadKey();
+
+                                break;
+
+                            }
+                            
+                        }
+                        break;
+
+                    case 7:
+                        while (true)
+                        {
+                            Console.Clear();
+                            _application.GetAllUsers();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\n\nCheck the above list of members and insert the MyLibrary Id " +
+                                "of the user you want to delete.");
+                            string _deleteUserId = Console.ReadLine();
+                            int deleteUserId;
+                            bool isDeleteUserIdNumber = int.TryParse(_deleteUserId, out deleteUserId);
+
+                            if (_deleteUserId.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            if (isDeleteUserIdNumber)
+                            {
+                                _application.DeleteUser(deleteUserId);
+                                Console.WriteLine("\n\nPress any key to return to the Menu");
+                                Console.ReadKey();
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("The MyLibrary Id you entered is invalid. Press any key to try again.");
+                                Console.ReadLine();
+                            }
+                            
+                        }
+
+
+                        break;
+
                     default:
                         break;
                 }
             }
+        }
+
+        static bool IsValidEmail(string email)
+        {         
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            return Regex.IsMatch(email, pattern);
         }
 
     }

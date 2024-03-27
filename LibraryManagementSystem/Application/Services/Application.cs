@@ -371,6 +371,94 @@ namespace LibraryApplication.Services
         
         }
 
+        public void SearchUser(string userSearch)
+        {
+            try
+            {
+                var user = new User();
+                var users = new List<User>();
+                
+                int _userSearch;
+                bool isNumber = int.TryParse(userSearch, out _userSearch);
+                char phoneChar = 'p';
+
+                if (isNumber)
+                {
+                    user = _userRepository.SearchUserById(_userSearch);
+                    if (user != null && _userRepository.UserIdExists(_userSearch))
+                    {
+                        Console.WriteLine($"User with Id: {userSearch}");
+                        Console.WriteLine($"First Name: {user.UserFirstName}");
+                        Console.WriteLine($"Last Name: {user.UserLastName}");
+                        Console.WriteLine($"Email: {user.UserEmail}");
+                        Console.WriteLine($"Mobile Phone: {user.UserMobilePhone}");
+                        Console.WriteLine($"Address: {user.UserAddress}");
+                        Console.WriteLine($"Number of books rented at the moment: {user.UserNumberOfBooksRented}");
+                    }
+                }
+
+
+                else if (userSearch.StartsWith(phoneChar))
+                {
+                    string mobilePhoneNumber = userSearch.Substring(1);
+                    users = (List<User>)_userRepository.SearchUsersByMobilePhone(mobilePhoneNumber);
+                    
+
+                    if (users != null)
+                    {
+                        foreach (var singleUser in users)
+                        {
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine($"First Name: {singleUser.UserFirstName}");
+                            Console.WriteLine($"Last Name: {singleUser.UserLastName}");
+                            Console.WriteLine($"Email: {singleUser.UserEmail}");
+                            Console.WriteLine($"Mobile Phone: {singleUser.UserMobilePhone}");
+                            Console.WriteLine($"Address: {singleUser.UserAddress}");
+                            Console.WriteLine($"Number of books rented at the moment: {singleUser.UserNumberOfBooksRented}");
+                            Console.WriteLine("-----------------------------\n\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No user was found with Mobile Phone: {mobilePhoneNumber}");
+                    }
+
+                   
+                }
+                else
+                {
+                    Console.WriteLine("\nNo results were found.");
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+        }
+
+        public void IncreaseBookCopies(string isbn, int increaseAmount)
+        {
+            try
+            {
+                if (_bookRepository.BookExists(isbn))
+                {
+                    _bookRepository.IncreaseBookInventory(isbn, increaseAmount);
+                }
+                else
+                {
+                    Console.WriteLine($"The Book with ISBN: {isbn} you entered does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+        }
+
 
     }
 }

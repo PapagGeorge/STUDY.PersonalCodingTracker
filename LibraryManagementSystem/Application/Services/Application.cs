@@ -447,11 +447,40 @@ namespace LibraryApplication.Services
                 if (_bookRepository.BookExists(isbn))
                 {
                     _bookRepository.IncreaseBookInventory(isbn, increaseAmount);
+                    Console.WriteLine("The copies have been added successfully. Press enter to continue.");
                 }
                 else
                 {
                     Console.WriteLine($"The Book with ISBN: {isbn} you entered does not exist.");
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+        }
+
+        public void DecreaseBookCopies(string isbn, int decreaseAmount)
+        {
+            try
+            {
+                if (!_bookRepository.BookExists(isbn))
+                {
+                    Console.WriteLine($"The Book with ISBN: {isbn} you entered does not exist.");
+                }
+
+                else if (_bookRepository.BookCopiesInStock(isbn) < decreaseAmount)
+                {
+                    Console.WriteLine("The decrease amount cannot be greater than the amount of available copies. " +
+                        "Please check if books should be returned by members first.");
+                }
+
+                else
+                {
+                    _bookRepository.DecreaseBookInventory(isbn, decreaseAmount);
+                    Console.WriteLine("The copies have been decreased successfully. Press enter to continue.");
+                }
+               
             }
             catch (Exception ex)
             {

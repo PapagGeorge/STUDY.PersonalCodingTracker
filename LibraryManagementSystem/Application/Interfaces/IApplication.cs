@@ -14,5 +14,6 @@ namespace LibraryApplication.Interfaces
         void GetAllUsers();
         void SearchUser(string userSearch);
         void IncreaseBookCopies(string isbn, int increaseAmount);
+        void DecreaseBookCopies(string isbn, int increaseAmount);
     }
 }

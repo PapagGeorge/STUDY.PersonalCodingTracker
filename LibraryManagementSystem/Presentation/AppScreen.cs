@@ -419,7 +419,52 @@ namespace Presentation
                             else
                             {
                                 _application.IncreaseBookCopies(bookIsbn, _increseNumberOfCopies);
-                                Console.WriteLine("The copies have been added successfully. Press enter to continue.");
+                                
+                                Console.ReadLine();
+                                break;
+                            }
+                        }
+
+
+
+                        break;
+
+                    case 10:
+                        while (true)
+                        {
+
+                            Console.Clear();
+                            _application.AllBooks();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\n\nCheck the above list of MyLibrary books.");
+                            Console.Write("Insert the Book ISBN you want to increase copies: ");
+                            string bookIsbn = Console.ReadLine();
+
+                            if (bookIsbn.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.Write("\n\nInsert the number of copies you want to decrease: ");
+                            string increaseNumberOfCopies = Console.ReadLine();
+                            int _increseNumberOfCopies;
+                            bool checkIncreaseAmount = int.TryParse(increaseNumberOfCopies, out _increseNumberOfCopies);
+
+                            if (increaseNumberOfCopies.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            if (string.IsNullOrEmpty(bookIsbn) || !checkIncreaseAmount)
+                            {
+                                Console.WriteLine("The information you entered is invalid. Press enter to try again.");
+                                Console.ReadLine();
+                                continue;
+                            }
+                            else
+                            {
+                                _application.DecreaseBookCopies(bookIsbn, _increseNumberOfCopies);
+                                
                                 Console.ReadLine();
                                 break;
                             }

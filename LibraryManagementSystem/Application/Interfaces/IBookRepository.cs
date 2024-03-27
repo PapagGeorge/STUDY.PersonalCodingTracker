@@ -17,6 +17,7 @@ namespace LibraryApplication.Interfaces
         bool BookExists(string isbn);
         bool IsBookInStock(string isbn);
         IEnumerable<Book> ShowAllBooks();
+        int BookCopiesInStock(string isbn);
         
     }
 }

@@ -5,6 +5,7 @@ using Infrastructure.Constants;
 using System.Data;
 using System.Transactions;
 using Infrastructure.Repositories;
+using System.Linq.Expressions;
 
 
 
@@ -466,6 +467,29 @@ namespace Infrastructure.Repositories
             }
         }
 
-        
+        int BookCopiesInStock(string isbn)
+        {
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.NumberOfCopiesInStock, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Isbn", SqlDbType.VarChar, 50).Value = isbn;
+
+                    var reader = command.ExecuteReader();
+                    reader.Read();
+                    int numberOfCopies = reader.GetInt32(0);
+                    return numberOfCopies;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("An error occured while trying the amount of copies in stock for " +
+                        $"book with ISBN: {isbn}");
+                }
+            }
+        }
+
+
     }
 }

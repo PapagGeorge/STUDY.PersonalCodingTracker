@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
             {
                 using (var connection = GetSqlConnection())
                 {
-                    var command = new SqlCommand(StoredProcedures.SearchById, connection);
+                    var command = new SqlCommand(StoredProcedures.UserIdExists, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
                     var reader = command.ExecuteReader();
@@ -193,7 +193,8 @@ namespace Infrastructure.Repositories
                     }
                     else
                     {
-                        throw new Exception($"No user was found with Mobile Phone: {mobilePhone}");
+                        
+                        return null;
                     }
                     return userList;
 

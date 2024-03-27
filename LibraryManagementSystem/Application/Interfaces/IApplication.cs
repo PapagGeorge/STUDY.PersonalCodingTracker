@@ -12,5 +12,7 @@ namespace LibraryApplication.Interfaces
         void RegisterUser(User user);
         void DeleteUser(int userId);
         void GetAllUsers();
+        void SearchUser(string userSearch);
+        void IncreaseBookCopies(string isbn, int increaseAmount);
     }
 }

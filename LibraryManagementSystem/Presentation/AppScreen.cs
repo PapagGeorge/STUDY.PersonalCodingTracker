@@ -5,6 +5,7 @@ using Infrastructure;
 using LibraryApplication.Interfaces;
 using System.Text.RegularExpressions;
 using Domain.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 
 
@@ -93,7 +94,7 @@ namespace Presentation
                                 Console.ReadKey();
                             }
 
-                            else if(userSearchText.ToUpper() == "MENU")
+                            else if(userSearchText.Trim().ToUpper() == "MENU")
                             {
                                 break;
                             }
@@ -140,7 +141,7 @@ namespace Presentation
                             Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to rent.");
                             rentUserIsbn = Console.ReadLine();
 
-                            if (rentUserIsbn.ToUpper() == "MENU")
+                            if (rentUserIsbn.Trim().ToUpper() == "MENU")
                             {
                                 break;
                             }
@@ -148,7 +149,7 @@ namespace Presentation
                             Console.WriteLine("\nEnter your MyLibrary Id: ");
                             string _userId = Console.ReadLine();
 
-                            if (_userId.ToUpper() == "MENU")
+                            if (_userId.Trim().ToUpper() == "MENU")
                             {
                                 break;
                             }
@@ -189,7 +190,7 @@ namespace Presentation
                             Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
                             Console.WriteLine("\nCheck the above list of Books and enter the ISBN of the book you want to return.");
                             returnUserIsbn = Console.ReadLine();
-                            if (returnUserIsbn.ToUpper() == "MENU")
+                            if (returnUserIsbn.Trim().ToUpper() == "MENU")
                             {
                                 break;
                             }
@@ -197,7 +198,7 @@ namespace Presentation
                             Console.WriteLine("\nEnter your MyLibrary Id: ");
                             string _returnUserId = Console.ReadLine();
 
-                            if (_returnUserId.ToUpper() == "MENU")
+                            if (_returnUserId.Trim().ToUpper() == "MENU")
                             {
                                 break;
                             }
@@ -341,6 +342,94 @@ namespace Presentation
                             }
                             
                         }
+
+
+                        break;
+
+                    case 8:
+                        string userSearchText2 = string.Empty;
+                        while (string.IsNullOrEmpty(userSearchText2))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\n\nEnter the User Id or Mobile Phone of the member you want to search.");
+                            Console.WriteLine("Note: If you want to search by Mobile Phone type letter (p) first.");
+                            Console.WriteLine("ex: p12345689");
+                            userSearchText = Console.ReadLine();
+
+                            if (string.IsNullOrEmpty(userSearchText))
+                            {
+                                Console.WriteLine("Your search is invalid. Press any key to try again or type MENU if you " +
+                                    "want to return to the menu.");
+                                Console.ReadKey();
+                            }
+
+                            else if (userSearchText.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            else
+                            {
+                                Console.Clear();
+                                _application.SearchUser(userSearchText);
+                                Console.WriteLine("\n\nPress any key to return to the Menu");
+                                Console.ReadKey();
+
+                                break;
+
+                            }
+
+                        }
+
+                        break;
+                    
+                    case 9:
+                        while (true)
+                        {
+
+                            Console.Clear();
+                            _application.AllBooks();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\n\nCheck the above list of MyLibrary books.");
+                            Console.Write("Insert the Book ISBN you want to increase copies: ");
+                            string bookIsbn = Console.ReadLine();
+
+                            if (bookIsbn.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.Write("\n\nInsert the number of copies you want to add: ");
+                            string increaseNumberOfCopies = Console.ReadLine();
+                            int _increseNumberOfCopies;
+                            bool checkIncreaseAmount = int.TryParse(increaseNumberOfCopies, out _increseNumberOfCopies);
+
+                            if(increaseNumberOfCopies.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            if(string.IsNullOrEmpty(bookIsbn) || !checkIncreaseAmount)
+                            {
+                                Console.WriteLine("The information you entered is invalid. Press enter to try again.");
+                                Console.ReadLine();
+                                continue;
+                            }
+                            else
+                            {
+                                _application.IncreaseBookCopies(bookIsbn, _increseNumberOfCopies);
+                                Console.WriteLine("The copies have been added successfully. Press enter to continue.");
+                                Console.ReadLine();
+                                break;
+                            }
+                        }
+
+
+
+                        break;
+
+
 
 
                         break;

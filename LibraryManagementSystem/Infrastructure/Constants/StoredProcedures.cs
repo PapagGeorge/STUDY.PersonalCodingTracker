@@ -59,8 +59,8 @@ namespace Infrastructure.Constants
         public const string NumberOfCopiesInStock = "SpNumberOfCopiesInStock";
         #endregion
 
-        #region SearchById
-        public const string SearchById = "SpSearchById";
+        #region UserIdExists
+        public const string UserIdExists = "SpUserIdExists";
         #endregion
 
         #region SearchBookByIsbn

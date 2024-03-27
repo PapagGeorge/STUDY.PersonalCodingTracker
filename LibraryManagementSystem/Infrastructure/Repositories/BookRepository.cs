@@ -58,12 +58,7 @@ namespace Infrastructure.Repositories
 
         public void InsertBook(Book book)
         {
-            if (BookExists(book.ISBN))
-            {
-                Console.WriteLine($"Book with ISBN {book.ISBN} already exists.");
-            }
-            else
-            {
+                 
                 try
                 {
                     using (var connection = GetSqlConnection())
@@ -86,7 +81,7 @@ namespace Infrastructure.Repositories
                 {
                     throw new Exception($"An error occurred while trying to insert a new book: {ex.Message}");
                 }
-            }
+            
         }
 
         public bool BookExists(string isbn)

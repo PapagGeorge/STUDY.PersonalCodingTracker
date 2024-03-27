@@ -142,10 +142,10 @@ namespace LibraryApplication.Services
                 }
                 int userBooksAmountRentedBeforeRental = _userRepository.NumberOfBooksRentedByUser(userId);
                 
-                if (userBooksAmountRentedBeforeRental >= UserRentedBooksLimit.maxBooksRentedByUser)
+                if (userBooksAmountRentedBeforeRental >= Limits.maxBooksRentedByUser)
                 {
                     Console.WriteLine($"You have already rented {userBooksAmountRentedBeforeRental} Books.");
-                    Console.WriteLine($"Maximum number of Books you can rent is {UserRentedBooksLimit.maxBooksRentedByUser}");
+                    Console.WriteLine($"Maximum number of Books you can rent is {Limits.maxBooksRentedByUser}");
                     Console.WriteLine("Please consider returning a Book in order to rent another one.");
                     return;
                 }
@@ -172,7 +172,7 @@ namespace LibraryApplication.Services
                     
 
                 if(_userRepository.UserIdExists(userId) 
-                    && userBooksAmountRentedBeforeRental < UserRentedBooksLimit.maxBooksRentedByUser
+                    && userBooksAmountRentedBeforeRental < Limits.maxBooksRentedByUser
                     && _bookRepository.BookExists(userIsbn) && _bookRepository.IsBookInStock(userIsbn) 
                     && !_userRepository.UserHasRentedBookIsbn(userId, userIsbn))
                 {
@@ -182,9 +182,9 @@ namespace LibraryApplication.Services
                     {
      
                         Console.WriteLine($"\n\nYou have rented Book with ISBN: {userIsbn}");
-                        Console.WriteLine($"Maximum number of Books you can rent is {UserRentedBooksLimit.maxBooksRentedByUser}");
+                        Console.WriteLine($"Maximum number of Books you can rent is {Limits.maxBooksRentedByUser}");
                         Console.WriteLine($"You can now rent " +
-                            $"{UserRentedBooksLimit.maxBooksRentedByUser - userBooksAmountRentedAfterRental} more Book(s)");
+                            $"{Limits.maxBooksRentedByUser - userBooksAmountRentedAfterRental} more Book(s)");
                     }
                     else
                     {
@@ -237,9 +237,9 @@ namespace LibraryApplication.Services
                     {
                         Console.WriteLine($"\n\nYou have returned Book with ISBN: {userIsbn}");
                         Console.WriteLine($"You owe {userBooksAmountRentedAfterReturn} more books.");
-                        Console.WriteLine($"Maximum number of Books you can rent is {UserRentedBooksLimit.maxBooksRentedByUser}");
+                        Console.WriteLine($"Maximum number of Books you can rent is {Limits.maxBooksRentedByUser}");
                         Console.WriteLine($"You can now rent " +
-                            $"{UserRentedBooksLimit.maxBooksRentedByUser - userBooksAmountRentedAfterReturn} more Book(s)");
+                            $"{Limits.maxBooksRentedByUser - userBooksAmountRentedAfterReturn} more Book(s)");
                     }
                     else
                     {
@@ -481,6 +481,35 @@ namespace LibraryApplication.Services
                     Console.WriteLine("The copies have been decreased successfully. Press enter to continue.");
                 }
                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. {ex.Message}");
+            }
+        }
+
+        public void InsertNewBook(Book book)
+        {
+            try
+            {
+                int countBooksBeforeNewRegistration = _bookRepository.CountBooks();
+                _bookRepository.InsertBook(book);
+                int countBooksAfterNewRegistration = _bookRepository.CountBooks();
+
+                if (countBooksAfterNewRegistration > countBooksBeforeNewRegistration)
+                {
+                    Console.WriteLine("Book been registered successfully with the following details: ");
+                    Console.WriteLine("\n\n------------------");
+                    Console.WriteLine($"ISBN: {book.ISBN}");
+                    Console.WriteLine($"Title: {book.BookTitle}");
+                    Console.WriteLine($"Author: {book.BookAuthor}");
+                    Console.WriteLine($"Year: {book.BookYear}");
+                    Console.WriteLine($"Genre: {book.BookGenre}");
+                    Console.WriteLine($"Pages: {book.BookPagesCount}");
+                    Console.WriteLine($"Number of Copies: {book.BookInventoryCount}");
+
+                    Console.WriteLine("\n\nPress any key to return to the Menu.");
+                }
             }
             catch (Exception ex)
             {

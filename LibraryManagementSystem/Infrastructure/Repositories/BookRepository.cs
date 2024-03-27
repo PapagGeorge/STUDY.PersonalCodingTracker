@@ -467,7 +467,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        int BookCopiesInStock(string isbn)
+        public int BookCopiesInStock(string isbn)
         {
             using (var connection = GetSqlConnection())
             {
@@ -484,8 +484,36 @@ namespace Infrastructure.Repositories
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("An error occured while trying the amount of copies in stock for " +
+                    throw new Exception("An error occured while trying to find the amount of copies in stock for " +
                         $"book with ISBN: {isbn}");
+                }
+            }
+        }
+
+        public int CountBooks()
+        {
+            using (var connection = GetSqlConnection())
+            {
+                try
+                {
+                    var command = new SqlCommand(StoredProcedures.CountBooks, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+
+                        reader.Read();
+                        int numberOfBooks = reader.GetInt32(0);
+                        return numberOfBooks;
+
+
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("An error occured while trying to count the existing number of books");
+
                 }
             }
         }

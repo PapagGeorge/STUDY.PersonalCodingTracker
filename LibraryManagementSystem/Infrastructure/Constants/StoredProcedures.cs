@@ -102,6 +102,10 @@ namespace Infrastructure.Constants
         #region UserList
         public const string UserList = "SpUserList";
         #endregion
+        
+        #region UserList
+        public const string CountBooks = "SpCountBooks";
+        #endregion
 
     }
 }

@@ -6,6 +6,7 @@ using LibraryApplication.Interfaces;
 using System.Text.RegularExpressions;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
+using LibraryApplication.Constants;
 
 
 
@@ -244,13 +245,28 @@ namespace Presentation
                             Console.Write("\n\nFirst Name: ");
                             string firstName = Console.ReadLine();
 
+                            if(firstName.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
                             Console.Write("Last Name: ");
                             string lastName = Console.ReadLine();
+
+                            if (lastName.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
 
                             Console.Write("Email: ");
                             string email = Console.ReadLine();
 
-                          
+                            if (email.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+
                             if (!IsValidEmail(email))
                             {
                                 Console.WriteLine("The email you entered is not valid. Please try again. " +
@@ -264,6 +280,11 @@ namespace Presentation
                             string pattern = @"^\d+$";
                             bool isNumeric = Regex.IsMatch(mobilePhone, pattern);
 
+                            if (mobilePhone.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
                             if (!isNumeric || mobilePhone.Length > 15)
                             {
                                 Console.WriteLine("The mobile phone you entered is not valid. Please try again. " +
@@ -275,6 +296,11 @@ namespace Presentation
                             Console.Write("Address: ");
                             string address = Console.ReadLine();
 
+                            if (address.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
                             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName)
                                 || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(mobilePhone) || string.IsNullOrEmpty(address))
                             {
@@ -282,14 +308,6 @@ namespace Presentation
                                 Console.ReadKey();
                                 continue;
                             }
-
-                            if (firstName.Trim().ToUpper() == "MENU" || lastName.Trim().ToUpper() == "MENU" ||
-                                email.Trim().ToUpper() == "MENU" || mobilePhone.Trim().ToUpper() == "MENU" ||
-                                address.Trim().ToUpper() == "MENU")
-                            {
-                                break;
-                            }
-
 
 
                             else
@@ -470,6 +488,149 @@ namespace Presentation
                             }
                         }
 
+
+
+                        break;
+
+
+                    case 11:
+                        while (true)
+
+                        {
+                            Console.Clear();
+
+                            Book newBook = new Book();
+                            Console.WriteLine("\n-----You can type (MENU) if you want to return to the Menu.-----");
+                            Console.WriteLine("\nInsert the following information in order to register new book.");
+                            Console.WriteLine("Note: All fields are required.");
+
+
+                            Console.Write("\n\nISBN: ");
+                            string isbn = Console.ReadLine();
+
+                            if (isbn.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.Write("Title: ");
+                            string title = Console.ReadLine();
+
+                            if (title.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.Write("Author: ");
+                            string author = Console.ReadLine();
+
+                            if (author.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+
+                            Console.Write("Year Published: ");
+                            string year = Console.ReadLine();
+                            string pattern = @"^\d+$";
+                            bool isNumeric = Regex.IsMatch(year, pattern);
+                            int _year = Convert.ToInt32(year);
+
+                            if (year.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            if (!isNumeric || year.Length > 4)
+                            {
+                                Console.WriteLine("The year you entered is not valid. Please try again. " +
+                                    "Press any key to continue.");
+                                Console.ReadKey();
+                                continue;
+                            }
+
+                            Console.Write("Genre: ");
+                            string genre = Console.ReadLine();
+
+                            if (genre.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            Console.Write("Pages: ");
+                            string pages = Console.ReadLine();
+                            int _pages;
+
+                            if (pages.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            bool isPagesNumeric = int.TryParse(pages, out _pages);
+
+                            if (!isPagesNumeric && _pages <= Limits.maxPages)
+                            {
+                                Console.WriteLine("The number of pages you entered is not valid. Please try again. " +
+                                    "Press any key to try again.");
+                                Console.ReadLine();
+                                continue;
+                            }
+
+                            Console.Write("Number of Copies: ");
+                            string numberOfCopies = Console.ReadLine();
+                            int _numberOfCopies;
+
+                            if (numberOfCopies.Trim().ToUpper() == "MENU")
+                            {
+                                break;
+                            }
+
+                            bool isNumberOfCopiesNumeric = int.TryParse(numberOfCopies, out _numberOfCopies);
+
+                            if (!isNumberOfCopiesNumeric && _numberOfCopies <= Limits.maxNumberOfCopies)
+                            {
+                                Console.WriteLine("The number of copies you entered is not valid. Maximum number of copies " +
+                                    "you can enter is 100.");
+                                Console.WriteLine("Press any key to try again.");
+                                Console.ReadLine();
+                                continue;
+                            }
+
+                            if (string.IsNullOrEmpty(isbn) || string.IsNullOrEmpty(title)
+                                || string.IsNullOrEmpty(author) || string.IsNullOrEmpty(year) || string.IsNullOrEmpty(genre) 
+                                || string.IsNullOrEmpty(pages) || string.IsNullOrEmpty(numberOfCopies))
+                            {
+                                Console.WriteLine("\nThe information you entered is invalid. Press any key to try again.");
+                                Console.ReadKey();
+                                continue;
+                            }
+
+                            else
+                            {
+                                Console.Clear();
+                                newBook.ISBN = isbn;
+                                newBook.BookTitle = title;
+                                newBook.BookAuthor = author;
+                                newBook.BookGenre = genre;
+                                newBook.BookYear = _year;
+                                newBook.BookGenre = genre;
+                                newBook.BookPagesCount = _pages;
+                                newBook.BookInventoryCount = _numberOfCopies;
+
+                                _application.InsertNewBook(newBook);
+                                
+                                Console.ReadKey();
+
+                                break;
+
+                            }
+
+                        }
+
+
+                        break;
+
+                    case 12:
 
 
                         break;

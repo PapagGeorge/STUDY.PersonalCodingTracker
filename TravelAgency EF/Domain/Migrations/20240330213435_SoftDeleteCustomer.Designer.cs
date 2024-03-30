@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(TravelAgencyDbContext))]
-    [Migration("20240330155512_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240330213435_SoftDeleteCustomer")]
+    partial class SoftDeleteCustomer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,6 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("PackageId")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("PricePerPersonPerDay")
                         .HasColumnType("decimal(18, 2)");
 
@@ -53,9 +50,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.HasIndex("PackageId");
-
-                    b.ToTable("Accomodations");
+                    b.ToTable("Accommodation");
                 });
 
             modelBuilder.Entity("Domain.Entities.Customer", b =>
@@ -88,6 +83,9 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -117,16 +115,11 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("PackageId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DestinationId");
-
-                    b.HasIndex("PackageId");
 
                     b.ToTable("Destinations");
                 });
@@ -286,9 +279,6 @@ namespace Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ServiceId"));
 
-                    b.Property<long?>("PackageId")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
@@ -297,8 +287,6 @@ namespace Domain.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ServiceId");
-
-                    b.HasIndex("PackageId");
 
                     b.ToTable("Service");
                 });
@@ -358,9 +346,6 @@ namespace Domain.Migrations
                     b.Property<long>("DestinationId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("PackageId")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
@@ -373,8 +358,6 @@ namespace Domain.Migrations
                     b.HasIndex("DestinationId")
                         .IsUnique();
 
-                    b.HasIndex("PackageId");
-
                     b.ToTable("Transportation");
                 });
 
@@ -386,18 +369,7 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Package", null)
-                        .WithMany("Accommodation")
-                        .HasForeignKey("PackageId");
-
                     b.Navigation("Destination");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Destination", b =>
-                {
-                    b.HasOne("Domain.Entities.Package", null)
-                        .WithMany("Destinations")
-                        .HasForeignKey("PackageId");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoice", b =>
@@ -414,13 +386,13 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.PackageAccommodation", b =>
                 {
                     b.HasOne("Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany()
+                        .WithMany("PackageAccommodation")
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Package", "Package")
-                        .WithMany()
+                        .WithMany("PackageAccommodation")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -433,13 +405,13 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.PackageDestination", b =>
                 {
                     b.HasOne("Domain.Entities.Destination", "Destination")
-                        .WithMany()
+                        .WithMany("PackageDestination")
                         .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Package", "Package")
-                        .WithMany()
+                        .WithMany("PackageDestination")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -452,13 +424,13 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.PackageService", b =>
                 {
                     b.HasOne("Domain.Entities.Package", "Package")
-                        .WithMany()
+                        .WithMany("PackageServices")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Service", "Service")
-                        .WithMany()
+                        .WithMany("PackageServices")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -471,13 +443,13 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.PackageTransportation", b =>
                 {
                     b.HasOne("Domain.Entities.Package", "Package")
-                        .WithMany()
+                        .WithMany("PackageTransportation")
                         .HasForeignKey("PackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Transportation", "Transportation")
-                        .WithMany()
+                        .WithMany("PackageTransportation")
                         .HasForeignKey("TransportationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -504,13 +476,6 @@ namespace Domain.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Invoice");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Service", b =>
-                {
-                    b.HasOne("Domain.Entities.Package", null)
-                        .WithMany("Servicec")
-                        .HasForeignKey("PackageId");
                 });
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
@@ -564,15 +529,13 @@ namespace Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Package", null)
-                        .WithMany("Transportation")
-                        .HasForeignKey("PackageId");
-
                     b.Navigation("Destination");
                 });
 
             modelBuilder.Entity("Domain.Entities.Accommodation", b =>
                 {
+                    b.Navigation("PackageAccommodation");
+
                     b.Navigation("Transactions");
                 });
 
@@ -587,6 +550,8 @@ namespace Domain.Migrations
                 {
                     b.Navigation("Accommodations");
 
+                    b.Navigation("PackageDestination");
+
                     b.Navigation("Transportation")
                         .IsRequired();
                 });
@@ -598,20 +563,27 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Package", b =>
                 {
-                    b.Navigation("Accommodation");
+                    b.Navigation("PackageAccommodation");
 
-                    b.Navigation("Destinations");
+                    b.Navigation("PackageDestination");
 
-                    b.Navigation("Servicec");
+                    b.Navigation("PackageServices");
+
+                    b.Navigation("PackageTransportation");
 
                     b.Navigation("Transactions");
-
-                    b.Navigation("Transportation");
                 });
 
             modelBuilder.Entity("Domain.Entities.Service", b =>
                 {
+                    b.Navigation("PackageServices");
+
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Transportation", b =>
+                {
+                    b.Navigation("PackageTransportation");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,6 +16,9 @@ namespace Domain.Entities
         public long DestinationId { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
         public Destination Destination { get; set; }
+        public ICollection<PackageAccommodation> PackageAccommodation { get; set; }
+        public bool IsAvailable { get; set; } = true;
+        public int Availability { get; set; }
 
     }
 }

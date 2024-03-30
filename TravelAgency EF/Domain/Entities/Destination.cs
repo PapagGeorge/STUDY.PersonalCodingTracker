@@ -13,5 +13,6 @@ namespace Domain.Entities
         public string PostalCode { get; set; }
         public Transportation Transportation { get; set; }
         public ICollection<Accommodation> Accommodations { get; set; }
+        public ICollection<PackageDestination> PackageDestination { get; set; }
     }
 }

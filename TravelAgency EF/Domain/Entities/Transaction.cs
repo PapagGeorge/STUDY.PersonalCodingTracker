@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain
+namespace Domain.Entities
 {
     public class Transaction
     {
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TransactionId { get; set; }
-        public int CustomerId { get; set; }
+        public long TransactionId { get; set; }
+        public long CustomerId { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.Now;
-        public int PackageId { get; set; }
-        public int TransportationId { get; set; }
-        public int AccommodationId { get; set; }
-        public int ServiceId { get; set; }
+        public long PackageId { get; set; }
+        public long TransportationId { get; set; }
+        public long AccommodationId { get; set; }
+        public long ServiceId { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Amount { get; set; }
         public Customer Customer { get; set; }
         public Package Package { get; set; }

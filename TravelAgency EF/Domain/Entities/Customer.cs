@@ -19,5 +19,7 @@ namespace Domain.Entities
         public string City { get; set; }
         public ICollection<Payment> Payments { get; set; }
         public ICollection<Invoice> Invoices { get; set; }
+        [Required]
+        public bool IsDeleted { get; set; } = false;
     }
 }

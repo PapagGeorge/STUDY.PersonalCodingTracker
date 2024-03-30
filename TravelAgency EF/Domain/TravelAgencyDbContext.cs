@@ -5,7 +5,7 @@ namespace Domain
 {
     internal class TravelAgencyDbContext : DbContext
     {
-        public DbSet<Accommodation> Accomodations { get; set; }
+        public DbSet<Accommodation> Accommodation { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Destination> Destinations { get; set; }
         public DbSet<Invoice> Invoices { get; set; }

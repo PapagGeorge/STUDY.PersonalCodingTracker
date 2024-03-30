@@ -14,10 +14,10 @@ namespace Domain.Entities
         public int Duration { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
-        public ICollection<Destination> Destinations { get; set; }
-        public ICollection<Accommodation> Accommodation { get; set; }
-        public ICollection<Transportation> Transportation { get; set; }
-        public ICollection<Service> Servicec { get; set; }
+        public ICollection<PackageDestination> PackageDestination { get; set; }
+        public ICollection<PackageAccommodation> PackageAccommodation { get; set; }
+        public ICollection<PackageTransportation> PackageTransportation { get; set; }
+        public ICollection<PackageService> PackageServices { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
 
     }

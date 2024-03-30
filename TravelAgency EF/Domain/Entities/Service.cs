@@ -12,5 +12,6 @@ namespace Domain.Entities
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
+        public ICollection<PackageService> PackageServices { get; set; }
     }
 }

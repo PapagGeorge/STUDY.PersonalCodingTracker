@@ -1,9 +1,10 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{12119132-0919-4D1A-9DE3-9BBE594A68B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{12119132-0919-4D1A-9DE3-9BBE594A68B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{C95EF3DE-ACDC-43D9-9BF7-AA123D1DB5F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47C}"
 EndProject
@@ -17,22 +18,8 @@ Global
 		{12119132-0919-4D1A-9DE3-9BBE594A68B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12119132-0919-4D1A-9DE3-9BBE594A68B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12119132-0919-4D1A-9DE3-9BBE594A68B5}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< Updated upstream
-=======
 		{C95EF3DE-ACDC-43D9-9BF7-AA123D1DB5F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C95EF3DE-ACDC-43D9-9BF7-AA123D1DB5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C95EF3DE-ACDC-43D9-9BF7-AA123D1DB5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C95EF3DE-ACDC-43D9-9BF7-AA123D1DB5F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47C}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> Stashed changes
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {FC621D43-EB62-44F6-8351-6A6F6883C075}
-	EndGlobalSection
-EndGlobal
+		{65A8B7F3-26BB-4B73-8E9D-AC3C247DA47

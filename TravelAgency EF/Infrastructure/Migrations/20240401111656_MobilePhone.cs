@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Domain.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class MobilePhone : Migration

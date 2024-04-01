@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 
-namespace Domain
+namespace Infrastructure
 {
     public class TravelAgencyDbContext : DbContext
     {
@@ -61,7 +61,7 @@ namespace Domain
             .Property(e => e.ServiceId)
             .HasDefaultValue(null);
 
-            
+
 
             base.OnModelCreating(modelBuilder);
         }

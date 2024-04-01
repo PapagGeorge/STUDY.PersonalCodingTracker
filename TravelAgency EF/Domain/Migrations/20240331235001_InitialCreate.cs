@@ -24,7 +24,8 @@ namespace Domain.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,20 +64,6 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Service",
-                columns: table => new
-                {
-                    ServiceId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Service", x => x.ServiceId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Invoices",
                 columns: table => new
                 {
@@ -96,7 +83,7 @@ namespace Domain.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,7 +95,9 @@ namespace Domain.Migrations
                     HotelName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StarRating = table.Column<int>(type: "int", nullable: false),
                     PricePerPersonPerDay = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DestinationId = table.Column<long>(type: "bigint", nullable: false)
+                    DestinationId = table.Column<long>(type: "bigint", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    Availability = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,7 +107,30 @@ namespace Domain.Migrations
                         column: x => x.DestinationId,
                         principalTable: "Destinations",
                         principalColumn: "DestinationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Service",
+                columns: table => new
+                {
+                    ServiceId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DestinationId = table.Column<long>(type: "bigint", nullable: false),
+                    Availability = table.Column<int>(type: "int", nullable: false),
+                    isAvailable = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Service", x => x.ServiceId);
+                    table.ForeignKey(
+                        name: "FK_Service_Destinations_DestinationId",
+                        column: x => x.DestinationId,
+                        principalTable: "Destinations",
+                        principalColumn: "DestinationId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,7 +141,9 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TransportationMode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DestinationId = table.Column<long>(type: "bigint", nullable: false)
+                    DestinationId = table.Column<long>(type: "bigint", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    Availability = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,7 +153,7 @@ namespace Domain.Migrations
                         column: x => x.DestinationId,
                         principalTable: "Destinations",
                         principalColumn: "DestinationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,37 +171,13 @@ namespace Domain.Migrations
                         column: x => x.DestinationId,
                         principalTable: "Destinations",
                         principalColumn: "DestinationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Package_Destination_Packages_PackageId",
                         column: x => x.PackageId,
                         principalTable: "Packages",
                         principalColumn: "PackageId",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Package_Service",
-                columns: table => new
-                {
-                    PackageId = table.Column<long>(type: "bigint", nullable: false),
-                    ServiceId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Package_Service", x => new { x.PackageId, x.ServiceId });
-                    table.ForeignKey(
-                        name: "FK_Package_Service_Packages_PackageId",
-                        column: x => x.PackageId,
-                        principalTable: "Packages",
-                        principalColumn: "PackageId",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Package_Service_Service_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Service",
-                        principalColumn: "ServiceId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,13 +199,13 @@ namespace Domain.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Payment_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "InvoiceId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,13 +223,37 @@ namespace Domain.Migrations
                         column: x => x.AccommodationId,
                         principalTable: "Accommodation",
                         principalColumn: "AccommodationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Package_Accomodation_Packages_PackageId",
                         column: x => x.PackageId,
                         principalTable: "Packages",
                         principalColumn: "PackageId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Package_Service",
+                columns: table => new
+                {
+                    PackageId = table.Column<long>(type: "bigint", nullable: false),
+                    ServiceId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Package_Service", x => new { x.PackageId, x.ServiceId });
+                    table.ForeignKey(
+                        name: "FK_Package_Service_Packages_PackageId",
+                        column: x => x.PackageId,
+                        principalTable: "Packages",
+                        principalColumn: "PackageId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Package_Service_Service_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "ServiceId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,13 +271,13 @@ namespace Domain.Migrations
                         column: x => x.PackageId,
                         principalTable: "Packages",
                         principalColumn: "PackageId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Package_Transportation_Transportation_TransportationId",
                         column: x => x.TransportationId,
                         principalTable: "Transportation",
                         principalColumn: "TransportationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -288,31 +302,31 @@ namespace Domain.Migrations
                         column: x => x.AccommodationId,
                         principalTable: "Accommodation",
                         principalColumn: "AccommodationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_Packages_PackageId",
                         column: x => x.PackageId,
                         principalTable: "Packages",
                         principalColumn: "PackageId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_Service_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Service",
                         principalColumn: "ServiceId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_Transportation_TransportationId",
                         column: x => x.TransportationId,
                         principalTable: "Transportation",
                         principalColumn: "TransportationId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -356,6 +370,11 @@ namespace Domain.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Service_DestinationId",
+                table: "Service",
+                column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transaction_AccommodationId",
                 table: "Transaction",
                 column: "AccommodationId");
@@ -383,8 +402,7 @@ namespace Domain.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Transportation_DestinationId",
                 table: "Transportation",
-                column: "DestinationId",
-                unique: true);
+                column: "DestinationId");
         }
 
         /// <inheritdoc />

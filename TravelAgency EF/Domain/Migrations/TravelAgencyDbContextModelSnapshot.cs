@@ -30,12 +30,18 @@ namespace Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("AccommodationId"));
 
+                    b.Property<int>("Availability")
+                        .HasColumnType("int");
+
                     b.Property<long>("DestinationId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("HotelName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("PricePerPersonPerDay")
                         .HasColumnType("decimal(18, 2)");
@@ -276,6 +282,12 @@ namespace Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ServiceId"));
 
+                    b.Property<int>("Availability")
+                        .HasColumnType("int");
+
+                    b.Property<long>("DestinationId")
+                        .HasColumnType("bigint");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
 
@@ -283,7 +295,12 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isAvailable")
+                        .HasColumnType("bit");
+
                     b.HasKey("ServiceId");
+
+                    b.HasIndex("DestinationId");
 
                     b.ToTable("Service");
                 });
@@ -340,8 +357,14 @@ namespace Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("TransportationId"));
 
+                    b.Property<int>("Availability")
+                        .HasColumnType("int");
+
                     b.Property<long>("DestinationId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 2)");
@@ -352,8 +375,7 @@ namespace Domain.Migrations
 
                     b.HasKey("TransportationId");
 
-                    b.HasIndex("DestinationId")
-                        .IsUnique();
+                    b.HasIndex("DestinationId");
 
                     b.ToTable("Transportation");
                 });
@@ -475,6 +497,17 @@ namespace Domain.Migrations
                     b.Navigation("Invoice");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.HasOne("Domain.Entities.Destination", "Destination")
+                        .WithMany("Services")
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destination");
+                });
+
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("Domain.Entities.Accommodation", "Accommodation")
@@ -502,7 +535,7 @@ namespace Domain.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Transportation", "Transportation")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("TransportationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,8 +554,8 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Transportation", b =>
                 {
                     b.HasOne("Domain.Entities.Destination", "Destination")
-                        .WithOne("Transportation")
-                        .HasForeignKey("Domain.Entities.Transportation", "DestinationId")
+                        .WithMany("Transportations")
+                        .HasForeignKey("DestinationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -549,8 +582,9 @@ namespace Domain.Migrations
 
                     b.Navigation("PackageDestination");
 
-                    b.Navigation("Transportation")
-                        .IsRequired();
+                    b.Navigation("Services");
+
+                    b.Navigation("Transportations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoice", b =>
@@ -581,6 +615,8 @@ namespace Domain.Migrations
             modelBuilder.Entity("Domain.Entities.Transportation", b =>
                 {
                     b.Navigation("PackageTransportation");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

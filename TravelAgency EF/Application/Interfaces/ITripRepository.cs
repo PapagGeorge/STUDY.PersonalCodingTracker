@@ -16,7 +16,5 @@ namespace Application.Interfaces
         bool isServiceAvailable();
 
 
-
-
     }
 }

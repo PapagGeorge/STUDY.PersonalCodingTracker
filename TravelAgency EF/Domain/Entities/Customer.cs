@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string PostalCode { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
+        public string MobilePhone { get; set; }
         public ICollection<Payment> Payments { get; set; }
         public ICollection<Invoice> Invoices { get; set; }
         [Required]

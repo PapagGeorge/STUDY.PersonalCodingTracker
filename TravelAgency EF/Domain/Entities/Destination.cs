@@ -11,8 +11,9 @@ namespace Domain.Entities
         public string Country { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
-        public Transportation Transportation { get; set; }
+        public ICollection<Transportation> Transportations { get; set; }
         public ICollection<Accommodation> Accommodations { get; set; }
         public ICollection<PackageDestination> PackageDestination { get; set; }
+        public ICollection<Service> Services { get; set; }
     }
 }

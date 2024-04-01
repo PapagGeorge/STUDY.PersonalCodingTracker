@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Domain
 {
-    internal class TravelAgencyDbContext : DbContext
+    public class TravelAgencyDbContext : DbContext
     {
         public DbSet<Accommodation> Accommodation { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -41,7 +41,7 @@ namespace Domain
             modelBuilder.Entity<PackageTransportation>()
                 .HasKey(pa => new { pa.PackageId, pa.TransportationId });
 
-           
+
 
             base.OnModelCreating(modelBuilder);
         }

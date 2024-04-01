@@ -7,7 +7,8 @@ namespace Application.Interfaces
     {
         void CreateCustomer(Customer customer);
         void SoftDeleteCustomer(long customerId);
-        IEnumerable<Customer> SearchCustomers(string searchText);
+        IEnumerable<Customer> SearchCustomersByMobile(string searchText);
         Customer SearchCustomerById(long customerId);
+        bool CustomerExists (long customerId);
     }
 }

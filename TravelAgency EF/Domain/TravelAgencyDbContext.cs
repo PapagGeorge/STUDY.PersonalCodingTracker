@@ -41,7 +41,27 @@ namespace Domain
             modelBuilder.Entity<PackageTransportation>()
                 .HasKey(pa => new { pa.PackageId, pa.TransportationId });
 
+            modelBuilder.Entity<Transaction>()
+            .Property(e => e.TransactionDate)
+            .HasDefaultValue(DateTime.Now);
 
+            modelBuilder.Entity<Transaction>()
+            .Property(e => e.PackageId)
+            .HasDefaultValue(null);
+
+            modelBuilder.Entity<Transaction>()
+            .Property(e => e.TransportationId)
+            .HasDefaultValue(null);
+
+            modelBuilder.Entity<Transaction>()
+            .Property(e => e.AccommodationId)
+            .HasDefaultValue(null);
+
+            modelBuilder.Entity<Transaction>()
+            .Property(e => e.ServiceId)
+            .HasDefaultValue(null);
+
+            
 
             base.OnModelCreating(modelBuilder);
         }

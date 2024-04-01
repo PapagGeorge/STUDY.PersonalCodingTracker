@@ -10,10 +10,10 @@ namespace Domain.Entities
         public long TransactionId { get; set; }
         public long CustomerId { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.Now;
-        public long PackageId { get; set; }
-        public long TransportationId { get; set; }
-        public long AccommodationId { get; set; }
-        public long ServiceId { get; set; }
+        public long? PackageId { get; set; }
+        public long? TransportationId { get; set; }
+        public long? AccommodationId { get; set; }
+        public long? ServiceId { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Amount { get; set; }
         public Customer Customer { get; set; }

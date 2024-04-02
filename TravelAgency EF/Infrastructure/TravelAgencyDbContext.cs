@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Application.Interfaces;
 
 namespace Infrastructure
 {
-    public class TravelAgencyDbContext : DbContext
+    public class TravelAgencyDbContext : DbContext, ITravelAgencyDbContext
     {
         public DbSet<Accommodation> Accommodation { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -60,6 +61,19 @@ namespace Infrastructure
             modelBuilder.Entity<Transaction>()
             .Property(e => e.ServiceId)
             .HasDefaultValue(null);
+
+            modelBuilder.Entity<Invoice>()
+            .Property(e => e.IssuedDate)
+            .HasDefaultValue(DateTime.Now);
+
+            modelBuilder.Entity<Invoice>()
+            .Property(e => e.IsPaid)
+            .HasDefaultValue(false);
+
+            modelBuilder.Entity<Invoice>()
+            .Property(e => e.PaymentDate)
+            .HasDefaultValue(null);
+
 
 
 

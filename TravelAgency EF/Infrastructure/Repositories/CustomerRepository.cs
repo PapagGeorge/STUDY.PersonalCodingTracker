@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure
 {
     public class CustomerRepository : ICustomerRepository
     {

@@ -11,10 +11,12 @@ namespace Application.Interfaces
         IEnumerable<Accommodation> AccommodationByDestination(long destinationId);
         IEnumerable<Transportation> TransporationByDestination(long destinationId);
         IEnumerable<Service> ServicesByDestination(long destinationId);
-        bool isAccommodationAvailable();
-        bool isTransportationAvailable();
-        bool isServiceAvailable();
-
+        bool isServiceAvailable(long serviceId);
+        bool isTransportationAvailable(long TransportationId);
+        bool isAccommodationAvailable(long accommodationId);
+        bool serviceExists(long serviceId);
+        bool accommodationExists(long accommodationId);
+        bool transportationExists(long transportationId);
 
     }
 }

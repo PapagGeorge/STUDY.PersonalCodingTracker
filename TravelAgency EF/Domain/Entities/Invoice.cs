@@ -13,7 +13,7 @@ namespace Domain.Entities
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
         public bool IsPaid { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public Customer Customer { get; set; }
         public ICollection<Payment> Payments { get; set; }
 

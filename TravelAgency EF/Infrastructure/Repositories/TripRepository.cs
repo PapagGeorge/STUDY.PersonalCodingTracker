@@ -34,7 +34,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public bool accommodationExists(long accommodationId)
+        public bool AccommodationExists(long accommodationId)
         {
             try
             {
@@ -185,7 +185,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public bool isAccommodationAvailable(long accommodationId)
+        public bool IsAccommodationAvailable(long accommodationId)
         {
             try
             {
@@ -200,7 +200,7 @@ namespace Infrastructure.Repositories
 
         }
 
-        public bool isServiceAvailable(long serviceId)
+        public bool IsServiceAvailable(long serviceId)
         {
             try
             {
@@ -216,7 +216,7 @@ namespace Infrastructure.Repositories
 
         }
 
-        public bool isTransportationAvailable(long transportationId)
+        public bool IsTransportationAvailable(long transportationId)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public bool serviceExists(long serviceId)
+        public bool ServiceExists(long serviceId)
         {
             try
             {
@@ -261,7 +261,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public bool transportationExists(long transportationId)
+        public bool TransportationExists(long transportationId)
         {
             throw new NotImplementedException();
         }

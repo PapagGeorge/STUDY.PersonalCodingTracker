@@ -236,34 +236,70 @@ namespace Infrastructure.Repositories
             try
             {
 
-                var service = context.Service.FirstOrDefault(trans => trans.ServiceId == serviceId);
-
-                return service.isAvailable;
+                return context.Service.Count(serv => serv.ServiceId == serviceId) == 1;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while checking transportation availability. {ex.Message}");
+                throw new Exception($"An error occured while checking if service exists. {ex.Message}");
             }
         }
 
         public IEnumerable<Service> ServicesByDestination(long destinationId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var servicesByDestination = context.Service.Where(serv => serv.DestinationId == destinationId 
+                && serv.isAvailable);
+                return servicesByDestination;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking services by destination. {ex.Message}");
+            }
         }
 
         public IEnumerable<Destination> ShowAllDestinations()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var destinations = from dest in context.Destinations
+                                   select dest;
+
+                return destinations;
+                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while fetching destination list. {ex.Message}");
+            }
         }
 
         public IEnumerable<Transportation> TransporationByDestination(long destinationId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var transportationsByDestination = context.Transportation.Where(trans => trans.DestinationId == destinationId
+            && trans.IsAvailable == true);
+                return transportationsByDestination;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking transportion by destination. {ex.Message}");
+            }
+            
         }
 
         public bool TransportationExists(long transportationId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return context.Transportation.Any(trans => trans.TransportationId == transportationId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking if transportation exists. {ex.Message}");
+            }
         }
     }
 }

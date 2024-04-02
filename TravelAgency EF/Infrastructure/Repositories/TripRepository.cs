@@ -187,22 +187,63 @@ namespace Infrastructure.Repositories
 
         public bool isAccommodationAvailable(long accommodationId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var accommodation = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == accommodationId);
+
+                return accommodation.IsAvailable;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking accommodation availability. {ex.Message}");
+            }
+
         }
 
         public bool isServiceAvailable(long serviceId)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                var service = context.Service.FirstOrDefault(serv => serv.ServiceId == serviceId);
+
+                return service.isAvailable;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking service availability. {ex.Message}");
+            }
+
         }
 
-        public bool isTransportationAvailable(long TransportationId)
+        public bool isTransportationAvailable(long transportationId)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                var transportation = context.Transportation.FirstOrDefault(trans => trans.TransportationId == transportationId);
+
+                return transportation.IsAvailable;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking transportation availability. {ex.Message}");
+            }
         }
 
         public bool serviceExists(long serviceId)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                var service = context.Service.FirstOrDefault(trans => trans.ServiceId == serviceId);
+
+                return service.isAvailable;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking transportation availability. {ex.Message}");
+            }
         }
 
         public IEnumerable<Service> ServicesByDestination(long destinationId)

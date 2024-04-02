@@ -4,7 +4,7 @@ using Application.Interfaces;
 
 namespace Infrastructure
 {
-    public class TravelAgencyDbContext : DbContext, ITravelAgencyDbContext
+    public class TravelAgencyDbContext : DbContext
     {
         public DbSet<Accommodation> Accommodation { get; set; }
         public DbSet<Customer> Customers { get; set; }

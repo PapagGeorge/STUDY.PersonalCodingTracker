@@ -34,51 +34,61 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public void BookAccommodation(long customerId, long AccommodationId, int daysOfVisit)
+        public bool accommodationExists(long accommodationId)
         {
-            using (var transaction = context.Database.BeginTransaction())
+            try
+            {
+                return context.Accommodation.Count(acom => acom.AccommodationId == accommodationId) == 1;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to validate the accommodation. {ex.Message}");
+            }
+
+        }
+
+        public void BookAccommodation(long customerId, long AccomId, int daysOfVisit)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
                 try
                 {
-                    var amountList = from transact in context.Transaction
-                                     join accommodation in context.Accommodation
-                                     on transact.AccommodationId equals accommodation.AccommodationId
-                                     select new
-                                     {
-                                         AccommodationId = transact.AccommodationId,
-                                         Amount = accommodation.PricePerPersonPerDay
-                                     };
+                    var accom = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == AccomId);
+                    accom.Availability -= 1;
 
-                    var record = amountList.FirstOrDefault(amount => amount.AccommodationId == AccommodationId);
-
-                    if (record != null)
+                    if (accom.Availability <= 0)
                     {
-                        var amount = record.Amount * daysOfVisit;
-
-
-                        var trans = new Transaction()
-                        {
-                            CustomerId = customerId,
-                            AccommodationId = AccommodationId,
-                            Amount = amount
-                        };
-
-                        var inv = new Invoice()
-                        {
-                            CustomerId = customerId,
-                            TotalAmount = amount
-                        };
-                        transaction.Commit();
+                        accom.IsAvailable = false;
                     }
-                    else
-                    {
-                        throw new Exception("Accommodation record not found.");
-                    }
+
+                    var invoice = new Invoice();
+                    invoice.CustomerId = customerId;
+                    invoice.TotalAmount = daysOfVisit * accom.PricePerPersonPerDay;
+
+                    var trans = new Transaction();
+                    trans.CustomerId = customerId;
+                    trans.AccommodationId = AccomId;
+                    trans.Amount = daysOfVisit * accom.PricePerPersonPerDay;
+
+                    var customer = new Customer();
+                    customer.Balance = daysOfVisit * accom.PricePerPersonPerDay;
+
+
+                    context.Add(invoice);
+                    context.Add(trans);
+                    context.Add(customer);
+                    context.SaveChanges();
+
+                    transaction.Commit();   
+                    
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"An error occured while booking an accomodation. {ex.Message}");
                     transaction.Rollback();
-                    Console.WriteLine($"An error occured while booking accommodation. {ex.Message}");
                 }
+                
+            }
 
         }
 
@@ -92,17 +102,22 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public bool isAccommodationAvailable()
+        public bool isAccommodationAvailable(long accommodationId)
         {
             throw new NotImplementedException();
         }
 
-        public bool isServiceAvailable()
+        public bool isServiceAvailable(long serviceId)
         {
             throw new NotImplementedException();
         }
 
-        public bool isTransportationAvailable()
+        public bool isTransportationAvailable(long TransportationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool serviceExists(long serviceId)
         {
             throw new NotImplementedException();
         }
@@ -118,6 +133,11 @@ namespace Infrastructure.Repositories
         }
 
         public IEnumerable<Transportation> TransporationByDestination(long destinationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool transportationExists(long transportationId)
         {
             throw new NotImplementedException();
         }

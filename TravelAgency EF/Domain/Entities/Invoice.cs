@@ -16,6 +16,6 @@ namespace Domain.Entities
         public DateTime? PaymentDate { get; set; }
         public Customer Customer { get; set; }
         public ICollection<Payment> Payments { get; set; }
-
+        
     }
 }

@@ -61,22 +61,23 @@ namespace Infrastructure.Repositories
                         accom.IsAvailable = false;
                     }
 
+                    var transact = new Transaction();
+                    transact.CustomerId = customerId;
+                    transact.AccommodationId = AccomId;
+                    transact.Amount = daysOfVisit * accom.PricePerPersonPerDay;
+
                     var invoice = new Invoice();
                     invoice.CustomerId = customerId;
                     invoice.TotalAmount = daysOfVisit * accom.PricePerPersonPerDay;
 
-                    var trans = new Transaction();
-                    trans.CustomerId = customerId;
-                    trans.AccommodationId = AccomId;
-                    trans.Amount = daysOfVisit * accom.PricePerPersonPerDay;
-
                     var customer = new Customer();
                     customer.Balance = daysOfVisit * accom.PricePerPersonPerDay;
 
-
+                    context.Add(accom);
                     context.Add(invoice);
-                    context.Add(trans);
+                    context.Add(transact);
                     context.Add(customer);
+
                     context.SaveChanges();
 
                     transaction.Commit();   
@@ -92,14 +93,96 @@ namespace Infrastructure.Repositories
 
         }
 
-        public void BookService(long customerId, long ServiceId)
+        public void BookService(long customerId, long serviceId)
         {
-            throw new NotImplementedException();
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var service = context.Service.FirstOrDefault(serv => serv.ServiceId == serviceId);
+                    service.Availability -= 1;
+
+                    if (service.Availability <= 0)
+                    {
+                        service.isAvailable = false;
+                    }
+
+                    var transact = new Transaction();
+                    transact.CustomerId = customerId;
+                    transact.ServiceId = serviceId;
+                    transact.Amount = service.Price;
+
+                    var invoice = new Invoice();
+                    invoice.CustomerId = customerId;
+                    invoice.TotalAmount = transact.Amount;
+
+                    var customer = new Customer();
+                    customer.Balance += invoice.TotalAmount;
+
+                    context.Add(service);
+                    context.Add(transact);
+                    context.Add(invoice);
+                    context.Add(customer);
+
+                    context.SaveChanges();
+
+                    transaction.Commit();
+                }
+                
+                    catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occured while booking service. {ex.Message}");
+                    transaction.Rollback();
+                }
+
+                
+            }
         }
 
         public void BookTransportation(long customerId, long transportationId)
         {
-            throw new NotImplementedException();
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var transportation = context.Transportation.FirstOrDefault(serv => serv.TransportationId == transportationId);
+                    transportation.Availability -= 1;
+
+                    if (transportation.Availability <= 0)
+                    {
+                        transportation.IsAvailable = false;
+                    }
+
+                    var transact = new Transaction();
+                    transact.CustomerId = customerId;
+                    transact.TransportationId = transportationId;
+                    transact.Amount = transportation.Price;
+
+                    var invoice = new Invoice();
+                    invoice.CustomerId = customerId;
+                    invoice.TotalAmount = transact.Amount;
+
+                    var customer = new Customer();
+                    customer.Balance += invoice.TotalAmount;
+
+                    context.Add(transportation);
+                    context.Add(transact);
+                    context.Add(invoice);
+                    context.Add(customer);
+
+                    context.SaveChanges();
+
+                    transaction.Commit();
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occured while booking transportation. {ex.Message}");
+                    transaction.Rollback();
+                }
+
+
+            }
         }
 
         public bool isAccommodationAvailable(long accommodationId)

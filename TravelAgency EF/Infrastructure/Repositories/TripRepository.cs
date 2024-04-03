@@ -53,7 +53,7 @@ namespace Infrastructure.Repositories
             {
                 try
                 {
-                    var accom = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == AccomId);
+                    var accom = context.Accommodation.First(accom => accom.AccommodationId == AccomId);
                     accom.Availability -= 1;
 
                     if (accom.Availability <= 0)
@@ -99,7 +99,7 @@ namespace Infrastructure.Repositories
             {
                 try
                 {
-                    var service = context.Service.FirstOrDefault(serv => serv.ServiceId == serviceId);
+                    var service = context.Service.First(serv => serv.ServiceId == serviceId);
                     service.Availability -= 1;
 
                     if (service.Availability <= 0)
@@ -145,7 +145,7 @@ namespace Infrastructure.Repositories
             {
                 try
                 {
-                    var transportation = context.Transportation.FirstOrDefault(serv => serv.TransportationId == transportationId);
+                    var transportation = context.Transportation.First(serv => serv.TransportationId == transportationId);
                     transportation.Availability -= 1;
 
                     if (transportation.Availability <= 0)
@@ -189,7 +189,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var accommodation = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == accommodationId);
+                var accommodation = context.Accommodation.First(accom => accom.AccommodationId == accommodationId);
 
                 return accommodation.IsAvailable;
             }
@@ -205,7 +205,7 @@ namespace Infrastructure.Repositories
             try
             {
 
-                var service = context.Service.FirstOrDefault(serv => serv.ServiceId == serviceId);
+                var service = context.Service.First(serv => serv.ServiceId == serviceId);
 
                 return service.isAvailable;
             }
@@ -221,7 +221,7 @@ namespace Infrastructure.Repositories
             try
             {
 
-                var transportation = context.Transportation.FirstOrDefault(trans => trans.TransportationId == transportationId);
+                var transportation = context.Transportation.First(trans => trans.TransportationId == transportationId);
 
                 return transportation.IsAvailable;
             }

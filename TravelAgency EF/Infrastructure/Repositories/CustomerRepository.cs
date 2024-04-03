@@ -33,7 +33,7 @@ namespace Infrastructure
         {
             try
             {
-                var customer = context.Customers.FirstOrDefault(cust => cust.CustomerId == customerId);
+                var customer = context.Customers.First(cust => cust.CustomerId == customerId);
                 return customer;
             }
             catch (Exception ex)
@@ -62,7 +62,7 @@ namespace Infrastructure
         {
             try
             {
-                var customer = context.Customers.FirstOrDefault(cust => cust.CustomerId == customerId);
+                var customer = context.Customers.First(cust => cust.CustomerId == customerId);
                 if (customer != null)
                 {
                     customer.IsDeleted = true;
@@ -89,8 +89,58 @@ namespace Infrastructure
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occured while deleting customer. {ex.Message}");
+                Console.WriteLine($"An error occured while checking if customer exists. {ex.Message}");
                 throw;
+            }
+        }
+
+        public void PayInvoice(long customerId, decimal paymentAmount, long invoiceId)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var invoice = context.Invoices.First(inv => inv.InvoiceId == invoiceId);
+
+                    if (paymentAmount == invoice.TotalAmount)
+                    {
+                        var payment = new Payment();
+                        payment.CustomerId = customerId;
+                        payment.InvoiceId = invoiceId;
+                        payment.Amount = paymentAmount;
+
+                        var customer = context.Customers.First(cust => cust.CustomerId == customerId);
+                        customer.Balance -= paymentAmount;
+
+
+                        invoice.IsPaid = true;
+                        invoice.PaymentDate = DateTime.Now;
+
+                        context.Add(invoice);
+                        context.Add(payment);
+                        context.Add(customer);
+
+                        context.SaveChanges();
+
+                        transaction.Commit();
+                    }
+
+                    if (paymentAmount > invoice.TotalAmount)
+                    {
+                        Console.WriteLine("The payment amount exceeds the amount required. Please try again.");
+                    }
+
+                    if (paymentAmount < invoice.TotalAmount)
+                    {
+                        Console.WriteLine("The payment amount is less than the amount required. Please try again.");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occured while attempting payment for invoice: {invoiceId}. {ex.Message}");
+                    throw;
+                }
             }
         }
     }

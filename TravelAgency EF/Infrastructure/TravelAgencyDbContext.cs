@@ -74,6 +74,10 @@ namespace Infrastructure
             .Property(e => e.PaymentDate)
             .HasDefaultValue(null);
 
+            modelBuilder.Entity<Payment>()
+            .Property(e => e.PaymentDate)
+            .HasDefaultValue(DateTime.Now);
+
 
 
 

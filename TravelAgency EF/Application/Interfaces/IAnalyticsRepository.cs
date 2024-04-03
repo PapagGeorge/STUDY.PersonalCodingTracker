@@ -18,12 +18,11 @@ namespace Application.Interfaces
         IEnumerable<Service> Top10Services();
         Accommodation TopService();
         IEnumerable<Invoice> InvoicesByDateRange(DateTime dateRangeStart, DateTime dateRangeEnd);
-        IEnumerable<Invoice> PaidInvoices();
-        IEnumerable<Invoice> UnPaidInvoices();
+        IEnumerable<Invoice> PaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd);
+        IEnumerable<Invoice> UnPaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd);
         IEnumerable<Payment> PaymentsByDateRange(DateTime dateRangeStart, DateTime dateRangeEnd);
         IEnumerable<Payment> PaymentsByCustomer(long userId);
         IEnumerable<Transaction> TransactionsByCustomer(long customerId);
-        IEnumerable<Customer> CustomersByRegion();
 
 
 

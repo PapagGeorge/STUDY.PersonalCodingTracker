@@ -82,7 +82,7 @@ namespace Infrastructure.Repositories
                     accom => accom.AccommodationId,
                     (transGroup, accom) => new Accommodation
                     {
-                        AccommodationId = (long)transGroup.Key,
+                        AccommodationId = transGroup.Key,
                         HotelName = accom.HotelName,
                         StarRating = accom.StarRating
 
@@ -193,12 +193,45 @@ namespace Infrastructure.Repositories
 
         public Accommodation TopAccommodation()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var topAccommodationId = context.Transaction
+                    .GroupBy(trans => trans.AccommodationId)
+                    .OrderByDescending(g => g.Count())
+                    .Select(g => g.Key)
+                    .FirstOrDefault();
+
+                var topAccommodation = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == topAccommodationId);
+                    
+
+                return topAccommodation;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top Accommodation. {ex.Message}");
+            }
         }
 
         public Customer TopCustomer()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var topCustommerId = context.Transaction
+                    .GroupBy(trans => trans.CustomerId)
+                    .OrderByDescending(g => g.Count())
+                    .Select(g => g.Key)
+                    .FirstOrDefault();
+
+                var topCustomer = context.Customers.FirstOrDefault(cust => cust.CustomerId == topCustommerId);
+                return topCustomer;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top Accommodation. {ex.Message}");
+            }
+
         }
 
         public Destination TopDestination()
@@ -206,9 +239,26 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Accommodation TopService()
+        public Service TopService()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var topServiceInTransactions = context.Transaction
+                    .GroupBy(serv => serv.ServiceId)
+                    .OrderByDescending(group => group.Count())
+                    .Select(g => g.Key)
+                    .FirstOrDefault();
+
+                var topService = context.Service.FirstOrDefault(serv => serv.ServiceId == topServiceInTransactions);
+
+                return topService;
+
+                
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top Service. {ex.Message}");
+            }
         }
 
         public IEnumerable<Transaction> TransactionsByCustomer(long customerId)

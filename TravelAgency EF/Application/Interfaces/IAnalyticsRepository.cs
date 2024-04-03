@@ -13,10 +13,10 @@ namespace Application.Interfaces
         Customer TopCustomer();
         IEnumerable<Destination> Top10Destinations();
         Destination TopDestination();
-        IEnumerable<Accommodation> Top10Accommodations();
+        IEnumerable<Accommodation> Top10MostVisitedAccommodations();
         Accommodation TopAccommodation();
         IEnumerable<Service> Top10Services();
-        Accommodation TopService();
+        Service TopService();
         IEnumerable<Invoice> InvoicesByDateRange(DateTime dateRangeStart, DateTime dateRangeEnd);
         IEnumerable<Invoice> PaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd);
         IEnumerable<Invoice> UnPaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd);

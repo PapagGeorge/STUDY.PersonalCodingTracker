@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Application.Interfaces;
+using Infrastructure.Migrations;
 
 namespace Infrastructure.Repositories
 {
@@ -21,7 +22,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while searching for invoices in a specific daterange.");
+                throw new Exception($"An error occured while searching for invoices in a specific daterange. {ex.Message}");
             }
             
         }
@@ -36,7 +37,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while searching for paid invoices in a specific daterange.");
+                throw new Exception($"An error occured while searching for paid invoices in a specific daterange. {ex.Message}");
             }
         }
 
@@ -47,9 +48,9 @@ namespace Infrastructure.Repositories
                 var paymentsPerCustomer = context.Payment.Where(paym => paym.CustomerId == userId);
                 return paymentsPerCustomer;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("An error occured while searching for customer payments.");
+                throw new Exception($"An error occured while searching for customer payments. {ex.Message}");
             }
         }
 
@@ -63,7 +64,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while searching for payments by date range.");
+                throw new Exception($"An error occured while searching for payments by date range. {ex.Message}");
             }
         }
 
@@ -75,11 +76,15 @@ namespace Infrastructure.Repositories
                     .GroupBy(trans => trans.AccommodationId)
                     .OrderByDescending(g => g.Count())
                     .Take(10)
-                    .Select(g => new Accommodation
+                    .Join(
+                    context.Accommodation,
+                    transGroup => transGroup.Key,
+                    accom => accom.AccommodationId,
+                    (transGroup, accom) => new Accommodation
                     {
-
-                        AccommodationId = g.Key ?? 0
-
+                        AccommodationId = (long)transGroup.Key,
+                        HotelName = accom.HotelName,
+                        StarRating = accom.StarRating
 
                     });
 
@@ -87,9 +92,9 @@ namespace Infrastructure.Repositories
 
                
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("An error occured while searching for Top 10 Accommodation.");
+                throw new Exception($"An error occured while searching for Top 10 Accommodation. {ex.Message}");
             }
 
                 
@@ -97,17 +102,93 @@ namespace Infrastructure.Repositories
 
         public IEnumerable<Customer> Top10Customers()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var top10Customers = context.Transaction
+                    .GroupBy(trans => trans.CustomerId)
+                    .OrderByDescending(g => g.Count())
+                    .Take(10)
+                    .Join(
+                    context.Customers,
+                    transGroup => transGroup.Key,
+                    cust => cust.CustomerId,
+                    (transGroup, cust) => new Customer
+                    {
+                        CustomerId = transGroup.Key,
+                        FirstName = cust.FirstName,
+                        LastName = cust.LastName,
+                        Address = cust.Address,
+                        City = cust.City,
+                        MobilePhone = cust.MobilePhone
+                    });
+
+                return top10Customers;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top 10 Customers. {ex.Message}");
+            }
         }
 
         public IEnumerable<Destination> Top10Destinations()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var top10Destinations = context.Transaction
+                    .GroupBy(trans => trans.AccommodationId)
+                    .OrderByDescending(g => g.Count())
+                    .Take(10)
+                    .Join(
+                    context.Accommodation,
+                    transGroup => transGroup.Key,
+                    accom => accom.AccommodationId,
+                    (transGroup, accom) => new Accommodation
+                    {
+                        AccommodationId = transGroup.Key,
+                        DestinationId = accom.DestinationId
+
+                    }).Join(context.Destinations,
+                    accommod => accommod.DestinationId,
+                    dest => dest.DestinationId,
+                    (accommod, dest) => new Destination
+                    {
+                        DestinationId = dest.DestinationId,
+                        Country = dest.Country,
+                        City = dest.City,
+                        PostalCode = dest.PostalCode
+                    });
+
+                return top10Destinations;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top 10 Customers. {ex.Message}");
+            }
         }
 
         public IEnumerable<Service> Top10Services()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var Top10Services = context.Transaction
+                    .GroupBy(trans => trans.ServiceId)
+                    .OrderByDescending(group => group.Count())
+                    .Take(10)
+                    .Join(context.Service,
+                    groupServ => groupServ.Key,
+                    serv => serv.ServiceId,
+                    (groupServ, serv) => new Service
+                    {
+                        ServiceId = groupServ.Key,
+                        ServiceName = serv.ServiceName,
+                        Price = serv.Price
+                    });
+                return Top10Services;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for Top 10 Customers. {ex.Message}");
+            }
         }
 
         public Accommodation TopAccommodation()

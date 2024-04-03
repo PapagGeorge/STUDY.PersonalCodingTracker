@@ -10,5 +10,6 @@ namespace Application.Interfaces
         IEnumerable<Customer> SearchCustomersByMobile(string searchText);
         Customer SearchCustomerById(long customerId);
         bool CustomerExists (long customerId);
+        void PayInvoice(decimal amount, long invoiceId);
     }
 }

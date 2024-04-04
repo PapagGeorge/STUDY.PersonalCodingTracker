@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
             {
                 throw new Exception($"An error occured while searching for invoices in a specific daterange. {ex.Message}");
             }
-            
+
         }
 
         public IEnumerable<Invoice> PaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd)
@@ -92,7 +92,7 @@ namespace Infrastructure.Repositories
                 throw new Exception($"An error occured while searching for Top 10 Accommodation. {ex.Message}");
             }
 
-                
+
         }
 
         public IEnumerable<Customer> Top10Customers()
@@ -221,7 +221,7 @@ namespace Infrastructure.Repositories
                     context.Transaction,
                     cust => cust.CustomerId,
                     trans => trans.CustomerId,
-                    (cust, trans) => new {Customer = cust, TransactionSum = trans.Sum(trans => trans.Amount)})
+                    (cust, trans) => new { Customer = cust, TransactionSum = trans.Sum(trans => trans.Amount) })
                     .OrderByDescending(result => result.TransactionSum)
                     .Select(result => result.Customer)
                     .FirstOrDefault();
@@ -250,9 +250,9 @@ namespace Infrastructure.Repositories
 
                 return topService;
 
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"An error occured while searching for Top Service. {ex.Message}");
             }
@@ -273,14 +273,28 @@ namespace Infrastructure.Repositories
             }
         }
 
-
-
-
-    }
-
         public IEnumerable<Invoice> UnPaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var unPaidInvoices = context.Invoices.Where(inv => inv.IsPaid == false
+                && inv.IssuedDate >= dateRangeStart
+                && inv.IssuedDate <= dateRangeEnd);
+
+                return unPaidInvoices;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while searching for unpaid invoices. {ex.Message}");
+            }
+
         }
+
+
     }
 }
+    
+
+        
+    
+

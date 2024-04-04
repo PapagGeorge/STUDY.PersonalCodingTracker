@@ -12,7 +12,6 @@ namespace Application.Interfaces
         IEnumerable<Customer> Top10Customers();
         Customer TopCustomer();
         IEnumerable<Destination> Top10Destinations();
-        Destination TopDestination();
         IEnumerable<Accommodation> Top10MostVisitedAccommodations();
         Accommodation TopAccommodation();
         IEnumerable<Service> Top10Services();

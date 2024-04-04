@@ -72,25 +72,20 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var top10Accomodations = context.Transaction
-                    .GroupBy(trans => trans.AccommodationId)
-                    .OrderByDescending(g => g.Count())
-                    .Take(10)
-                    .Join(
-                    context.Accommodation,
-                    transGroup => transGroup.Key,
-                    accom => accom.AccommodationId,
-                    (transGroup, accom) => new Accommodation
-                    {
-                        AccommodationId = transGroup.Key,
-                        HotelName = accom.HotelName,
-                        StarRating = accom.StarRating
+                var top10Accommodations = context.Accommodation
+                .GroupJoin(
+                context.Transaction,
+                accom => accom.AccommodationId,
+                trans => trans.AccommodationId,
+                (accom, transGroup) => new { Accommodation = accom, TransactionCount = transGroup.Count() })
+                .OrderByDescending(result => result.TransactionCount)
+                .Select(result => result.Accommodation)
+                .Take(10);
 
-                    });
+                return top10Accommodations;
 
-                return top10Accomodations;
 
-               
+
             }
             catch (Exception ex)
             {
@@ -104,25 +99,19 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var top10Customers = context.Transaction
-                    .GroupBy(trans => trans.CustomerId)
-                    .OrderByDescending(g => g.Count())
-                    .Take(10)
-                    .Join(
-                    context.Customers,
-                    transGroup => transGroup.Key,
+                var top10Customers = context.Customers
+                    .GroupJoin(context.Transaction,
                     cust => cust.CustomerId,
-                    (transGroup, cust) => new Customer
-                    {
-                        CustomerId = transGroup.Key,
-                        FirstName = cust.FirstName,
-                        LastName = cust.LastName,
-                        Address = cust.Address,
-                        City = cust.City,
-                        MobilePhone = cust.MobilePhone
-                    });
+                    trans => trans.CustomerId,
+                    (cust, transGroup) => new { Customer = cust, TransGroupCount = transGroup.Count() })
+                    .OrderByDescending(result => result.TransGroupCount)
+                    .Select(result => result.Customer)
+                    .Take(10);
 
                 return top10Customers;
+
+
+
             }
             catch (Exception ex)
             {
@@ -134,75 +123,84 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var top10Destinations = context.Transaction
-                    .GroupBy(trans => trans.AccommodationId)
-                    .OrderByDescending(g => g.Count())
+                var top10Destinations = context.Accommodation
+                    .GroupJoin(
+                        context.Transaction,
+                        accom => accom.AccommodationId,
+                        trans => trans.AccommodationId,
+                        (accom, transGroup) => new
+                        {
+                            Accommodation = accom,
+                            TransactionCount = transGroup.Count()
+                        })
+                    .GroupBy(
+                        result => result.Accommodation.DestinationId,
+                        (key, group) => new
+                        {
+                            DestinationId = key,
+                            TotalTransactionCount = group.Sum(result => result.TransactionCount)
+                        })
+                    .OrderByDescending(result => result.TotalTransactionCount)
                     .Take(10)
                     .Join(
-                    context.Accommodation,
-                    transGroup => transGroup.Key,
-                    accom => accom.AccommodationId,
-                    (transGroup, accom) => new Accommodation
-                    {
-                        AccommodationId = transGroup.Key,
-                        DestinationId = accom.DestinationId
-
-                    }).Join(context.Destinations,
-                    accommod => accommod.DestinationId,
-                    dest => dest.DestinationId,
-                    (accommod, dest) => new Destination
-                    {
-                        DestinationId = dest.DestinationId,
-                        Country = dest.Country,
-                        City = dest.City,
-                        PostalCode = dest.PostalCode
-                    });
+                        context.Destinations,
+                        result => result.DestinationId,
+                        dest => dest.DestinationId,
+                        (result, dest) => dest)
+                    .Distinct();
 
                 return top10Destinations;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while searching for Top 10 Customers. {ex.Message}");
+                throw new Exception($"An error occurred while searching for Top 10 Destinations. {ex.Message}");
             }
         }
+
 
         public IEnumerable<Service> Top10Services()
         {
             try
             {
-                var Top10Services = context.Transaction
-                    .GroupBy(trans => trans.ServiceId)
-                    .OrderByDescending(group => group.Count())
+                var top10Services = context.Transaction
+                    .GroupBy(
+                        trans => trans.ServiceId,
+                        (key, group) => new
+                        {
+                            ServiceId = key,
+                            TransactionCount = group.Count()
+                        })
+                    .OrderByDescending(result => result.TransactionCount)
                     .Take(10)
-                    .Join(context.Service,
-                    groupServ => groupServ.Key,
-                    serv => serv.ServiceId,
-                    (groupServ, serv) => new Service
-                    {
-                        ServiceId = groupServ.Key,
-                        ServiceName = serv.ServiceName,
-                        Price = serv.Price
-                    });
-                return Top10Services;
+                    .Join(
+                        context.Service,
+                        result => result.ServiceId,
+                        serv => serv.ServiceId,
+                        (result, serv) => serv);
+
+                return top10Services;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while searching for Top 10 Customers. {ex.Message}");
+                throw new Exception($"An error occurred while searching for Top 10 Services. {ex.Message}");
             }
         }
+
 
         public Accommodation TopAccommodation()
         {
             try
             {
-                var topAccommodationId = context.Transaction
-                    .GroupBy(trans => trans.AccommodationId)
-                    .OrderByDescending(g => g.Count())
-                    .Select(g => g.Key)
+                var topAccommodation = context.Accommodation
+                    .GroupJoin(
+                    context.Transaction,
+                    accom => accom.AccommodationId,
+                    trans => trans.AccommodationId,
+                    (accom, transGroup) => new { Accommodation = accom, TransactionCount = transGroup.Count() })
+                    .OrderByDescending(result => result.TransactionCount)
+                    .Select(result => result.Accommodation)
                     .FirstOrDefault();
 
-                var topAccommodation = context.Accommodation.FirstOrDefault(accom => accom.AccommodationId == topAccommodationId);
-                    
 
                 return topAccommodation;
 
@@ -218,13 +216,16 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var topCustommerId = context.Transaction
-                    .GroupBy(trans => trans.CustomerId)
-                    .OrderByDescending(g => g.Count())
-                    .Select(g => g.Key)
+                var topCustomer = context.Customers
+                    .GroupJoin(
+                    context.Transaction,
+                    cust => cust.CustomerId,
+                    trans => trans.CustomerId,
+                    (cust, trans) => new {Customer = cust, TransactionSum = trans.Sum(trans => trans.Amount)})
+                    .OrderByDescending(result => result.TransactionSum)
+                    .Select(result => result.Customer)
                     .FirstOrDefault();
 
-                var topCustomer = context.Customers.FirstOrDefault(cust => cust.CustomerId == topCustommerId);
                 return topCustomer;
             }
             catch (Exception ex)
@@ -234,10 +235,6 @@ namespace Infrastructure.Repositories
 
         }
 
-        public Destination TopDestination()
-        {
-            throw new NotImplementedException();
-        }
 
         public Service TopService()
         {

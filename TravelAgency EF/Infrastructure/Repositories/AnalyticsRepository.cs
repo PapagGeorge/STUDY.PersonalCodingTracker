@@ -260,8 +260,23 @@ namespace Infrastructure.Repositories
 
         public IEnumerable<Transaction> TransactionsByCustomer(long customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var transactionsByCustomer = context.Transaction
+                    .Where(trans => trans.CustomerId == customerId);
+
+                return transactionsByCustomer;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while searching for transactions by customer. {ex.Message}");
+            }
         }
+
+
+
+
+    }
 
         public IEnumerable<Invoice> UnPaidInvoices(DateTime dateRangeStart, DateTime dateRangeEnd)
         {

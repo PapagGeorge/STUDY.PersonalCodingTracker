@@ -20,7 +20,7 @@ namespace Application.Services
 
         public void ShowAllDestinations()
         {
-            Console.WriteLine("\n\n\nThe Following are all the available destinations you can travel to through our Agency: \n\n");
+            
             List<Destination> destinations = _tripRepository.ShowAllDestinations().ToList();
 
             if (destinations.Any())
@@ -37,9 +37,9 @@ namespace Application.Services
                 Console.WriteLine("Destination List is empty. Please try again later.");
             }
         }
-        public void ShowTripChoices(int userChoice, long destionationId)
+        public void ShowTripChoices(long destionationId)
         {
-            if (_tripRepository.DestinationExists(userChoice))
+            if (_tripRepository.DestinationExists(destionationId))
             {
                 Console.WriteLine("\n\nBased on the destination you chose there are the following travelling choices at the moment: ");
 

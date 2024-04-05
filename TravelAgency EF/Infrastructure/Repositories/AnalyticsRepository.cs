@@ -41,6 +41,34 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public IEnumerable<Invoice> PaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd)
+        {
+            try
+            {
+                var paidInvoices = context.Invoices.Where(inv => inv.IsPaid == true && inv.IssuedDate >= dateRangeStart
+                && inv.IssuedDate <= dateRangeEnd && inv.CustomerId == customerId);
+                return paidInvoices;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for paid invoices in a specific daterange. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Invoice> UnPaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd)
+        {
+            try
+            {
+                var paidInvoices = context.Invoices.Where(inv => inv.IsPaid == false && inv.IssuedDate >= dateRangeStart
+                && inv.IssuedDate <= dateRangeEnd && inv.CustomerId == customerId);
+                return paidInvoices;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while searching for unpaid invoices in a specific daterange. {ex.Message}");
+            }
+        }
+
         public IEnumerable<Payment> PaymentsByCustomer(long userId)
         {
             try
@@ -103,8 +131,8 @@ namespace Infrastructure.Repositories
                     .GroupJoin(context.Transaction,
                     cust => cust.CustomerId,
                     trans => trans.CustomerId,
-                    (cust, transGroup) => new { Customer = cust, TransGroupCount = transGroup.Count() })
-                    .OrderByDescending(result => result.TransGroupCount)
+                    (cust, transGroup) => new { Customer = cust, TotalTransactionAmount = transGroup.Sum(trans => trans.Amount) })
+                    .OrderByDescending(result => result.TotalTransactionAmount)
                     .Select(result => result.Customer)
                     .Take(10);
 
@@ -288,6 +316,12 @@ namespace Infrastructure.Repositories
                 throw new Exception($"An error occurred while searching for unpaid invoices. {ex.Message}");
             }
 
+        }
+
+        public IEnumerable<Invoice> UnpaidInvoicesByCustomer(long customerId)
+        {
+            var invoicesByCustomer = context.Invoices.Where(inv => inv.CustomerId == customerId && inv.IsPaid == false);
+            return invoicesByCustomer;
         }
 
 

@@ -17,6 +17,7 @@ namespace Application.Interfaces
         bool ServiceExists(long serviceId);
         bool AccommodationExists(long accommodationId);
         bool TransportationExists(long transportationId);
+        bool DestinationExists(long transportationId);
 
     }
 }

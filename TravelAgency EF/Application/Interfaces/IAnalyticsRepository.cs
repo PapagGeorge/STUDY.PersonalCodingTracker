@@ -22,6 +22,9 @@ namespace Application.Interfaces
         IEnumerable<Payment> PaymentsByDateRange(DateTime dateRangeStart, DateTime dateRangeEnd);
         IEnumerable<Payment> PaymentsByCustomer(long userId);
         IEnumerable<Transaction> TransactionsByCustomer(long customerId);
+        IEnumerable<Invoice> UnpaidInvoicesByCustomer(long customerId);
+        IEnumerable<Invoice> PaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd);
+        IEnumerable<Invoice> UnPaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd)
 
 
 

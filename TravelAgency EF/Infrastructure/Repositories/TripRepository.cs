@@ -47,6 +47,18 @@ namespace Infrastructure.Repositories
 
         }
 
+        public bool DestinationExists(long destinationId)
+        {
+            try
+            {
+                return context.Destinations.Count(dest => dest.DestinationId == destinationId) == 1;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to validate the destination. {ex.Message}");
+            }
+        }
+
         public void BookAccommodation(long customerId, long AccomId, int daysOfVisit)
         {
             using(var transaction = context.Database.BeginTransaction())

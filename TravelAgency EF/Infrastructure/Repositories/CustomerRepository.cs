@@ -116,6 +116,7 @@ namespace Infrastructure
                         invoice.IsPaid = true;
                         invoice.PaymentDate = DateTime.Now;
 
+                        context.Add(payment);
                         context.Add(invoice);
                         context.Add(payment);
                         context.Add(customer);

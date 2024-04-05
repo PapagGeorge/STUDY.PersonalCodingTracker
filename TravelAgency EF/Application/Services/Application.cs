@@ -240,11 +240,63 @@ namespace Application.Services
             
         }
 
-
-
         public void TopChoicesByCustomers()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("\n\nThe following are the top 10 Choices by our Customers so far: ");
+
+            Console.WriteLine("-----Top 10 Destinations-----");
+            List<Destination> top10Destinations = _analyticsRepository.Top10Destinations().ToList();
+            if( !top10Destinations.Any() )
+            {
+                Console.WriteLine("Top Destinations List is not available at the moment. Please try again later.");
+            }
+            else
+            {
+                for (int i = 0; i < top10Destinations.Count; i++)
+                {
+                    Destination destination = top10Destinations[i];
+                    Console.WriteLine($"\n\n\n{i + 1}. Country: {destination.Country} || City: {destination.City} || {destination.DestinationId}");
+                }
+            }
+
+
+            Console.WriteLine("-----Top 10 Hotels-----");
+
+            List<Accommodation> top10Hotels = _analyticsRepository.Top10MostVisitedAccommodations().ToList();
+            if (!top10Hotels.Any())
+            {
+                Console.WriteLine("Top Hotels List is not available at the moment. Please try again later.");
+            }
+            else
+            {
+                for (int i = 0; i < top10Hotels.Count; i++)
+                {
+                    Accommodation accommodation = top10Hotels[i];
+                    Console.WriteLine($"\n\n\n{i + 1}. Hotel: {accommodation.HotelName} || Star Rating: {accommodation.StarRating} ||" +
+                        $" Price Per Person: {accommodation.PricePerPersonPerDay} || Accommodation Id: {accommodation.AccommodationId}");
+
+                }
+            }
+
+
+
+            Console.WriteLine("-----Top 10 Additional Services-----");
+
+            List<Service> top10Services = _analyticsRepository.Top10Services().ToList();
+            if (!top10Services.Any())
+            {
+                Console.WriteLine("Top Services List is not available at the moment. Please try again later.");
+            }
+            else
+            {
+                for (int i = 0; i < top10Services.Count; i++)
+                {
+                    Service service = top10Services[i];
+                    Console.WriteLine($"\n\n\n{i + 1}. Service Description: {service.ServiceName} || Price: {service.Price} ||" +
+                        $" Service Id: {service.ServiceId}");
+
+                }
+            }
         }
     }
 }

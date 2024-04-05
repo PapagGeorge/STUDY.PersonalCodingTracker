@@ -320,11 +320,31 @@ namespace Infrastructure.Repositories
 
         public IEnumerable<Invoice> UnpaidInvoicesByCustomer(long customerId)
         {
-            var invoicesByCustomer = context.Invoices.Where(inv => inv.CustomerId == customerId && inv.IsPaid == false);
-            return invoicesByCustomer;
+            try
+            {
+                var invoicesByCustomer = context.Invoices.Where(inv => inv.CustomerId == customerId && inv.IsPaid == false);
+                return invoicesByCustomer;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while searching for unpaid invoices. {ex.Message}");
+            }
+
         }
 
+        public bool InvoiceExists(long invoiceId)
+        {
+            try
+            {
+                return context.Invoices.Any(inv => inv.InvoiceId == invoiceId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while validating invoice. {ex.Message}");
+            }
 
+
+        }
     }
 }
     

@@ -224,7 +224,20 @@ namespace Application.Services
         }
         public void PayInvoice(long customerId, decimal amount, long invoiceId)
         {
-            throw new NotImplementedException();
+            if (!_analyticsRepository.InvoiceExists(invoiceId))
+            {
+                Console.WriteLine($"Invoice with Id: {invoiceId} does not exist");
+                return;
+            }
+
+            if (!_customerRepository.CustomerExists(customerId))
+            {
+                Console.WriteLine($"Customer with Id: {customerId} does not exist.");
+                return;
+            }
+            
+                PayInvoice(customerId, amount, invoiceId);
+            
         }
 
 

@@ -24,7 +24,8 @@ namespace Application.Interfaces
         IEnumerable<Transaction> TransactionsByCustomer(long customerId);
         IEnumerable<Invoice> UnpaidInvoicesByCustomer(long customerId);
         IEnumerable<Invoice> PaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd);
-        IEnumerable<Invoice> UnPaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd)
+        IEnumerable<Invoice> UnPaidInvoicesByCustomer(long customerId, DateTime dateRangeStart, DateTime dateRangeEnd);
+        bool InvoiceExists(long invoiceId);
 
 
 

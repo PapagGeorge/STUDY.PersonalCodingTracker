@@ -13,10 +13,18 @@ namespace Infrastructure
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
+
+        public SalesDbContext(DbContextOptions<SalesDbContext> options) : base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=DESKTOP;Database=SalesWebApi;Integrated Security=SSPI;Trust Server Certificate=True;");
         }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

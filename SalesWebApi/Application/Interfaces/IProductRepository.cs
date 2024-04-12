@@ -7,7 +7,7 @@ namespace Application.Interfaces
         IEnumerable<Product> ShowAllProducts();
         void BulkInsertProducts(List<Product> producstToAdd);
         bool ProductExists(int productId);
-        IEnumerable<Product> ChooseProducts();
+        IEnumerable<Product> ChooseProducts(List <int> productIds);
 
     }
 }

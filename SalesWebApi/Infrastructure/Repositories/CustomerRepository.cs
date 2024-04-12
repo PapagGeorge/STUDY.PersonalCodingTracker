@@ -82,6 +82,8 @@ namespace Infrastructure.Repositories
                     customerToUpdate.Address = customer.Address;
                     customerToUpdate.MobilePhone = customer.MobilePhone;
                     customerToUpdate.Email = customer.Email;
+
+                    _context.SaveChanges();
                 }
                 else
                 {

@@ -24,21 +24,60 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<Product> ChooseProducts(List<int> productIds)
+        public bool isProductAvailable(int productId)
+        {
+            try
+            {
+                return _context.Products.Any(prod => prod.ProductId == productId && prod.isAvailable == true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while checking product availability. {ex.Message}");
+            }
+
+        }
+
+        public IEnumerable<Product> CheckProductListAvailability(List<Product> productList)
         {
             try
             {
                 List<Product> chosenProducts = new List<Product>();
 
-                foreach (int productId in productIds)
+                foreach (Product product in chosenProducts)
                 {
-                    if (ProductExists(productId))
+                    if (isProductAvailable(product.ProductId))
                     {
-                        chosenProducts.Add(_context.Products.FirstOrDefault(p => p.ProductId == productId));
+                        chosenProducts.Add(_context.Products.FirstOrDefault(p => p.ProductId == product.ProductId));
                     }
                     else
                     {
-                        throw new KeyNotFoundException($"Product with Id: {productId} was not found. Please try again.");
+                        throw new KeyNotFoundException($"Product with Id: {product.ProductId} does not exist. Please try again.");
+                    }
+                }
+
+                return chosenProducts;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while inserting products. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Product> ChosenProductsExist(List<Product> productList)
+        {
+            try
+            {
+                List<Product> chosenProducts = new List<Product>();
+
+                foreach (Product product in chosenProducts)
+                {
+                    if (ProductExists(product.ProductId))
+                    {
+                        chosenProducts.Add(_context.Products.FirstOrDefault(p => p.ProductId == product.ProductId));
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"Product with Id: {product.ProductId} was not found. Please try again.");
                     }
                 }
 

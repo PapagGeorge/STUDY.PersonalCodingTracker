@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface IOrderService
     {
-        void CreateOrder(int customerId, int paymentMethodId);
+        void CreateOrder(Order order, List<Product> chosenProducts);
     }
 }

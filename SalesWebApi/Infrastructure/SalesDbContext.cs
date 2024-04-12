@@ -12,6 +12,7 @@ namespace Infrastructure
         public DbSet<Order> Orders { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
 
 
 

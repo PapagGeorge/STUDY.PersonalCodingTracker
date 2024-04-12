@@ -12,15 +12,34 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public void CreateOrder(int customerId, int paymentMethodId)
+        public void CreateOrder(Order order, List<Product> chosenProducts)
         {
             try
             {
-                var order = new Order();
-                order.customerId = customerId;
-                order.PaymentMethodId = paymentMethodId;
-                _context.Orders.Add(order);
-                _context.SaveChanges();
+               using (var transaction = _context.Database.BeginTransaction())
+                {
+
+                    
+                    _context.Orders.Add(order);
+                    _context.SaveChanges();
+
+
+                    var orderProducts = new List<OrderProduct>();
+
+                    foreach (var product in chosenProducts)
+                    {
+                        var orderProduct = new OrderProduct();
+                        orderProduct.ProductId = product.ProductId;
+                        orderProduct.OrderId = order.OrderId;
+
+                        orderProducts.Add(orderProduct);
+                    }
+
+                    _context.OrderProduct.AddRange(orderProducts);
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+                
                 
             }
             catch (Exception ex)

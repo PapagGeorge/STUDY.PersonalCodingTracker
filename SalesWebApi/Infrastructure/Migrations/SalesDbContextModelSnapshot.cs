@@ -37,21 +37,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("CategoryProduct");
                 });
 
-            modelBuilder.Entity("ColorOrder", b =>
-                {
-                    b.Property<int>("ColorsColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrdersOrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ColorsColorId", "OrdersOrderId");
-
-                    b.HasIndex("OrdersOrderId");
-
-                    b.ToTable("ColorOrder");
-                });
-
             modelBuilder.Entity("ColorProduct", b =>
                 {
                     b.Property<int>("ColorsColorId")
@@ -141,26 +126,20 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("OrderDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("customerId")
                         .HasColumnType("int");
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("PaymentMethodId");
+
+                    b.HasIndex("customerId");
 
                     b.ToTable("Orders");
                 });
@@ -271,21 +250,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ColorOrder", b =>
-                {
-                    b.HasOne("Domain.Entities.Color", null)
-                        .WithMany()
-                        .HasForeignKey("ColorsColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ColorProduct", b =>
                 {
                     b.HasOne("Domain.Entities.Color", null)
@@ -303,15 +267,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Order", b =>
                 {
-                    b.HasOne("Domain.Entities.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
                         .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("customerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

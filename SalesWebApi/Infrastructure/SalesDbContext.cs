@@ -13,6 +13,8 @@ namespace Infrastructure
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
+        
+
 
         public SalesDbContext(DbContextOptions<SalesDbContext> options) : base(options)
         {
@@ -32,9 +34,7 @@ namespace Infrastructure
                 .Property(prop => prop.ColorId)
                 .IsRequired(false);
 
-            modelBuilder.Entity<Order>()
-                .Property(prop => prop.ColorId)
-                .IsRequired(false);
+           
 
             modelBuilder.Entity<Order>()
                 .Property(o => o.Amount)
@@ -47,6 +47,12 @@ namespace Infrastructure
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
+
+            
+
+
+
+
         }
     }
 }

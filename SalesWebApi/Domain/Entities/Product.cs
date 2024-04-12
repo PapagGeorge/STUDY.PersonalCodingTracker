@@ -12,5 +12,6 @@
         public ICollection <Color> Colors { get; set; }
         public ICollection<Category> Categories { get; set; }
         public ICollection<Order> Orders { get; set; }
+
     }
 }

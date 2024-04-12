@@ -13,7 +13,7 @@ namespace Infrastructure
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
-        
+
 
 
         public SalesDbContext(DbContextOptions<SalesDbContext> options) : base(options)
@@ -33,8 +33,6 @@ namespace Infrastructure
             modelBuilder.Entity<Product>()
                 .Property(prop => prop.ColorId)
                 .IsRequired(false);
-
-           
 
             modelBuilder.Entity<Order>()
                 .Property(o => o.Amount)

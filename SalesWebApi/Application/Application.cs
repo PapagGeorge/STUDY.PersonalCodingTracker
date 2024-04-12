@@ -48,17 +48,36 @@ namespace Application
 
         public void CreateNewCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (string.IsNullOrEmpty(customer.Name) || string.IsNullOrEmpty(customer.MobilePhone))
+                {
+                    throw new Exception("Customer's Name and Mobile Phone must be provided");
+                }
+                else
+                {
+                    _customerRepository.CreateNewCustomer(customer);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while creating new Customer. {ex.Message}");
+            }
         }
 
-        public IEnumerable<Order> ShowCustomerOrders(int customerId)
+        public IEnumerable<object> ShowCustomerOrders(int customerId)
         {
-            throw new NotImplementedException();
+            if (_customerRepository.CustomerExists(customerId))
+            {
+                var ordersByCustomer =  _customerRepository.OrdersByCustomer(customerId).ToList();
+                return ordersByCustomer;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Customer with Id: {customerId} was not found");
+            }
         }
 
-        public IEnumerable<Product> ShowProducts()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

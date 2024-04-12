@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using System.Configuration;
 
 namespace Infrastructure
 {
@@ -24,7 +25,9 @@ namespace Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP;Database=SalesWebApi;Integrated Security=SSPI;Trust Server Certificate=True;");
+            var dbConfiguration = ((DatabaseConfigurationSection)ConfigurationManager.GetSection("DataBaseConfigurationSection"));
+            var connectionString = dbConfiguration.ConnectionString;
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         

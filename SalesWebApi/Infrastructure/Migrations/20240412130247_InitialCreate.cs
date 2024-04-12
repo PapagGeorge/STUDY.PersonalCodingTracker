@@ -112,19 +112,17 @@ namespace Infrastructure.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: true),
                     PaymentMethodId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    OrderDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    customerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_Orders_Customers_customerId",
+                        column: x => x.customerId,
                         principalTable: "Customers",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
@@ -185,30 +183,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ColorOrder",
-                columns: table => new
-                {
-                    ColorsColorId = table.Column<int>(type: "int", nullable: false),
-                    OrdersOrderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ColorOrder", x => new { x.ColorsColorId, x.OrdersOrderId });
-                    table.ForeignKey(
-                        name: "FK_ColorOrder_Colors_ColorsColorId",
-                        column: x => x.ColorsColorId,
-                        principalTable: "Colors",
-                        principalColumn: "ColorId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ColorOrder_Orders_OrdersOrderId",
-                        column: x => x.OrdersOrderId,
-                        principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderProduct",
                 columns: table => new
                 {
@@ -238,11 +212,6 @@ namespace Infrastructure.Migrations
                 column: "ProductsProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ColorOrder_OrdersOrderId",
-                table: "ColorOrder",
-                column: "OrdersOrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ColorProduct_ProductsProductId",
                 table: "ColorProduct",
                 column: "ProductsProductId");
@@ -253,9 +222,9 @@ namespace Infrastructure.Migrations
                 column: "ProductsProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
+                name: "IX_Orders_customerId",
                 table: "Orders",
-                column: "CustomerId");
+                column: "customerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PaymentMethodId",
@@ -273,9 +242,6 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CategoryProduct");
-
-            migrationBuilder.DropTable(
-                name: "ColorOrder");
 
             migrationBuilder.DropTable(
                 name: "ColorProduct");

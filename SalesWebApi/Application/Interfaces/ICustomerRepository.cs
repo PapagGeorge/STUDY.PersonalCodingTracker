@@ -8,6 +8,6 @@ namespace Application.Interfaces
         void DeleteCustomer(int customerId);
         void CreateNewCustomer (Customer customer);
         IEnumerable<Customer> ShowAllCustomers();
-        void UpdateCustomer(int customerId);
+        void UpdateCustomer(int customerId, Customer customer);
     }
 }

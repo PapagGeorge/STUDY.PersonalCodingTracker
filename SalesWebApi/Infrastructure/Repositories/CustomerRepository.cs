@@ -5,29 +5,94 @@ namespace Infrastructure.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
+        private readonly SalesDbContext _context;
+
+        public CustomerRepository(SalesDbContext context)
+        {
+            _context = context;
+        }
+
         public void CreateNewCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Customers.Add(customer);
+                _context.SaveChanges();
+                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while creating new customer. {ex.Message}");
+            }
         }
 
         public bool CustomerExists(int customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Customers.Any(cust => cust.CustomerId == customerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void DeleteCustomer(int customerId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (CustomerExists(customerId))
+                {
+                    var customerToRemove = _context.Customers.FirstOrDefault(cust => cust.CustomerId == customerId);
+                    _context.Remove(customerToRemove);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Customer with ID {customerId} does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while deleting customer. {ex.Message}");
+            }
         }
 
         public IEnumerable<Customer> ShowAllCustomers()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Customers;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to show all customers. {ex.Message}");
+            }
         }
 
-        public void UpdateCustomer(int customerId)
+        public void UpdateCustomer(int customerId, Customer customer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (CustomerExists(customerId))
+                {
+                    var customerToUpdate = _context.Customers.FirstOrDefault(cust => cust.CustomerId == customerId);
+                    customerToUpdate.Name = customer.Name;
+                    customerToUpdate.Address = customer.Address;
+                    customerToUpdate.MobilePhone = customer.MobilePhone;
+                    customerToUpdate.Email = customer.Email;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Customer with ID {customerId} does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to update customer with Id: {customerId}. {ex.Message}");
+            }
+
         }
     }
 }

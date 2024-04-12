@@ -59,6 +59,32 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public IEnumerable<object> OrdersByCustomer(int customerId)
+        {
+
+            try
+            {
+                
+                var result = from customer in _context.Customers
+                             join order in _context.Orders
+                             on customer.CustomerId equals order.customerId
+                             select new
+                             {
+                                 CustomerName = customer.Name,
+                                 OrderId = order.OrderId,
+                                 Amount = order.Amount,
+                                 Date = order.OrderDateTime
+                             };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find the orders of customer with Id: {customerId}. {ex.Message}");
+            }
+
+
+        }
+
         public IEnumerable<Customer> ShowAllCustomers()
         {
             try

@@ -9,5 +9,6 @@ namespace Application.Interfaces
         void CreateNewCustomer (Customer customer);
         IEnumerable<Customer> ShowAllCustomers();
         void UpdateCustomer(int customerId, Customer customer);
+        IEnumerable<object> OrdersByCustomer(int customerId);
     }
 }

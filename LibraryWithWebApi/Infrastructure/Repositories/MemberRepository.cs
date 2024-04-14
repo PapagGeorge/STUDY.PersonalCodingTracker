@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using System.Collections;
 
 namespace Infrastructure.Repositories
 {
@@ -23,6 +24,32 @@ namespace Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while adding new member. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Book> BooksOwedByMember(int memberId)
+        {
+            try
+            {
+                var BooksOwed = _context.Transactions
+                .Where(trans => trans.MemberId == memberId)
+                .GroupBy(trans => trans.BookId)
+                .Select(g => g.OrderByDescending(trans => trans.TransactionId).FirstOrDefault())
+                .Join(
+                _context.Books,
+                trans => trans.BookId,
+                book => book.BookId,
+                (trans, book) => book);
+
+                return BooksOwed;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find books " +
+                    $"owed by user with Id: {memberId}. {ex.Message}");
             }
         }
 

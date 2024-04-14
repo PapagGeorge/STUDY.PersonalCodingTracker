@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using System.Collections;
 
 namespace Application.Interfaces
 {
@@ -12,6 +13,7 @@ namespace Application.Interfaces
         void RestoreMemberRentability(int memberId);
         bool CanMemberRentBooks(int memberId);
         int BooksOwedByMemberCount(int memberId);
+        IEnumerable<Book> BooksOwedByMember(int memberId);
 
 
 

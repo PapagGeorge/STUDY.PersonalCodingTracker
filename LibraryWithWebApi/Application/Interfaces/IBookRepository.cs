@@ -9,6 +9,11 @@ namespace Application.Interfaces
         void SoftDeleteBook(int bookId);
         IEnumerable<Book> GetAllBooks();
         bool IsBookAvailable(int bookId);
-
+        void MakeBookAvailable(int bookId);
+        void MakeBookUnavailable(int bookId);
+        int NumberOfBooksAvailable(int bookId);
+        bool BookIsOwed (int bookId);
+        void IncreaseBookAvailability(int bookId, int increaseNumber);
+        void DecreaseBookAvailability(int bookId, int decreaseNumber);
     }
 }

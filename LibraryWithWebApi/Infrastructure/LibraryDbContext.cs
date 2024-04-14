@@ -17,8 +17,8 @@ namespace Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
-            optionsBuilder.UseSqlServer(dbConfiguration.ConnectionString);
+            //var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP;Database=NewLibrary;Integrated Security=SSPI;Trust Server Certificate=True;");
         }
 
     }

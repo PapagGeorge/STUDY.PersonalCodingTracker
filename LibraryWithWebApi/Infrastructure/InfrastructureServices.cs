@@ -11,14 +11,12 @@ namespace Infrastructure
     {
         public static IServiceCollection InfraServices (this IServiceCollection services)
         {
-            services.AddDbContext<LibraryDbContext>(options
-                => options.UseSqlServer("Data Source=DESKTOP;Database=NewLibrary;Integrated Security=SSPI;Trust Server Certificate=True;"));
             services.AddSingleton<IRentService, RentService>();
             services.AddSingleton<IBookRepository, BookRepository>();
             services.AddSingleton<IMemberRepository, MemberRepository>();
 
-            //var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
-            
+            var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
+            services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(dbConfiguration.ConnectionString));
 
             return services;
 

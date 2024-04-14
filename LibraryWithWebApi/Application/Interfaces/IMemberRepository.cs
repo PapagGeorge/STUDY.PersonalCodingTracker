@@ -11,6 +11,7 @@ namespace Application.Interfaces
         void RemoveMemberRentability(int memberId);
         void RestoreMemberRentability(int memberId);
         bool CanMemberRentBooks(int memberId);
+        int BooksOwedByMemberCount(int memberId);
 
 
 

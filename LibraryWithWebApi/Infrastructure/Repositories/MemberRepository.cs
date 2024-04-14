@@ -26,6 +26,27 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public int BooksOwedByMemberCount(int memberId)
+        {
+            try
+            {
+                var numBooksOwed = _context.Transactions
+                .Where(trans => trans.MemberId == memberId)
+                .GroupBy(trans => trans.BookId)
+                .Select(g => g.OrderByDescending(trans => trans.TransactionId).FirstOrDefault())
+                .Count(t => t.RentDate != null && t.ReturnDate == null);
+
+                return numBooksOwed;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find number of books " +
+                    $"owed by user with Id: {memberId}. {ex.Message}");
+            }
+
+
+        }
+
         public bool CanMemberRentBooks(int memberId)
         {
             try

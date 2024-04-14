@@ -5,7 +5,8 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ApplicationsController : ControllerBase
+    public class MembersController : ControllerBase
     {
+
     }
 }

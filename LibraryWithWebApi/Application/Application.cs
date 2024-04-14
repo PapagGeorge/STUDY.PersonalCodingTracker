@@ -69,18 +69,18 @@ namespace Application
         {
             try
             {
-                if (!string.IsNullOrEmpty(member.Name))
+                if (string.IsNullOrEmpty(member.Name))
                 {
                     throw new Exception("Member name cannot be null or Empty");
 
                 }
 
-                if (!string.IsNullOrEmpty(member.Surname))
+                if (string.IsNullOrEmpty(member.Surname))
                 {
                     throw new Exception("Member surname cannot be null or Empty");
 
                 }
-                if (!string.IsNullOrEmpty(member.MobilePhone))
+                if (string.IsNullOrEmpty(member.MobilePhone))
                 {
                     throw new Exception("Member mobile phone cannot be null or Empty");
 

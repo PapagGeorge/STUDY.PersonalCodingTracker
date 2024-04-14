@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to add new book");
+                throw new Exception($"An error occured while trying to add new book. {ex.Message}");
             }
         }
 
@@ -34,7 +34,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to add new book");
+                throw new Exception($"An error occured while trying to check if book with Id: {bookId} exists. {ex.Message}");
             }
         }
 
@@ -47,7 +47,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to add new book");
+                throw new Exception($"An error occured while trying to get all books. {ex.Message}");
             }
         }
 
@@ -68,7 +68,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to add new book");
+                throw new Exception($"An error occured while trying to check availability of book with Id: {bookId}.  {ex.Message}");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to add new book");
+                throw new Exception($"An error occured while trying to delete book.  {ex.Message}");
             }
         }
     }

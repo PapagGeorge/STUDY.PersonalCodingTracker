@@ -25,13 +25,13 @@ namespace Application
         {
             try
             {
-                if (!string.IsNullOrEmpty(book.BookTitle))
+                if (string.IsNullOrEmpty(book.BookTitle))
                 {
                     throw new Exception("Book Title cannot be null or Empty");
                     
                 }
     
-                if (!string.IsNullOrEmpty(book.Author))
+                if (string.IsNullOrEmpty(book.Author))
                 {
                     throw new Exception("Author cannot be null or Empty");
                     
@@ -109,6 +109,10 @@ namespace Application
                 {
                     throw new Exception($"Book with Id: {bookId} is owed by members. It can only be deleted after returned.");
                 }
+                if (_bookRepository.isBookDeleted(bookId))
+                {
+                    throw new Exception($"Book with Id: {bookId} is already deleted.");
+                }
                 _bookRepository.SoftDeleteBook(bookId);
             }
             catch (Exception ex)
@@ -123,14 +127,15 @@ namespace Application
             try
             {
                
-                if (_memberRepository.MemberExists(memberId))
-                {
-                    _memberRepository.SoftDeleteMember(memberId);
-                }
-                else
+                if (!_memberRepository.MemberExists(memberId))
                 {
                     throw new Exception($"Member with Id: {memberId} does not exist.");
                 }
+                if(_memberRepository.isMemberDeleted(memberId))
+                {
+                    throw new Exception($"Member with Id: {memberId} is already deleted.");
+                }
+                _memberRepository.SoftDeleteMember(memberId);
             }
             catch (Exception ex)
             {
@@ -160,6 +165,14 @@ namespace Application
                 if (!_bookRepository.IsBookAvailable(bookId))
                 {
                     throw new Exception($"Book with Id: {bookId} is not available.");
+                }
+                if (_memberRepository.isMemberDeleted(memberId))
+                {
+                    throw new Exception($"Member with Id: {memberId} is deleted.");
+                }
+                if (_bookRepository.isBookDeleted(bookId))
+                {
+                    throw new Exception($"Book with Id: {bookId} is deleted.");
                 }
                 if (!_memberRepository.CanMemberRentBooks(memberId))
                 {
@@ -233,7 +246,7 @@ namespace Application
         {
             try
             {
-                var allBooks = _bookRepository.GetAllBooks();
+                var allBooks = _bookRepository.GetAllActiveAvailableBooks();
                 return allBooks;
 
             }
@@ -247,7 +260,7 @@ namespace Application
         {
             try
             {
-                var allMembers = _memberRepository.GetAllMembers();
+                var allMembers = _memberRepository.GetAllActiveMembers();
                 return allMembers;
 
             }

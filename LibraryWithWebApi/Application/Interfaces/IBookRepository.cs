@@ -7,7 +7,7 @@ namespace Application.Interfaces
         bool BookExists(int bookId);
         void AddBook(Book book);
         void SoftDeleteBook(int bookId);
-        IEnumerable<Book> GetAllBooks();
+        IEnumerable<Book> GetAllActiveAvailableBooks();
         bool IsBookAvailable(int bookId);
         void MakeBookAvailable(int bookId);
         void MakeBookUnavailable(int bookId);
@@ -15,5 +15,7 @@ namespace Application.Interfaces
         bool BookIsOwed (int bookId);
         void IncreaseBookAvailability(int bookId, int increaseNumber);
         void DecreaseBookAvailability(int bookId, int decreaseNumber);
+        bool isBookDeleted(int bookId);
+        
     }
 }

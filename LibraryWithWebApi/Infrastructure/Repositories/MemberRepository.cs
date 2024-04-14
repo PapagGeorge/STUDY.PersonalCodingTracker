@@ -95,17 +95,37 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<Member> GetAllMembers()
+        public IEnumerable<Member> GetAllActiveMembers()
         {
             try
             {
-                return _context.Members;
+                return _context.Members.Where(member => member.isDeleted == false);
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to find all members. {ex.Message}");
             }
 
+        }
+
+        public bool isMemberDeleted(int memberId)
+        {
+            try
+            {
+                var member = _context.Members.FirstOrDefault(member => member.MemberId == memberId);
+                if(member.isDeleted == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find if member with Id: {memberId} is deleted. {ex.Message}");
+            }
         }
 
         public bool MemberExists(int memberId)

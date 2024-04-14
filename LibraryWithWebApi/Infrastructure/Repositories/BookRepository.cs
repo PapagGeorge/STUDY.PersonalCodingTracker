@@ -70,11 +70,11 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<Book> GetAllBooks()
+        public IEnumerable<Book> GetAllActiveAvailableBooks()
         {
             try
             {
-                var result = _context.Books;
+                var result = _context.Books.Where(book => book.isDeleted == false && book.IsAvailable == true);
                 return result;
             }
             catch (Exception ex)
@@ -115,6 +115,27 @@ namespace Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to check availability of book with Id: {bookId}.  {ex.Message}");
+            }
+        }
+
+        public bool isBookDeleted(int bookId)
+        {
+            try
+            {
+                var book = _context.Books.FirstOrDefault(book => book.BookId == bookId);
+
+                if(book.isDeleted == true)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to check if book with Id: {bookId} is deleted.  {ex.Message}");
             }
         }
 

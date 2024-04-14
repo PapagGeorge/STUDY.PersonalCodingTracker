@@ -11,9 +11,9 @@ namespace Infrastructure
     {
         public static IServiceCollection InfraServices (this IServiceCollection services)
         {
-            services.AddSingleton<IRentService, RentService>();
-            services.AddSingleton<IBookRepository, BookRepository>();
-            services.AddSingleton<IMemberRepository, MemberRepository>();
+            services.AddScoped<IRentService, RentService>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
 
             var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
             services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(dbConfiguration.ConnectionString));

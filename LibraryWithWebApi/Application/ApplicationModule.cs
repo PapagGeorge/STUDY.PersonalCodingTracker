@@ -7,7 +7,7 @@ namespace Application
     {
         public static IServiceCollection AppService(this IServiceCollection services)
         {
-            services.AddSingleton<IApplication, Application>();
+            services.AddScoped<IApplication, Application>();
 
             return services;
 

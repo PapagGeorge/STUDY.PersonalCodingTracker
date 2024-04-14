@@ -13,5 +13,6 @@ namespace Domain.Entities
         public int RentedCount { get; set; }
         public bool IsAvailable { get; set; }
         public bool isDeleted { get; set; } = false;
+
     }
 }

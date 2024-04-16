@@ -26,17 +26,35 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public IEnumerable<Book> BooksOwedByMember(int memberId)
+        {
+            try
+            {
+                var booksOwed = _context.Transactions.Where(trans => trans.MemberId == memberId && trans.ReturnDate == null)
+                    .Join(_context.Books,
+                    trans => trans.BookId,
+                    book => book.BookId,
+                    (trans ,book) => book);
+ 
+                return booksOwed;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find books " +
+                    $"owed by user with Id: {memberId}. {ex.Message}");
+            }
+        }
+
         public int BooksOwedByMemberCount(int memberId)
         {
             try
             {
                 var numBooksOwed = _context.Transactions
-                .Where(trans => trans.MemberId == memberId)
-                .GroupBy(trans => trans.BookId)
-                .Select(g => g.OrderByDescending(trans => trans.TransactionId).FirstOrDefault())
-                .Count(t => t.RentDate != null && t.ReturnDate == null);
+                    .Where(trans => trans.MemberId == memberId && trans.ReturnDate == null).Count();
 
                 return numBooksOwed;
+
             }
             catch (Exception ex)
             {
@@ -68,17 +86,30 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<Member> GetAllMembers()
+        public IEnumerable<Member> GetAllActiveMembers()
         {
             try
             {
-                return _context.Members;
+                return _context.Members.Where(member => member.isDeleted == false);
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to find all members. {ex.Message}");
             }
 
+        }
+
+        public bool isMemberDeleted(int memberId)
+        {
+            try
+            {
+                var member = _context.Members.FirstOrDefault(member => member.MemberId == memberId);
+                return member.isDeleted;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to check if member with Id: {memberId} exists. {ex.Message}");
+            }
         }
 
         public bool MemberExists(int memberId)

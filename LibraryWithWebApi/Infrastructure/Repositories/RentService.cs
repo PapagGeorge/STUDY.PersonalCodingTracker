@@ -12,15 +12,16 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public void RentBook(int memberId, int bookId)
+        public void RentBook(RentBookRequest rentBookRequest)
         {
             try
             {
                 var transactionRecord = new Transaction()
                 {
-                    MemberId = memberId,
-                    BookId = bookId,
-                    RentDate = DateTime.Now
+                    MemberId = rentBookRequest.MemberId,
+                    BookId = rentBookRequest.BookId,
+                    RentDate = DateTime.Now,
+                    ReturnDate = null
                 };
 
                 _context.Transactions.Add(transactionRecord);
@@ -30,29 +31,25 @@ namespace Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to rent Book " +
-                    $"with Id: {bookId} to Member with Id: {memberId}. {ex.Message}");
+                    $"with Id: {rentBookRequest.BookId} to Member with Id: {rentBookRequest.MemberId}. {ex.Message}");
             }
         }
 
-        public void ReturnBook(int memberId, int bookId)
+        public void ReturnBook(ReturnBookRequest returnBookRequest)
         {
             try
             {
-                var transactionRecord = new Transaction()
-                {
-                    MemberId = memberId,
-                    BookId = bookId,
-                    ReturnDate = DateTime.Now
-                };
+                var transactionRecord = _context.Transactions.FirstOrDefault(trans => trans.BookId == returnBookRequest.BookId
+                && trans.ReturnDate == null);
 
-                _context.Transactions.Add(transactionRecord);
+                transactionRecord.ReturnDate = DateTime.Now;
                 _context.SaveChanges();
 
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to return Book " +
-                    $"with Id: {bookId} to Member with Id: {memberId}. {ex.Message}");
+                    $"with Id: {returnBookRequest.BookId} to Member with Id: {returnBookRequest.MemberId}. {ex.Message}");
             }
         }
     }

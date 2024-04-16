@@ -1,9 +1,6 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Entities;
-using System.Collections;
-using System.Net;
-using Application.Constans;
-
+using Application.Constatnts;
 
 namespace Application
 {
@@ -12,6 +9,7 @@ namespace Application
         private readonly IBookRepository _bookRepository;
         private readonly IMemberRepository _memberRepository;
         private readonly IRentService _rentService;
+        
 
         public Application(IBookRepository bookRepository, IMemberRepository memberRepository, IRentService rentService)
         {
@@ -136,6 +134,7 @@ namespace Application
                     throw new Exception($"Member with Id: {memberId} is already deleted.");
                 }
                 _memberRepository.SoftDeleteMember(memberId);
+                _memberRepository.RemoveMemberRentability(memberId);
             }
             catch (Exception ex)
             {
@@ -143,106 +142,106 @@ namespace Application
             }
         }
 
-        public void RentBook(int bookId, int memberId)
+        public void RentBook(RentBookRequest rentBookRequest)
         {
             try
             {
-                var booksOwedByMember = _memberRepository.BooksOwedByMember(memberId).ToList();
+                var booksOwedByMember = _memberRepository.BooksOwedByMember(rentBookRequest.MemberId).ToList();
 
 
-                if(booksOwedByMember.Any(book => book.BookId == bookId))
+                if (booksOwedByMember.Any(books => books.BookId == rentBookRequest.BookId))
                 {
-                    throw new Exception($"Book with Id: {bookId} has allready been rented to member with Id: {memberId}.");
+                    throw new Exception($"Book with Id: {rentBookRequest.BookId} has allready been rented to member with Id: {rentBookRequest.MemberId}.");
                 }
-                if(!_memberRepository.MemberExists(memberId))
+                if (!_memberRepository.MemberExists(rentBookRequest.MemberId))
                 {
-                    throw new Exception($"Member with Id: {memberId} does not exist.");
+                    throw new Exception($"Member with Id: {rentBookRequest.MemberId} does not exist.");
                 }
-                if (!_bookRepository.BookExists(bookId))
+                if (!_bookRepository.BookExists(rentBookRequest.BookId))
                 {
-                    throw new Exception($"Book with Id: {bookId} does not exist.");
+                    throw new Exception($"Book with Id: {rentBookRequest.BookId} does not exist.");
                 }
-                if (!_bookRepository.IsBookAvailable(bookId))
+                if (!_bookRepository.IsBookAvailable(rentBookRequest.BookId))
                 {
-                    throw new Exception($"Book with Id: {bookId} is not available.");
+                    throw new Exception($"Book with Id: {rentBookRequest.BookId} is not available.");
                 }
-                if (_memberRepository.isMemberDeleted(memberId))
+                if (_memberRepository.isMemberDeleted(rentBookRequest.MemberId))
                 {
-                    throw new Exception($"Member with Id: {memberId} is deleted.");
+                    throw new Exception($"Member with Id: {rentBookRequest.MemberId} is deleted.");
                 }
-                if (_bookRepository.isBookDeleted(bookId))
+                if (_bookRepository.isBookDeleted(rentBookRequest.BookId))
                 {
-                    throw new Exception($"Book with Id: {bookId} is deleted.");
+                    throw new Exception($"Book with Id: {rentBookRequest.BookId} is deleted.");
                 }
-                if (!_memberRepository.CanMemberRentBooks(memberId))
+                if (!_memberRepository.CanMemberRentBooks(rentBookRequest.MemberId))
                 {
-                    throw new Exception($"Member with Id: {memberId} cannot rent more books.");
-                }
-
-                _rentService.RentBook(memberId, bookId);
-                _bookRepository.DecreaseBookAvailability(bookId, 1);
-
-                if(_memberRepository.BooksOwedByMemberCount(memberId) >= Limits.maxBooksRentLimit)
-                {
-                    _memberRepository.RemoveMemberRentability(memberId);
+                    throw new Exception($"Member with Id: {rentBookRequest.MemberId} cannot rent more books.");
                 }
 
-                if(_bookRepository.NumberOfBooksAvailable(bookId) <= 0)
+                _rentService.RentBook(rentBookRequest);
+                _bookRepository.DecreaseBookAvailability(rentBookRequest.BookId, 1);
+
+                if(_memberRepository.BooksOwedByMemberCount(rentBookRequest.MemberId) >= Limits.maxBookRentLimit)
                 {
-                    _bookRepository.MakeBookUnavailable(bookId);
+                    _memberRepository.RemoveMemberRentability(rentBookRequest.MemberId);
+                }
+
+                if(_bookRepository.NumberOfBooksAvailable(rentBookRequest.BookId) <= 0)
+                {
+                    _bookRepository.MakeBookUnavailable(rentBookRequest.BookId);
                 }
 
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while renting Book with Id: {bookId}" +
-                    $"to member with Id {memberId}. {ex.Message}");
+                throw new Exception($"An error occured while renting Book with Id: {rentBookRequest.BookId} " +
+                    $"to member with Id {rentBookRequest.MemberId}. {ex.Message} {ex.StackTrace}");
             }
         }
 
-        public void ReturnBook(int bookId, int memberId)
+        public void ReturnBook(ReturnBookRequest returnBookRequest)
         {
             try
             {
-                if (!_memberRepository.MemberExists(memberId))
+                if (!_memberRepository.MemberExists(returnBookRequest.MemberId))
                 {
-                    throw new Exception($"Member with Id: {memberId} does not exist.");
+                    throw new Exception($"Member with Id: {returnBookRequest.MemberId} does not exist.");
                 }
-                if (!_bookRepository.BookExists(bookId))
+                if (!_bookRepository.BookExists(returnBookRequest.BookId))
                 {
-                    throw new Exception($"Book with Id: {bookId} does not exist.");
-                }
-
-                var booksOwedByMember = _memberRepository.BooksOwedByMember(memberId).ToList();
-
-                if (!booksOwedByMember.Any(book => book.BookId == bookId))
-                {
-                    throw new Exception($"Book with Id: {bookId} is not rented to member with Id: {memberId}.");
+                    throw new Exception($"Book with Id: {returnBookRequest.BookId} does not exist.");
                 }
 
-                _rentService.ReturnBook(memberId, bookId);
-                _bookRepository.IncreaseBookAvailability(bookId, 1);
+                var booksOwedByMember = _memberRepository.BooksOwedByMember(returnBookRequest.MemberId).ToList();
 
-
-                if (_memberRepository.BooksOwedByMemberCount(memberId) < Limits.maxBooksRentLimit)
+                if (!booksOwedByMember.Any(book => book.BookId == returnBookRequest.BookId))
                 {
-                    _memberRepository.RestoreMemberRentability(memberId);
+                    throw new Exception($"Book with Id: {returnBookRequest.BookId} is not rented to member with Id: {returnBookRequest.MemberId}.");
                 }
 
-                if (_bookRepository.NumberOfBooksAvailable(bookId) > 0)
+                _rentService.ReturnBook(returnBookRequest);
+                _bookRepository.IncreaseBookAvailability(returnBookRequest.BookId, 1);
+
+
+                if (_memberRepository.BooksOwedByMemberCount(returnBookRequest.MemberId) < Limits.maxBookRentLimit)
                 {
-                    _bookRepository.MakeBookAvailable(bookId);
+                    _memberRepository.RestoreMemberRentability(returnBookRequest.MemberId);
+                }
+
+                if (_bookRepository.NumberOfBooksAvailable(returnBookRequest.BookId) > 0)
+                {
+                    _bookRepository.MakeBookAvailable(returnBookRequest.BookId);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while returning Book with Id: {bookId}" +
-                    $"from member with Id {memberId}. {ex.Message}");
+                throw new Exception($"An error occured while returning Book with Id: {returnBookRequest.BookId} " +
+                    $"from member with Id {returnBookRequest.MemberId}. {ex.Message} {ex.StackTrace}");
             }
 
         }
 
-        public IEnumerable ShowAllBooks()
+        public IEnumerable<Book> ShowAllBooks()
         {
             try
             {
@@ -256,7 +255,7 @@ namespace Application
             }
         }
 
-        public IEnumerable ShowAllMembers()
+        public IEnumerable<Member> ShowAllMembers()
         {
             try
             {
@@ -269,5 +268,8 @@ namespace Application
                 throw new Exception("An error occured while trying to get all members list");
             }
         }
+
+        
+
     }
 }

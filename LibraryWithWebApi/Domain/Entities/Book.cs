@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -13,6 +14,8 @@ namespace Domain.Entities
         public int RentedCount { get; set; }
         public bool IsAvailable { get; set; }
         public bool isDeleted { get; set; } = false;
+        //[JsonIgnore]
+        //public ICollection<Transaction> Transactions { get; set; }
 
     }
 }

@@ -1,6 +1,5 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Entities;
-using System.Collections;
 
 namespace Infrastructure.Repositories
 {
@@ -31,19 +30,13 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var BooksOwed = _context.Transactions
-                .Where(trans => trans.MemberId == memberId)
-                .GroupBy(trans => trans.BookId)
-                .Select(g => g.OrderByDescending(trans => trans.TransactionId).FirstOrDefault())
-                .Join(
-                _context.Books,
-                trans => trans.BookId,
-                book => book.BookId,
-                (trans, book) => book);
-
-                return BooksOwed;
-
-
+                var booksOwed = _context.Transactions.Where(trans => trans.MemberId == memberId && trans.ReturnDate == null)
+                    .Join(_context.Books,
+                    trans => trans.BookId,
+                    book => book.BookId,
+                    (trans ,book) => book);
+ 
+                return booksOwed;
 
             }
             catch (Exception ex)
@@ -58,12 +51,10 @@ namespace Infrastructure.Repositories
             try
             {
                 var numBooksOwed = _context.Transactions
-                .Where(trans => trans.MemberId == memberId)
-                .GroupBy(trans => trans.BookId)
-                .Select(g => g.OrderByDescending(trans => trans.TransactionId).FirstOrDefault())
-                .Count(t => t.RentDate != null && t.ReturnDate == null);
+                    .Where(trans => trans.MemberId == memberId && trans.ReturnDate == null).Count();
 
                 return numBooksOwed;
+
             }
             catch (Exception ex)
             {
@@ -113,18 +104,11 @@ namespace Infrastructure.Repositories
             try
             {
                 var member = _context.Members.FirstOrDefault(member => member.MemberId == memberId);
-                if(member.isDeleted == true)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return member.isDeleted;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while trying to find if member with Id: {memberId} is deleted. {ex.Message}");
+                throw new Exception($"An error occured while trying to check if member with Id: {memberId} exists. {ex.Message}");
             }
         }
 

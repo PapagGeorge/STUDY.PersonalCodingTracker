@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -14,6 +15,8 @@ namespace Domain.Entities
         public int RentedBooks { get; set; } = 0;
         public bool CanRent { get; set; } = true;
         public bool isDeleted { get; set; } = false;
+        //[JsonIgnore]
+        //public ICollection<Transaction> Transactions { get; set; }
 
     }
 }

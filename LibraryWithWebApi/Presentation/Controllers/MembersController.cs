@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Domain.Entities;
@@ -16,14 +16,13 @@ namespace Presentation.Controllers
             _application = application;
         }
 
-
         [HttpGet("get-members")]
-        public IActionResult GetMembers()
+        public IActionResult ShowAllMembers()
         {
             try
             {
-                var members = _application.ShowAllMembers();
-                return Ok(members);
+                var allMembers = _application.ShowAllMembers();
+                return Ok(allMembers);
             }
             catch (Exception ex)
             {
@@ -37,21 +36,21 @@ namespace Presentation.Controllers
             try
             {
                 _application.CreateNewMember(member);
-                return Ok("Member created successfully");
+                return Ok("Member added successfully");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpPost("delete-member")]
+        [HttpPatch]
         public IActionResult DeleteMember([FromBody] int memberId)
         {
             try
             {
                 _application.DeleteMember(memberId);
-                return Ok($"Member with Id: {memberId} was successfully deleted");
+                return Ok($"Member with Id: {memberId} deleted sucessfully.");
             }
             catch (Exception ex)
             {

@@ -21,5 +21,19 @@ namespace Infrastructure
             optionsBuilder.UseSqlServer("Data Source=DESKTOP;Database=NewLibrary;Integrated Security=SSPI;Trust Server Certificate=True;");
         }
 
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+            
+        //    modelBuilder.Entity<Transaction>()
+        //        .HasOne(t => t.Member)
+        //        .WithMany(m => m.Transactions)
+        //        .HasForeignKey(t => t.MemberId);
+
+        //    modelBuilder.Entity<Transaction>()
+        //        .HasOne(t => t.Book)
+        //        .WithMany(b => b.Transactions)
+        //        .HasForeignKey(t => t.BookId);
+        //}
+
     }
 }

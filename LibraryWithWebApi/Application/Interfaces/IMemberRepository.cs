@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using System.Collections;
 
 namespace Application.Interfaces
 {

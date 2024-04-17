@@ -1,6 +1,0 @@
-@WebApiActionMethodsPractice_HostAddress = http://localhost:5027
-
-GET {{WebApiActionMethodsPractice_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,4 +1,5 @@
-﻿using ApiControllerMethodsPractise.Models;
+﻿using ApiControllerMethodsPractise.Interfaces;
+using ApiControllerMethodsPractise.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,30 +9,26 @@ namespace ApiControllerMethodsPractise.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly List<Product> _productList = new List<Product>
+        private readonly IProductRepository _productRepository;
+
+
+
+        public ProductsController(IProductRepository productRepository)
         {
-            new Product {ProductId = 1, ProductTitle = "Coca-Cola", Price = 1.30m, Availability = 10, isAvailable = true},
-            new Product {ProductId = 2, ProductTitle = "Pepsi", Price = 1.10m, Availability = 8, isAvailable = true},
-            new Product {ProductId = 3, ProductTitle = "Gum", Price = 1.50m, Availability = 0, isAvailable = false},
-            new Product {ProductId = 4, ProductTitle = "Neswspaper", Price = 2m, Availability = 4, isAvailable = true},
-            new Product {ProductId = 5, ProductTitle = "Chocolate", Price = 4m, Availability = 7, isAvailable = true},
-            new Product {ProductId = 6, ProductTitle = "PopCorn", Price = 4m, Availability = 0, isAvailable = false},
-            new Product {ProductId = 7, ProductTitle = "Magazine", Price = 7m, Availability = 5, isAvailable = true}
-        };
-        public ProductsController(List<Product> productList)
-        {
-            _productList = productList;
+
+            _productRepository = productRepository;
         }
+
 
         [HttpGet]
         public IActionResult GetProducts()
         {
-            var products = _productList.ToList();
+            var products = _productRepository.GetProducts().ToList();
             if (products == null)
             {
                 return NotFound();
             }
-            
+
             if (products.Count == 0)
             {
                 return NoContent();
@@ -45,9 +42,10 @@ namespace ApiControllerMethodsPractise.Controllers
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = _productList.FirstOrDefault(prod => prod.ProductId == id);
 
-            if(product == null)
+            var product = _productRepository.GetProducts().FirstOrDefault(prod => prod.ProductId == id);
+
+            if (product == null)
             {
                 return NotFound();
             }
@@ -62,14 +60,15 @@ namespace ApiControllerMethodsPractise.Controllers
         [HttpGet("available")]
         public IActionResult AvailableProducts()
         {
-            var availableProducts = _productList.Where(prod => prod.isAvailable == true).ToList();
 
-            if(availableProducts.Count == 0)
+            var availableProducts = _productRepository.GetProducts().Where(prod => prod.isAvailable == true).ToList();
+
+            if (availableProducts.Count == 0)
             {
                 return NoContent();
             }
 
-            if(availableProducts == null)
+            if (availableProducts == null)
             {
                 return NotFound();
             }
@@ -81,16 +80,17 @@ namespace ApiControllerMethodsPractise.Controllers
         }
 
         [HttpGet("price-range")]
-        public IActionResult GetProductsInPriceRange([FromQuery]decimal minPrice, [FromQuery]decimal maxPrice)
+        public IActionResult GetProductsInPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
         {
-            var productsInPriceRange = _productList.Where(prod => prod.Price >= 4 && prod.Price <= 8).ToList();
 
-            if(productsInPriceRange.Count == 0)
+            var productsInPriceRange = _productRepository.GetProducts().Where(prod => prod.Price >= minPrice && prod.Price <= maxPrice).ToList();
+
+            if (productsInPriceRange.Count == 0)
             {
                 return NoContent();
             }
-            
-            if(productsInPriceRange == null)
+
+            if (productsInPriceRange == null)
             {
                 return NotFound();
             }
@@ -99,6 +99,23 @@ namespace ApiControllerMethodsPractise.Controllers
             {
                 return Ok(productsInPriceRange);
             }
+        }
+
+        [HttpPost]
+        [Route("crete-product")]
+        public IActionResult AddNewProduct([FromBody] Product product)
+        {
+            if (product == null)
+            {
+                return BadRequest("Product data is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+           return CreatedAtAction(nameof(GetProduct), new {id = product.ProductId}, product);
         }
 
 

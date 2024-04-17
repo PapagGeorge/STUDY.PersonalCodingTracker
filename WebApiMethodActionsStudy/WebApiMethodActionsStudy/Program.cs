@@ -1,4 +1,5 @@
-
+using WebApiMethodActionsStudy.Interfaces;
+using WebApiMethodActionsStudy.Repositories;
 namespace WebApiMethodActionsStudy
 {
     public class Program
@@ -13,6 +14,7 @@ namespace WebApiMethodActionsStudy
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IProductRepository,ProductRepository>();
 
             var app = builder.Build();
 

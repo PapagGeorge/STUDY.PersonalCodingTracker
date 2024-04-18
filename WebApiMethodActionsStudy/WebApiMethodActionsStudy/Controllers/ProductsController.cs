@@ -77,5 +77,31 @@ namespace WebApiMethodActionsStudy.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("new-product")]
+        public IActionResult CreateNewProduct([FromBody] Product product)
+        {
+            try
+            {
+                if (product == null)
+                {
+                    return BadRequest("Product is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                _products.AddProduct(product);
+                return CreatedAtAction(nameof(GetProduct), new {id = product.ProductId}, product);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
+
+        }
     }
 }

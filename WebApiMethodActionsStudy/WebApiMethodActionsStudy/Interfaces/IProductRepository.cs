@@ -5,5 +5,6 @@ namespace WebApiMethodActionsStudy.Interfaces
     public interface IProductRepository
     {
         IEnumerable<Product> GetProducts();
+        void AddProduct(Product product);
     }
 }

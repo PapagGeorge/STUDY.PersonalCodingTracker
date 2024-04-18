@@ -5,9 +5,7 @@ namespace WebApiMethodActionsStudy.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        public IEnumerable<Product> GetProducts()
-        {
-            List<Product> products = new List<Product>()
+        private List<Product> _products = new List<Product>()
             {
                 new Product { ProductId = 1, ProductName = "Coca-Cola", Price = 1.30m, Availability = 5, IsAvailable = true },
                 new Product { ProductId = 2, ProductName = "Pepsi-Cola", Price = 1.10m, Availability = 5, IsAvailable = true },
@@ -19,7 +17,16 @@ namespace WebApiMethodActionsStudy.Repositories
                 new Product { ProductId = 8, ProductName = "Ice Cream", Price = 8m, Availability = 5, IsAvailable = true },
                 new Product { ProductId = 9, ProductName = "Bisquits", Price = 6m, Availability = 5, IsAvailable = true }
             };
-            return products;
+
+        public void AddProduct(Product product)
+        {
+            _products.Add(product);
+        }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            
+            return _products;
         }
     }
 }

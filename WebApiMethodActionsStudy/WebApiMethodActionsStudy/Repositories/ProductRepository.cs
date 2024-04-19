@@ -20,13 +20,48 @@ namespace WebApiMethodActionsStudy.Repositories
 
         public void AddProduct(Product product)
         {
-            _products.Add(product);
+            try
+            {
+                _products.Add(product);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Product could not be added. {ex.Message}");
+            }
+            
         }
 
         public IEnumerable<Product> GetProducts()
         {
+            try
+            {
+                return _products;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Products could not be fetched. {ex.Message}");
+            }
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            try
+            {
+                var productToUpdate = _products.FirstOrDefault(prod => prod.ProductId == product.ProductId);
+                if (productToUpdate != null)
+                {
+                    
+                    productToUpdate.ProductName = product.ProductName;
+                    productToUpdate.Price = product.Price;
+                    productToUpdate.Availability = product.Availability;
+                    productToUpdate.IsAvailable = product.IsAvailable;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"An error occured while updating product. {ex.Message}");
+            }
             
-            return _products;
         }
     }
 }

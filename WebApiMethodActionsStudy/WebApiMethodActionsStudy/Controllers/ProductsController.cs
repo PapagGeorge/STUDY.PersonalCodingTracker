@@ -100,8 +100,32 @@ namespace WebApiMethodActionsStudy.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
-            
 
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProduct(int id, [FromBody]Product product)
+        {
+            try
+            {
+                
+                if (product == null)
+                {
+                    return BadRequest("Product does not exist");
+                }
+                if(!ModelState.IsValid)
+                {
+                    return BadRequest("Product is not in valid state");
+                }
+                _products.UpdateProduct(product);
+
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

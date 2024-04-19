@@ -7,5 +7,6 @@ namespace WebApiMethodActionsStudy.Interfaces
         IEnumerable<Product> GetProducts();
         void AddProduct(Product product);
         void UpdateProduct(Product product);
+        
     }
 }

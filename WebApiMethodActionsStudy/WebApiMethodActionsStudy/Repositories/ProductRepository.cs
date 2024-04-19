@@ -28,7 +28,7 @@ namespace WebApiMethodActionsStudy.Repositories
             {
                 throw new Exception($"Product could not be added. {ex.Message}");
             }
-            
+
         }
 
         public IEnumerable<Product> GetProducts()
@@ -50,18 +50,22 @@ namespace WebApiMethodActionsStudy.Repositories
                 var productToUpdate = _products.FirstOrDefault(prod => prod.ProductId == product.ProductId);
                 if (productToUpdate != null)
                 {
-                    
+
                     productToUpdate.ProductName = product.ProductName;
                     productToUpdate.Price = product.Price;
                     productToUpdate.Availability = product.Availability;
                     productToUpdate.IsAvailable = product.IsAvailable;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"An error occured while updating product. {ex.Message}");
             }
-            
+
         }
+
+    
+
+        
     }
 }

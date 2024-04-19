@@ -127,5 +127,32 @@ namespace WebApiMethodActionsStudy.Controllers
             }
         }
 
+        [HttpPatch("{id}")]
+        public IActionResult UpdateProductPrice(int id, [FromBody] decimal price)
+        {
+            try
+            {
+                var productToUpdate = _products.GetProducts().FirstOrDefault(prod => prod.ProductId == id);
+
+                if (productToUpdate == null)
+                {
+                    return BadRequest("Product does not exist");
+                }
+
+                productToUpdate.Price = price;
+
+
+                _products.UpdateProduct(productToUpdate);
+
+                return Ok(productToUpdate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+
+        }
+
     }
 }

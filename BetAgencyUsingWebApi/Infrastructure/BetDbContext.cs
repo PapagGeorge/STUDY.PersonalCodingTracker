@@ -19,11 +19,11 @@ namespace Infrastructure
         public DbSet<TicketBet> TicketBet { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("connectionString"));
-            optionsBuilder.UseSqlServer(dbConfiguration.ConnectionString);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    var dbConfiguration = ((DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection"));
+        //    optionsBuilder.UseSqlServer(dbConfiguration.ConnectionString);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,12 +33,14 @@ namespace Infrastructure
             modelBuilder.Entity<TicketBet>()
                         .HasOne(tb => tb.Ticket)
                         .WithMany(t => t.TicketBet)
-                        .HasForeignKey(tb => tb.TicketId);
+                        .HasForeignKey(tb => tb.TicketId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TicketBet>()
                         .HasOne(tb => tb.Bet)
                         .WithMany(b => b.TicketBet)
-                        .HasForeignKey(tb => tb.BetId);
+                        .HasForeignKey(tb => tb.BetId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Bet>()
                         .Property(b => b.BetDateTime)

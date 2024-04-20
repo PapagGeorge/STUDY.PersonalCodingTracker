@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Interfaces
+﻿namespace Application.Interfaces
 {
-    internal interface IApplication
+    public interface IApplication
     {
+        void CreateBet(int userId, int matchId, string bettingMarket, decimal stake);
     }
 }

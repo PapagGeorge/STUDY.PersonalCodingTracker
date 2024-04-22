@@ -1,8 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
-
-
 namespace Infrastructure.Repositories
 {
     public class MatchRepository : IMatchRepository
@@ -71,6 +69,19 @@ namespace Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to update status of a match. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate)
+        {
+            try
+            {
+                var matches = _context.Matches.Where(match => match.MatchDateTime >= startingDate && match.MatchDateTime <= endingDate);
+                return matches;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find matches in a set range of dates. {ex.Message}");
             }
         }
     }

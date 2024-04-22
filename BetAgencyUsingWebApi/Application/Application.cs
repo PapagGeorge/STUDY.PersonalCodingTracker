@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
-
 namespace Application
 {
     public class Application : IApplication
@@ -242,6 +241,32 @@ namespace Application
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to apply results to Match, Bets and Tickets. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate)
+        {
+            try
+            {
+                var matches = _matchRepository.GetAllMatchesByDateRange(startingDate, endingDate);
+                return matches;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get matches in a specific range of dates. {ex.Message}");
+            }
+        }
+
+        public Match GetMatchById(int matchId)
+        {
+            try
+            {
+                var match = _matchRepository.GetMatchById(matchId);
+                return match;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get matchwith Id: {matchId}. {ex.Message}");
             }
         }
     }

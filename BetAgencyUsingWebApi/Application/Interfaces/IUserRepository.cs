@@ -6,5 +6,7 @@ namespace Application.Interfaces
     {
         void CreateUser(User user);
         bool UserExists (int userId);
+        User GetUserById (int userId);
+        IEnumerable<User> GetAllUsers();
     }
 }

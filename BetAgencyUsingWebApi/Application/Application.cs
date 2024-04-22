@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
+
 namespace Application
 {
     public class Application : IApplication
@@ -266,7 +267,33 @@ namespace Application
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while trying to get matchwith Id: {matchId}. {ex.Message}");
+                throw new Exception($"An error occured while trying to get match with Id: {matchId}. {ex.Message}");
+            }
+        }
+
+        public User GetUserById(int userId)
+        {
+            try
+            {
+                var user = _userRepository.GetUserById(userId);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get get user with Id: {userId}. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            try
+            {
+                var users = _userRepository.GetAllUsers();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get get all existing users. {ex.Message}");
             }
         }
     }

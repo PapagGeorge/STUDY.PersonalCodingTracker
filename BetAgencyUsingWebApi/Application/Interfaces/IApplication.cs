@@ -12,5 +12,8 @@ namespace Application.Interfaces
         void ApplyResult(int matchId, int homeTeamScore, int awayTeamScore);
         IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate);
         Match GetMatchById(int matchId);
+        User GetUserById(int userId);
+        IEnumerable<User> GetAllUsers();
+        
     }
 }

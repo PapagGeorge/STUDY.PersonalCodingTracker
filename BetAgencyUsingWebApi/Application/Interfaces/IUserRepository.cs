@@ -4,7 +4,7 @@ namespace Application.Interfaces
 {
     public interface IUserRepository
     {
-        void NewUser(User user);
+        void CreateUser(User user);
         bool UserExists (int userId);
     }
 }

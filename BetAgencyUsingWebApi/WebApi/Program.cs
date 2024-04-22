@@ -15,6 +15,9 @@ namespace WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.InfraServices();
+
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

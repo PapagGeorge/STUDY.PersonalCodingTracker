@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
+
+
 namespace Infrastructure.Repositories
 {
     public class MatchRepository : IMatchRepository
@@ -39,6 +41,37 @@ namespace Infrastructure.Repositories
                 throw new Exception($"An error occured while trying to find if match with Id: {matchId} exists. {ex.Message}");
             }
 
+        }
+
+        public void CreateMatch(Match match)
+        {
+            try
+            {
+                if(match == null)
+                {
+                    throw new Exception("Match you are trying to create is null");
+                }
+
+                _context.Matches.Add(match);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to create a new match. {ex.Message}");
+            }
+        }
+        public void ChangeMatchStatus(int matchId, string newStatus)
+        {
+            try
+            {
+                var match = _context.Matches.FirstOrDefault(match => match.MatchId == matchId);
+                match.Status = newStatus;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to update status of a match. {ex.Message}");
+            }
         }
     }
 }

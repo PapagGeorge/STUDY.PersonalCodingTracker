@@ -72,7 +72,8 @@ namespace Infrastructure
 
             modelBuilder.Entity<Bet>()
                         .Property(b => b.BetStatus)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasDefaultValue("Pending");
 
             modelBuilder.Entity<Match>()
                         .Property(m => m.MatchDateTime)
@@ -88,7 +89,8 @@ namespace Infrastructure
 
             modelBuilder.Entity<Match>()
                         .Property(m => m.Status)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasDefaultValue("Scheduled");
 
             modelBuilder.Entity<Match>()
                         .Property(m => m.HomeTeamWinsOdds)
@@ -126,9 +128,18 @@ namespace Infrastructure
                         .Property(r => r.AwayTeamScore)
                         .IsRequired();
 
+            modelBuilder.Entity<Result>()
+                        .Property(r => r.GameResult)
+                        .IsRequired();
+
+            modelBuilder.Entity<Result>()
+                        .Property(r => r.OverUnderResult)
+                        .IsRequired();
+
             modelBuilder.Entity<Ticket>()
                         .Property(t => t.TicketDateTime)
-                        .IsRequired().HasDefaultValueSql("GETDATE()");
+                        .IsRequired()
+                        .HasDefaultValueSql("GETDATE()");
 
             modelBuilder.Entity<Ticket>()
                         .Property(t => t.UserId)
@@ -136,7 +147,8 @@ namespace Infrastructure
 
             modelBuilder.Entity<Ticket>()
                         .Property(t => t.TicketStatus)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasDefaultValue("Pending");
 
             modelBuilder.Entity<Ticket>()
                         .Property(t => t.TotalStake)

@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public void NewUser(User user)
+        public void CreateUser(User user)
         {
             try
             {

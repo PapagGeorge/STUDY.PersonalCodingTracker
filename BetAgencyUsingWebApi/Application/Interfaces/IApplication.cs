@@ -10,5 +10,7 @@ namespace Application.Interfaces
         void CreateUser(User user);
         void AddMatchResult(Result result);
         void ApplyResult(int matchId, int homeTeamScore, int awayTeamScore);
+        IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate);
+        Match GetMatchById(int matchId);
     }
 }

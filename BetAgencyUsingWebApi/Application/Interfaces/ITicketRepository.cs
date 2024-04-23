@@ -5,7 +5,7 @@ namespace Application.Interfaces
     public interface ITicketRepository
     {
         void CreateTicket(Ticket ticket);
-        void UpdateTicketStatusWithBetList(IEnumerable<Bet> betsLost);
+        void UpdateTicketStatusWithBetList(List<Bet> betsLost);
         void UpdateTicketStatusWithId(int ticketId, string status);
 
 

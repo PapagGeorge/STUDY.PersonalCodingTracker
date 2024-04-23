@@ -51,32 +51,26 @@ namespace Infrastructure.Repositories
                 try
                 {
                     {
-                        var ticketBetGroups = _context.TicketBet.GroupBy(ticket => ticket.TicketId);
+                        var ticketIdsWithLostBets = _context.TicketBet.ToList()
+                        .Where(ticket => betsLost.Any(bet => bet.BetId == ticket.BetId))
+                        .Select(ticket => ticket.TicketId)
+                        .Distinct();
 
-                        List<int> betsLostIds = new List<int>();
-
-
-                        foreach (var bet in betsLost)
+                        foreach (var ticketId in ticketIdsWithLostBets)
                         {
-                            betsLostIds.Add(bet.BetId);
+                            UpdateTicketStatusWithId(ticketId, "Lost");
                         }
 
+                        var ticketIdsWithWonBets = _context.TicketBet.ToList()
+                        .Where(ticket => !ticketIdsWithLostBets.Contains(ticket.TicketId))
+                        .Select(ticket => ticket.TicketId)
+                        .Distinct();
 
-
-                        foreach (var group in ticketBetGroups)
+                        foreach (var ticketId in ticketIdsWithWonBets)
                         {
-                            var ticketId = group.Key;
-                            var containsLostBet = group.Any(ticket => betsLostIds.Contains(ticket.BetId));
-
-                            if (containsLostBet)
-                            {
-                                UpdateTicketStatusWithId(group.Key, "Lost");
-                            }
-                            else
-                            {
-                                UpdateTicketStatusWithId(group.Key, "Won");
-                            }
+                            UpdateTicketStatusWithId(ticketId, "Won");
                         }
+                        
                         transaction.Commit();
                     }
 

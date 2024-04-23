@@ -7,6 +7,7 @@ namespace Application.Interfaces
         void AddBet(Bet bet);
         void ChangeBetStatus(int betId, string status);
         IEnumerable<Bet> GetBetsByMatchId(int matchId);
+        Bet GetBetById(int betId);
         
     }
 }

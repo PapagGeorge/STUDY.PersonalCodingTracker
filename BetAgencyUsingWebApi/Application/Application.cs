@@ -14,10 +14,11 @@ namespace Application
         private readonly ITotalStake _totalStake;
         private readonly ITicketRepository _ticketRepository;
         private readonly IResultRepository _resultRepository;
+        private readonly ITicketBetRepository _ticketBetRepository;
 
         public Application(IMatchRepository matchRepository, IBetRepository betRepository,
             IUserRepository userRepository, ICalculateOdds calculateOdds, ICalculatePotentialPayout potentialPayout, ITotalStake totalStake
-            , ITicketRepository ticketRepository, IResultRepository resultRepository)
+            , ITicketRepository ticketRepository, IResultRepository resultRepository, ITicketBetRepository ticketBetRepository)
         {
             _betRepository = betRepository;
             _matchRepository = matchRepository;
@@ -27,6 +28,7 @@ namespace Application
             _totalStake = totalStake;
             _ticketRepository = ticketRepository;
             _resultRepository = resultRepository;
+            _ticketBetRepository = ticketBetRepository;
         }
         public Bet CreateBet(int userId, int matchId, string bettingMarket, decimal stake)
         {
@@ -109,6 +111,19 @@ namespace Application
                 };
 
                 _ticketRepository.CreateTicket(ticket);
+
+                foreach(var bet in betList)
+                {
+                    TicketBet ticketBet = new TicketBet()
+                    {
+                        TicketId = ticket.TicketId,
+                        BetId = bet.BetId
+                    };
+
+                    _ticketBetRepository.CreateTicketBet(ticketBet);
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -148,24 +163,27 @@ namespace Application
             }
         }
 
-        public void AddMatchResult(Result result)
-        {
-            try
-            {
-                if (result == null)
-                {
-                    throw new Exception("Result you are trying to create is null");
-                }
+        //public void AddMatchResult(Result result)
+        //{
+        //    try
+        //    {
+        //        if (result == null)
+        //        {
+        //            throw new Exception("Result you are trying to create is null");
+        //        }
 
-                result.ResultDateTime = DateTime.Now;
 
-                _resultRepository.AddMatchResult(result);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occured while trying to add a result. {ex.Message}");
-            }
-        }
+
+        //        result.ResultDateTime = DateTime.Now;
+
+        //        _resultRepository.AddMatchResult(result);
+                
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"An error occured while trying to add a result. {ex.Message}");
+        //    }
+        //}
 
         public void ApplyResult(int matchId, int homeTeamScore, int awayTeamScore)
         {
@@ -293,7 +311,20 @@ namespace Application
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occured while trying to get get all existing users. {ex.Message}");
+                throw new Exception($"An error occured while trying to get all existing users. {ex.Message}");
+            }
+        }
+
+        public Bet GetBetById(int betId)
+        {
+            try
+            {
+                var bet = _betRepository.GetBetById(betId);
+                return bet;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find bet with Id: {betId}. {ex.Message}");
             }
         }
     }

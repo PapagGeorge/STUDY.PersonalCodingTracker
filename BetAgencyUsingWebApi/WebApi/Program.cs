@@ -1,5 +1,6 @@
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Application;
 namespace WebApi
 {
     public class Program
@@ -15,6 +16,7 @@ namespace WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.InfraServices();
+            builder.Services.AddServices();
 
 
 

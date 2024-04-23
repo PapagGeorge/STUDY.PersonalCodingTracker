@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Entities;
 using System.Linq;
 using System.Transactions;
@@ -80,7 +80,7 @@ namespace Infrastructure.Repositories
 
                         foreach (var bet in betsLost)
                         {
-                            if(ticketsWithPendingBets.Any(t => t.Key == bet.id))
+                            if(ticketsWithPendingBets.Any(t => t.Key == ticketId))
                             {
                                 UpdateTicketStatusWithId(ticketId, "Pending");
                             }

@@ -30,17 +30,17 @@ namespace Infrastructure
             modelBuilder.Entity<TicketBet>()
                .HasKey(tb => new { tb.TicketId, tb.BetId });
 
-            modelBuilder.Entity<TicketBet>()
-                        .HasOne(tb => tb.Ticket)
-                        .WithMany(t => t.TicketBet)
-                        .HasForeignKey(tb => tb.TicketId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<TicketBet>()
+            //            .HasOne(tb => tb.Ticket)
+            //            .WithMany(t => t.TicketBet)
+            //            .HasForeignKey(tb => tb.TicketId)
+            //            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<TicketBet>()
-                        .HasOne(tb => tb.Bet)
-                        .WithMany(b => b.TicketBet)
-                        .HasForeignKey(tb => tb.BetId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<TicketBet>()
+            //            .HasOne(tb => tb.Bet)
+            //            .WithMany(b => b.TicketBet)
+            //            .HasForeignKey(tb => tb.BetId)
+            //            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Bet>()
                         .Property(b => b.BetDateTime)

@@ -68,7 +68,17 @@ namespace Application
                     BetStatus = "Pending"
                 };
 
-                _betRepository.AddBet(newBet);
+                var bettingMatch = _matchRepository.GetMatchById(newBet.MatchId);
+
+                if (bettingMatch.MatchDateTime <= newBet.BetDateTime)
+                {
+                    throw new Exception("Bets cannot be commited after the match begins");
+                }
+
+                else
+                {
+                    _betRepository.AddBet(newBet);
+                }
 
                 return newBet;
 
@@ -148,100 +158,159 @@ namespace Application
             }
         }
 
-        public void AddMatchResult(Result result)
-        {
-            try
-            {
-                if (result == null)
-                {
-                    throw new Exception("Result you are trying to create is null");
-                }
+        
 
-                result.ResultDateTime = DateTime.Now;
-
-                _resultRepository.AddMatchResult(result);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occured while trying to add a result. {ex.Message}");
-            }
-        }
 
         public void ApplyResult(int matchId, int homeTeamScore, int awayTeamScore)
         {
             try
             {
-                _matchRepository.ChangeMatchStatus(matchId, "Finished");
+                var currentTime = DateTime.Now;
+                var match = _matchRepository.GetMatchById(matchId);
 
-                string gameResult;
-
-                if (homeTeamScore > awayTeamScore)
+                if(currentTime <= match.MatchDateTime)
                 {
-                    gameResult = "Home";
-                }
+                    _matchRepository.ChangeMatchStatus(matchId, "Finished");
 
-                else if (homeTeamScore < awayTeamScore)
-                {
-                    gameResult = "Away";
-                }
+                    string gameResult;
 
-                else
-                {
-                    gameResult = "Draw";
-                }
-
-                string overUnderResult;
-
-                if (homeTeamScore + awayTeamScore <= 2)
-                {
-                    overUnderResult = "Under";
-                }
-                else
-                {
-                    overUnderResult = "Over";
-                }
-
-
-
-                Result result = new Result()
-                {
-                    ResultDateTime = DateTime.Now,
-                    MatchId = matchId,
-                    HomeTeamScore = homeTeamScore,
-                    AwayTeamScore = awayTeamScore,
-                    OverUnderResult = overUnderResult,
-                    GameResult = gameResult
-                };
-
-                _resultRepository.AddMatchResult(result);
-
-                var betsForThisMatch = _betRepository.GetBetsByMatchId(matchId);
-
-                
-                List<Bet> betsLost = new List<Bet>();
-
-
-                foreach (var bet in betsForThisMatch)
-                {
-                    if (bet.BettingMarket == overUnderResult || bet.BettingMarket == gameResult)
+                    if (homeTeamScore > awayTeamScore)
                     {
-                        _betRepository.ChangeBetStatus(bet.BetId, "Won");
-                        
+                        gameResult = "Home";
+                    }
+
+                    else if (homeTeamScore < awayTeamScore)
+                    {
+                        gameResult = "Away";
                     }
 
                     else
                     {
-                        _betRepository.ChangeBetStatus(bet.BetId, "Lost");
-                        betsLost.Add(bet);
+                        gameResult = "Draw";
                     }
+
+                    string overUnderResult;
+
+                    if (homeTeamScore + awayTeamScore <= 2)
+                    {
+                        overUnderResult = "Under";
+                    }
+                    else
+                    {
+                        overUnderResult = "Over";
+                    }
+
+
+
+                    Result result = new Result()
+                    {
+                        ResultDateTime = DateTime.Now,
+                        MatchId = matchId,
+                        HomeTeamScore = homeTeamScore,
+                        AwayTeamScore = awayTeamScore,
+                        OverUnderResult = overUnderResult,
+                        GameResult = gameResult
+                    };
+
+                    _resultRepository.AddMatchResult(result);
+
+                    var betsForThisMatch = _betRepository.GetBetsByMatchId(matchId);
+                    List<Bet> betsLost = new List<Bet>();
+
+
+                    foreach (var bet in betsForThisMatch)
+                    {
+                        if (bet.BettingMarket == overUnderResult || bet.BettingMarket == gameResult)
+                        {
+                            _betRepository.ChangeBetStatus(bet.BetId, "Won");
+
+                        }
+
+                        else
+                        {
+                            _betRepository.ChangeBetStatus(bet.BetId, "Lost");
+                            betsLost.Add(bet);
+                        }
+                    }
+
+                    _ticketRepository.UpdateTicketStatusWithBetList(betsLost);
                 }
 
-                _ticketRepository.UpdateTicketStatusWithBetList(betsLost);
+                else
+                {
+                    throw new Exception("Match Results cannot be applied before match starts");
+                }
+                
 
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to apply results to Match, Bets and Tickets. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate)
+        {
+            try
+            {
+                var matches = _matchRepository.GetAllMatchesByDateRange(startingDate, endingDate);
+                return matches;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get matches in a specific range of dates. {ex.Message}");
+            }
+        }
+
+        public Match GetMatchById(int matchId)
+        {
+            try
+            {
+                var match = _matchRepository.GetMatchById(matchId);
+                return match;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get match with Id: {matchId}. {ex.Message}");
+            }
+        }
+
+        public User GetUserById(int userId)
+        {
+            try
+            {
+                var user = _userRepository.GetUserById(userId);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get get user with Id: {userId}. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            try
+            {
+                var users = _userRepository.GetAllUsers();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get all existing users. {ex.Message}");
+            }
+        }
+
+        public Bet GetBetById(int betId)
+        {
+            try
+            {
+                var bet = _betRepository.GetBetById(betId);
+                return bet;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find bet with Id: {betId}. {ex.Message}");
             }
         }
     }

@@ -51,32 +51,67 @@ namespace Infrastructure.Repositories
                 try
                 {
                     {
-                        var ticketBetGroups = _context.TicketBet.GroupBy(ticket => ticket.TicketId);
+                        var betsList = _context.Bets.ToList();
+
+                        var ticketsWithPendingBets = _context.TicketBet
+                            .ToList()
+                            .Join(betsList,
+                            ticketBet => ticketBet.BetId,
+                            bet => bet.BetId,
+                            (ticketBet, bet) => new
+                            {
+                                TicketId = ticketBet.TicketId,
+                                BetId = bet.BetId,
+                                BetStatus = bet.BetStatus
+
+                            })
+                            .ToList()
+                            .GroupBy(x => x.TicketId)
+                            .Where(ticket => ticket.Any(bet => bet.BetStatus == "Pending"))
+                            .ToList();
+
+                        var ticketIdsWithLostBets = _context.TicketBet.ToList()
+                        .Where(ticket => betsLost.Any(bet => bet.BetId == ticket.BetId))
+                        .Select(ticket => ticket.TicketId)
+                        .Distinct();
 
                         List<int> betsLostIds = new List<int>();
 
 
                         foreach (var bet in betsLost)
                         {
-                            betsLostIds.Add(bet.BetId);
-                        }
-
-
-
-                        foreach (var group in ticketBetGroups)
-                        {
-                            var ticketId = group.Key;
-                            var containsLostBet = group.Any(ticket => betsLostIds.Contains(ticket.BetId));
-
-                            if (containsLostBet)
+                            if(ticketsWithPendingBets.Any(t => t.Key == bet.id))
                             {
-                                UpdateTicketStatusWithId(group.Key, "Lost");
+                                UpdateTicketStatusWithId(ticketId, "Pending");
                             }
+
                             else
                             {
-                                UpdateTicketStatusWithId(group.Key, "Won");
+                                UpdateTicketStatusWithId(ticketId, "Lost");
                             }
+
+                            
                         }
+
+                        var ticketIdsWithWonBets = _context.TicketBet.ToList()
+                        .Where(ticket => !ticketIdsWithLostBets.Contains(ticket.TicketId))
+                        .Select(ticket => ticket.TicketId)
+                        .Distinct();
+
+                        foreach (var ticketId in ticketIdsWithWonBets)
+                        {
+                            if (ticketsWithPendingBets.Any(t => t.Key == ticketId))
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Pending");
+                            }
+
+                            else
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Won");
+                            }
+                            
+                        }
+                        
                         transaction.Commit();
                     }
 
@@ -88,9 +123,7 @@ namespace Infrastructure.Repositories
                     throw new Exception($"An error occured while creating changing status of tickets with bet list. {ex.Message}");
                 }
             }
-            
-            
-            
+  
         }
     }
 }

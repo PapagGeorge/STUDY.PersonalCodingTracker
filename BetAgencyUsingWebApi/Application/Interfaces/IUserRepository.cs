@@ -5,6 +5,8 @@ namespace Application.Interfaces
     public interface IUserRepository
     {
         void CreateUser(User user);
-        bool UserExists (int userId);
+        bool UserExists(int userId);
+        User GetUserById(int userId);
+        IEnumerable<User> GetAllUsers();
     }
 }

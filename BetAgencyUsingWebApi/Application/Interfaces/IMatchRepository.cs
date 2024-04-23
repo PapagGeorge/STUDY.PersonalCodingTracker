@@ -8,5 +8,6 @@ namespace Application.Interfaces
         bool MatchExists(int matchId);
         void CreateMatch(Match match);
         void ChangeMatchStatus(int matchId, string newStatus);
+        IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate);
     }
 }

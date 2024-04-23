@@ -65,12 +65,35 @@ namespace Infrastructure.Repositories
             try
             {
                 var match = _context.Matches.FirstOrDefault(match => match.MatchId == matchId);
-                match.Status = newStatus;
-                _context.SaveChanges();
+
+                if(match.Status == "Finished")
+                {
+                    throw new Exception("Result for this match has already been applied.");
+                }
+
+                else
+                {
+                    match.Status = newStatus;
+                    _context.SaveChanges();
+                }
+                
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occured while trying to update status of a match. {ex.Message}");
+            }
+        }
+
+        public IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate)
+        {
+            try
+            {
+                var matches = _context.Matches.Where(match => match.MatchDateTime >= startingDate && match.MatchDateTime <= endingDate);
+                return matches;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to find matches in a set range of dates. {ex.Message}");
             }
         }
     }

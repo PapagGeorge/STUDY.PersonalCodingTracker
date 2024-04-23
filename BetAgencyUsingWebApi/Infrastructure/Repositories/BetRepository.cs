@@ -52,5 +52,18 @@ namespace Infrastructure.Repositories
             }
 
         }
+
+        public Bet GetBetById(int betId)
+        {
+            try
+            {
+                return _context.Bets.FirstOrDefault(bet => bet.BetId == betId);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while changing bet status. {ex.Message}");
+            }
+        }
     }
 }

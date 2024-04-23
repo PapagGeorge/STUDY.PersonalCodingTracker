@@ -28,9 +28,22 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var bet = _context.Bets.FirstOrDefault(bet => bet.UserId == betId);
+                var bet = _context.Bets.FirstOrDefault(bet => bet.BetId == betId);
                 bet.BetStatus = status;
                 _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while changing bet status. {ex.Message}");
+            }
+        }
+
+        public Bet GetBetById(int betId)
+        {
+            try
+            {
+                return _context.Bets.FirstOrDefault(bet => bet.BetId == betId);
 
             }
             catch (Exception ex)

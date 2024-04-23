@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Domain.Entities;
+using WebApi.DTO;
 
 namespace WebApi.Controllers
 {
@@ -56,19 +57,28 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("add-user")]
-        public IActionResult AddUser([FromBody] User user)
+        public IActionResult AddUser([FromBody] UserDto userRequest)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("User object doesn't provide all necessary information");
+                }
+
+                User user = new User()
+                {
+                    FullName = userRequest.FullName,
+                    Mobile = userRequest.Mobile,
+                    Email = userRequest.Email
+                };
+
                 if (user == null)
                 {
                     return BadRequest("User object is null.");
                 }
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("User object doesn't provide all necessary information");
-                }
+                
 
                 _application.CreateUser(user);
 

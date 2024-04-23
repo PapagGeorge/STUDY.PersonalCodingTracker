@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
 using Application.Interfaces;
@@ -23,16 +23,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                if(resultRequest == null)
-                {
-                    return BadRequest("Result object is null");
-                }
-
-                if (resultRequest.MatchId == null || resultRequest.HomeTeamScore == null || resultRequest.AwayTeamScore == null)
+                if (!ModelState.IsValid)
                 {
                     return BadRequest("Result object does not contain all necessary information");
                 }
 
+  
                 _applicataion.ApplyResult(resultRequest.MatchId, resultRequest.HomeTeamScore, resultRequest.AwayTeamScore);
 
                 return Ok(resultRequest);

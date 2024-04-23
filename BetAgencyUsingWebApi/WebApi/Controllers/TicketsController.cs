@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using WebApi.DTO;
@@ -21,6 +21,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)
+                {
+                    throw new Exception("The request for adding a new ticket does not contail all required information");
+                }
                 var userId = ticketBetsRequest.UserId;
                 var betsData = ticketBetsRequest.BetsData.Select(bet => (bet.MatchId, bet.BettingMarket, bet.Stake)).ToList();
                 _application.CreateTicketWithBets(userId, betsData);

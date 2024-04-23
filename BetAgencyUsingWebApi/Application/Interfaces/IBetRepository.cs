@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -8,6 +8,6 @@ namespace Application.Interfaces
         void ChangeBetStatus(int betId, string status);
         IEnumerable<Bet> GetBetsByMatchId(int matchId);
         Bet GetBetById(int betId);
-        
+
     }
 }

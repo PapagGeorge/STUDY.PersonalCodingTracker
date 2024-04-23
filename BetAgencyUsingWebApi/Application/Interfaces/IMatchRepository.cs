@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
@@ -9,6 +9,5 @@ namespace Application.Interfaces
         void CreateMatch(Match match);
         void ChangeMatchStatus(int matchId, string newStatus);
         IEnumerable<Match> GetAllMatchesByDateRange(DateTime startingDate, DateTime endingDate);
-        
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Entities;
 using System.Linq;
 using System.Transactions;
@@ -51,14 +51,46 @@ namespace Infrastructure.Repositories
                 try
                 {
                     {
+                        var betsList = _context.Bets.ToList();
+
+                        var ticketsWithPendingBets = _context.TicketBet
+                            .ToList()
+                            .Join(betsList,
+                            ticketBet => ticketBet.BetId,
+                            bet => bet.BetId,
+                            (ticketBet, bet) => new
+                            {
+                                TicketId = ticketBet.TicketId,
+                                BetId = bet.BetId,
+                                BetStatus = bet.BetStatus
+
+                            })
+                            .ToList()
+                            .GroupBy(x => x.TicketId)
+                            .Where(ticket => ticket.Any(bet => bet.BetStatus == "Pending"))
+                            .ToList();
+
                         var ticketIdsWithLostBets = _context.TicketBet.ToList()
                         .Where(ticket => betsLost.Any(bet => bet.BetId == ticket.BetId))
                         .Select(ticket => ticket.TicketId)
                         .Distinct();
 
-                        foreach (var ticketId in ticketIdsWithLostBets)
+                        List<int> betsLostIds = new List<int>();
+
+
+                        foreach (var bet in betsLost)
                         {
-                            UpdateTicketStatusWithId(ticketId, "Lost");
+                            if(ticketsWithPendingBets.Any(t => t.Key == ticketId))
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Pending");
+                            }
+
+                            else
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Lost");
+                            }
+
+                            
                         }
 
                         var ticketIdsWithWonBets = _context.TicketBet.ToList()
@@ -68,7 +100,16 @@ namespace Infrastructure.Repositories
 
                         foreach (var ticketId in ticketIdsWithWonBets)
                         {
-                            UpdateTicketStatusWithId(ticketId, "Won");
+                            if (ticketsWithPendingBets.Any(t => t.Key == ticketId))
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Pending");
+                            }
+
+                            else
+                            {
+                                UpdateTicketStatusWithId(ticketId, "Won");
+                            }
+                            
                         }
                         
                         transaction.Commit();
@@ -82,9 +123,7 @@ namespace Infrastructure.Repositories
                     throw new Exception($"An error occured while creating changing status of tickets with bet list. {ex.Message}");
                 }
             }
-            
-            
-            
+  
         }
     }
 }

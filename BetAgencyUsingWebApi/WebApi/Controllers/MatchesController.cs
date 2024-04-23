@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Domain.Entities;
@@ -47,7 +47,7 @@ namespace WebApi.Controllers
 
                 if(match == null)
                 {
-                    return NotFound($"Match with Id: {id} not found");
+                    return NotFound($"Match with Id: {id} was not found");
                 }
 
                 return Ok(match);
@@ -59,19 +59,34 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("add-match")]
-        public IActionResult AddNewMatch([FromBody] Match match)
+        public IActionResult AddNewMatch([FromBody] MatchDto matchRequest)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception("Match object doesn't provide all necessary information");
+                }
+
+                Match match = new Match()
+                {
+                    MatchDateTime = matchRequest.MatchDateTime,
+                    HomeTeam = matchRequest.HomeTeam,
+                    AwayTeam = matchRequest.AwayTeam,
+                    Status = matchRequest.Status,
+                    HomeTeamWinsOdds = matchRequest.HomeTeamWinsOdds,
+                    AwayTeamWinsOdds = matchRequest.AwayTeamWinsOdds,
+                    DrawOdds = matchRequest.DrawOdds,
+                    OverOdds = matchRequest.OverOdds,
+                    UnderOdds = matchRequest.UnderOdds
+                };
+
                 if(match == null)
                 {
                     throw new Exception("Match object is null");
                 }
 
-                if(!ModelState.IsValid)
-                {
-                    throw new Exception("Match object doesn't provide all necessary information");
-                }
+                
 
                 _application.CreateMatch(match);
                 return CreatedAtAction(nameof(GetMatchById), new { id = match.MatchId }, match);

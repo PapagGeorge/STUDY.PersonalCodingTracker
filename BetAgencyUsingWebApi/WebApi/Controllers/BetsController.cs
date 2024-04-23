@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using WebApi.DTO;
@@ -27,11 +27,7 @@ namespace WebApi.Controllers
                 {
                     return NotFound("Bet object is null");
                 }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("The bet object does not contain all necessary information");
-                }
+                
 
                 return Ok(bet);
             }
@@ -46,16 +42,18 @@ namespace WebApi.Controllers
         {
             try
             {
-                var bet = _application.CreateBet(newBetRequest.UserId, newBetRequest.MatchId, newBetRequest.BettingMarket, newBetRequest.Stake);
-
-                if (bet == null)
-                {
-                    return BadRequest("Bet object is null");
-                }
                 if (!ModelState.IsValid)
                 {
                     return BadRequest("The bet object does not contain all necessary information");
                 }
+
+                var bet = _application.CreateBet(newBetRequest.UserId, newBetRequest.MatchId, newBetRequest.BettingMarket, newBetRequest.Stake);
+
+                if (bet == null)
+                {
+                    return BadRequest("Addition of new bet did not succeed");
+                }
+                
 
                 return CreatedAtAction(nameof(GetBetById), new { id = bet.BetId }, bet);
             }

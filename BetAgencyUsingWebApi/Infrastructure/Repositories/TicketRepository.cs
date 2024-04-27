@@ -46,84 +46,47 @@ namespace Infrastructure.Repositories
 
         public void UpdateTicketStatusWithBetList(List<Bet> betsLost)
         {
-            using(var transaction = _context.Database.BeginTransaction())
+            try
             {
-                try
+                var tickets = _context.Tickets.ToList();
+
+                foreach (var ticket in tickets)
                 {
-                    {
-                        var betsList = _context.Bets.ToList();
+                    var ticketBets = ticket.TicketBet.Select(tb => tb.Bet).ToList();
+                    var ticketStatus = CalculateTicketStatus(ticketBets, betsLost);
 
-                        var ticketsWithPendingBets = _context.TicketBet
-                            .ToList()
-                            .Join(betsList,
-                            ticketBet => ticketBet.BetId,
-                            bet => bet.BetId,
-                            (ticketBet, bet) => new
-                            {
-                                TicketId = ticketBet.TicketId,
-                                BetId = bet.BetId,
-                                BetStatus = bet.BetStatus
-
-                            })
-                            .ToList()
-                            .GroupBy(x => x.TicketId)
-                            .Where(ticket => ticket.Any(bet => bet.BetStatus == "Pending"))
-                            .ToList();
-
-                        var ticketIdsWithLostBets = _context.TicketBet.ToList()
-                        .Where(ticket => betsLost.Any(bet => bet.BetId == ticket.BetId))
-                        .Select(ticket => ticket.TicketId)
-                        .Distinct();
-
-                        List<int> betsLostIds = new List<int>();
-
-
-                        foreach (var bet in betsLost)
-                        {
-                            if(ticketsWithPendingBets.Any(t => t.Key == ticketId))
-                            {
-                                UpdateTicketStatusWithId(ticketId, "Pending");
-                            }
-
-                            else
-                            {
-                                UpdateTicketStatusWithId(ticketId, "Lost");
-                            }
-
-                            
-                        }
-
-                        var ticketIdsWithWonBets = _context.TicketBet.ToList()
-                        .Where(ticket => !ticketIdsWithLostBets.Contains(ticket.TicketId))
-                        .Select(ticket => ticket.TicketId)
-                        .Distinct();
-
-                        foreach (var ticketId in ticketIdsWithWonBets)
-                        {
-                            if (ticketsWithPendingBets.Any(t => t.Key == ticketId))
-                            {
-                                UpdateTicketStatusWithId(ticketId, "Pending");
-                            }
-
-                            else
-                            {
-                                UpdateTicketStatusWithId(ticketId, "Won");
-                            }
-                            
-                        }
-                        
-                        transaction.Commit();
-                    }
-
+                    
+                    ticket.TicketStatus = ticketStatus;
                 }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
 
-                    throw new Exception($"An error occured while creating changing status of tickets with bet list. {ex.Message}");
-                }
+                _context.SaveChanges();
             }
-  
+            catch (Exception ex)
+            {
+                
+                throw new Exception("An error occurred while updating ticket statuses.", ex);
+            }
         }
+
+        private string CalculateTicketStatus(List<Bet> ticketBets, List<Bet> betsLost)
+        {
+            var anyBetLost = ticketBets.Any(tb => betsLost.Any(bl => bl.BetId == tb.BetId));
+            var anyBetWon = ticketBets.Any(tb => !betsLost.Any(bl => bl.BetId == tb.BetId));
+            var anyBetPending = ticketBets.Any(tb => tb.BetStatus == "Pending");
+
+            if (anyBetLost)
+            {
+                return "Lost";
+            }
+            else if (anyBetWon && !anyBetPending)
+            {
+                return "Won";
+            }
+            else
+            {
+                return "Pending";
+            }
+        }
+
     }
 }

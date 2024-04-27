@@ -28,6 +28,31 @@ namespace Infrastructure.Repositories
             }
         }
 
+        public IEnumerable<User> GetAllUsers()
+        {
+            try
+            {
+                return _context.Users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get all existing users. {ex.Message}");
+            }
+        }
+
+        public User GetUserById(int userId)
+        {
+            try
+            {
+                var user = _context.Users.FirstOrDefault(user => user.UserId == userId);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to get user with Id: {userId}. {ex.Message}");
+            }
+        }
+
         public bool UserExists(int userId)
         {
             try

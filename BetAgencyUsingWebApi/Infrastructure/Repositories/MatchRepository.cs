@@ -1,8 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 
-
-
 namespace Infrastructure.Repositories
 {
     public class MatchRepository : IMatchRepository

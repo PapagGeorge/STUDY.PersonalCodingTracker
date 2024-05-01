@@ -7,5 +7,6 @@
         public int UserId { get; set; }
         public DateTime RegistrationDatTime { get; set; }
         public string Status { get; set; }
+        public bool isDeleted { get; set; }
     }
 }

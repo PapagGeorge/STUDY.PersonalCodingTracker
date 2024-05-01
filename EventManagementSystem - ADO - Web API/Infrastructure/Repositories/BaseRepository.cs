@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Data.SqlClient;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
     public abstract class BaseRepository
     {
@@ -17,6 +17,6 @@ namespace Infrastructure
             return connection;
         }
 
-        
+
     }
 }

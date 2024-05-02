@@ -1,29 +1,29 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
-using System.Collections;
 
 namespace WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class RegistrationsController : ControllerBase
     {
         private readonly ICrudService _crudService;
 
-        public UsersController(ICrudService crudService)
+        public RegistrationsController(ICrudService crudService)
         {
             _crudService = crudService;
         }
 
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public IActionResult GetAllEvents()
         {
             try
             {
-                IEnumerable users = _crudService.GetAll<User>("Users");
-                return Ok(users);
+                var registrations = _crudService.GetAll<Registration>("Registrations");
+                return Ok(registrations);
             }
             catch (Exception ex)
             {
@@ -31,13 +31,13 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpGet("{userId}")]
-        public IActionResult GetEventById(int userId)
+        [HttpGet("{registrationId}")]
+        public IActionResult GetRegistrationById(int registrationId)
         {
             try
             {
-                var searchedUser = _crudService.GetById<Event>(userId, "Users", "UserId");
-                return Ok(searchedUser);
+                var registration = _crudService.GetById<Registration>(registrationId, "Registrations", "RegistrationId");
+                return Ok(registration);
             }
             catch (Exception ex)
             {
@@ -45,18 +45,20 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpDelete("{userId}")]
-        public IActionResult SoftDeleteUser(int userId)
+        [HttpDelete("{registrationId}")]
+        public IActionResult SoftDeleteRegistration(int registrationId)
         {
             try
             {
-                _crudService.SoftDelete<Event>("Users", userId);
-                return Ok("User deleted successfully");
+                _crudService.SoftDelete<Registration>("Registrations", registrationId);
+                return Ok("Registration deleted successfully");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
+
+
     }
 }

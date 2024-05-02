@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories
 {
     internal class GenericRepository : BaseRepository, IGenericRepository
     {
-        public GenericRepository(DataBaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
+        public GenericRepository(DatabaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
         {
             
         }
@@ -41,9 +41,23 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void Delete<TEntity>(int id)
+        public void SoftDelete<TEntity>(string tableName, int primaryKeyValue)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.SoftDelete, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occured while trying to do a soft delete to a record.");
+            }
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>(string tableName)
@@ -73,9 +87,33 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public TEntity GetById<TEntity>(int id)
+        public TEntity GetById<TEntity>(int id, string tableName, string columnName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = Activator.CreateInstance<TEntity>();
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.GetById, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
+
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        entity = MapDataReaderToEntity<TEntity>(reader);
+                    }
+                }
+
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occured while operating against the database in order to find an object by id.");
+            }
         }
 
         public void Insert<TEntity>(TEntity entity)

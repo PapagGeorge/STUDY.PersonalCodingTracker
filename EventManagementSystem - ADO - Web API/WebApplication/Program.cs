@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Infrastructure;
+using Application;
 
 namespace WebApplication
 {
@@ -19,6 +20,7 @@ namespace WebApplication
                         services.AddEndpointsApiExplorer();
                         services.AddSwaggerGen();
                         services.InfraServices();
+                        services.AddServices();
                         
                     });
 

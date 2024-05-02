@@ -20,7 +20,7 @@ namespace Application
             catch (Exception ex)
             {
                 
-                throw new Exception("An error occurred while retrieving data from the database.", ex);
+                throw new Exception($"An error occurred while retrieving data from the database. {ex.Message}");
             }
         }
     }

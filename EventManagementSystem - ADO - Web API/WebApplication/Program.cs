@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Infrastructure;
 
 namespace WebApplication
 {
@@ -5,32 +9,41 @@ namespace WebApplication
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var hostBuilder = Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureServices((context, services) =>
+                    {
+                        
+                        services.AddControllers();
+                        services.AddEndpointsApiExplorer();
+                        services.AddSwaggerGen();
+                        services.InfraServices();
+                        
+                    });
 
-            // Add services to the container.
+                    webBuilder.Configure((context, app) =>
+                    {
+                        
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+                        if (context.HostingEnvironment.IsDevelopment())
+                        {
+                            app.UseSwagger();
+                            app.UseSwaggerUI();
+                        }
 
-            var app = builder.Build();
+                        app.UseHttpsRedirection();
+                        app.UseAuthorization();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                        app.UseRouting();
+                        app.UseEndpoints(endpoints =>
+                        {
+                            endpoints.MapControllers();
+                        });
+                    });
+                });
 
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+            hostBuilder.Build().Run();
         }
     }
 }

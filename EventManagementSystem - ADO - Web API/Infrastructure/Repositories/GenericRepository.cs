@@ -43,7 +43,21 @@ namespace Infrastructure.Repositories
 
         public void Delete<TEntity>(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.SoftDelete, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while trying to do a soft delete to a record. {ex.Message}");
+            }
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>(string tableName)
@@ -69,18 +83,62 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while operating against the database in order to retrieve all objects of an entity.");
+                throw new Exception($"An error occured while operating against the database in order to retrieve all objects of an entity. {ex.Message}");
             }
         }
 
         public TEntity GetById<TEntity>(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = Activator.CreateInstance<TEntity>();
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.GetById, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@TableName", tableName);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
+
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        entity = MapDataReaderToEntity<TEntity>(reader);
+                    }
+                }
+
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured while operating against the database in order to find an object by id. {ex.Message}");
+            }
         }
 
         public void Insert<TEntity>(TEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.InsertEntity, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Assuming TEntity has properties corresponding to table columns
+                    PropertyInfo[] properties = typeof(TEntity).GetProperties();
+                    foreach (PropertyInfo property in properties)
+                    {
+                        command.Parameters.AddWithValue($"@{property.Name}", property.GetValue(entity));
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while inserting the entity into the database. {ex.Message}");
+            }
         }
 
         public void Update<TEntity>(TEntity entity)

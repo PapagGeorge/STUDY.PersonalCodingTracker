@@ -13,5 +13,9 @@
         #region GetById
         public const string GetById = "spGetById";
         #endregion
+
+        #region InsertEntity
+        public const string InsertEntity = "spInsertEntity";
+        #endregion
     }
 }

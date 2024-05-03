@@ -1,7 +1,8 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
+using WebApplication.DTO_s;
 
 namespace WebApplication.Controllers
 {
@@ -37,6 +38,39 @@ namespace WebApplication.Controllers
             {
                 var searchedEvent = _crudService.GetById<Event>(eventId, "Events", "EventId");
                 return Ok(searchedEvent);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult InsertEvent(EventDTO EventRequest)
+        {
+            try
+            {
+                
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Event newEvent = new Event()
+                {
+                    Description = EventRequest.Description,
+                    StartDate = EventRequest.StartDate,
+                    EndDate = EventRequest.EndDate,
+                    Location = EventRequest.Location,
+                    OrganizerId = EventRequest.OrganizerId,
+                    Capacity = EventRequest.Capacity,
+                    isDeleted = false
+                };
+
+                _crudService.Insert<Event>(newEvent);
+
+                return CreatedAtAction(nameof(GetEventById), new { eventId = newEvent.EventId }, newEvent);
+
             }
             catch (Exception ex)
             {

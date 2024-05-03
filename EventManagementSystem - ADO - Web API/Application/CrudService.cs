@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using System.Collections;
 
 namespace Application
@@ -11,20 +11,6 @@ namespace Application
         {
             _genRepository = genRepository;
         }
-
-        public void SoftDelete<TEntity>(string tableName, int primaryKeyValue)
-        {
-            try
-            {
-                _genRepository.SoftDelete<TEntity>(tableName, primaryKeyValue);
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception($"An error occurred while retrieving data from the database. {ex.Message}");
-            }
-        }
-
         public IEnumerable GetAll<TEntity>(string tableName)
         {
             try
@@ -48,6 +34,18 @@ namespace Application
             {
 
                 throw new Exception($"An error occurred while retrieving object from database. {ex.Message}");
+            }
+        }
+
+        public void Insert<TEntity>(TEntity entity)
+        {
+            try
+            {
+                _genRepository.Insert<TEntity>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while inserting new object to database. {ex.Message}");
             }
         }
     }

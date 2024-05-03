@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using System.Data.SqlClient;
 using Infrastructure.Constants;
 using System.Data;
@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories
 {
     internal class GenericRepository : BaseRepository, IGenericRepository
     {
-        public GenericRepository(DatabaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
+        public GenericRepository(DataBaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
         {
             
         }
@@ -41,7 +41,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void SoftDelete<TEntity>(string tableName, int primaryKeyValue)
+        public void Delete<TEntity>(int id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while trying to do a soft delete to a record.");
+                throw new Exception($"An error occured while trying to do a soft delete to a record. {ex.Message}");
             }
         }
 
@@ -83,7 +83,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while operating against the database in order to retrieve all objects of an entity.");
+                throw new Exception($"An error occured while operating against the database in order to retrieve all objects of an entity. {ex.Message}");
             }
         }
 
@@ -112,13 +112,33 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occured while operating against the database in order to find an object by id.");
+                throw new Exception($"An error occured while operating against the database in order to find an object by id. {ex.Message}");
             }
         }
 
         public void Insert<TEntity>(TEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var connection = GetSqlConnection();
+                {
+                    var command = new SqlCommand(StoredProcedures.InsertEntity, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Assuming TEntity has properties corresponding to table columns
+                    PropertyInfo[] properties = typeof(TEntity).GetProperties();
+                    foreach (PropertyInfo property in properties)
+                    {
+                        command.Parameters.AddWithValue($"@{property.Name}", property.GetValue(entity));
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while inserting the entity into the database. {ex.Message}");
+            }
         }
 
         public void Update<TEntity>(TEntity entity)

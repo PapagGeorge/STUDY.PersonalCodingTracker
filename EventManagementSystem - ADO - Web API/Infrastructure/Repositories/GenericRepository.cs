@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using System.Data.SqlClient;
 using Infrastructure.Constants;
 using System.Data;
@@ -87,7 +87,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public TEntity GetById<TEntity>(int id)
+        public TEntity GetById<TEntity>(int id, string tableName, string columnName)
         {
             try
             {

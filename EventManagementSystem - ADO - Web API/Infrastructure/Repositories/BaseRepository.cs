@@ -14,6 +14,7 @@ namespace Infrastructure.Repositories
         protected SqlConnection GetSqlConnection()
         {
             var connection = new SqlConnection(_dataBaseConfiguration.ConnectionString);
+            connection.Open();
             return connection;
         }
 

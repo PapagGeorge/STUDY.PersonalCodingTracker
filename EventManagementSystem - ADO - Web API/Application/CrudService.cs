@@ -65,6 +65,16 @@ namespace Application
             }
         }
 
-        
+        public void BulkInsertUsers(IEnumerable<User> users)
+        {
+            try
+            {
+                _userRepository.BulkInsertUsers(users);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -21,5 +21,9 @@
         #region InsertUser
         public const string InsertUser = "spAddNewUser";
         #endregion
+
+        #region BulkInsertUsers
+        public const string BulkInsertUsers = "spBulkInsertUsers";
+        #endregion
     }
 }

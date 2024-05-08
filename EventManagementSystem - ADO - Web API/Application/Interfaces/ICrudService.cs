@@ -9,5 +9,6 @@ namespace Application.Interfaces
         void SoftDelete<TEntity>(string tableName, int id, string columnName);
         TEntity GetById<TEntity>(int id, string tableName, string columnName);
         void AddNewUser(User newUser);
+        void BulkInsertUsers(IEnumerable<User> users);
     }
 }

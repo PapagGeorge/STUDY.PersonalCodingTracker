@@ -6,5 +6,6 @@ namespace Application.Interfaces
     {
         User GetUserByEmail(string email);
         void AddUser(User newUser);
+        void BulkInsertUsers(IEnumerable<User> users);
     }
 }

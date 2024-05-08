@@ -36,10 +36,7 @@ namespace Infrastructure.Repositories
             return entity;
         }
 
-        public void BulkInsert<TEntity>(IEnumerable<TEntity> entities)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public void SoftDelete<TEntity>(int id, string tableName, string columnName)
         {

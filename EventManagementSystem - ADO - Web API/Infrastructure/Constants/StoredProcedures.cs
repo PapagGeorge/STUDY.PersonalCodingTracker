@@ -17,5 +17,9 @@
         #region InsertEntity
         public const string InsertEntity = "spInsertEntity";
         #endregion
+
+        #region InsertUser
+        public const string InsertUser = "spAddNewUser";
+        #endregion
     }
 }

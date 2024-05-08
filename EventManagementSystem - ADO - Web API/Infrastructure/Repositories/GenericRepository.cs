@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories
 {
     internal class GenericRepository : BaseRepository, IGenericRepository
     {
-        public GenericRepository(DataBaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
+        public GenericRepository(DatabaseConfiguration dataBaseConfiguration) : base(dataBaseConfiguration)
         {
             
         }
@@ -41,7 +41,7 @@ namespace Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void Delete<TEntity>(int id)
+        public void SoftDelete<TEntity>(int id, string tableName, string columnName)
         {
             try
             {
@@ -50,7 +50,8 @@ namespace Infrastructure.Repositories
                     var command = new SqlCommand(StoredProcedures.SoftDelete, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@TableName", tableName);
-                    command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                    command.Parameters.AddWithValue("@PrimaryKeyValue", id);
+                    command.Parameters.AddWithValue("@ColumnName", columnName);
                     command.ExecuteNonQuery();
                 }
             }
@@ -116,34 +117,5 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public void Insert<TEntity>(TEntity entity)
-        {
-            try
-            {
-                using var connection = GetSqlConnection();
-                {
-                    var command = new SqlCommand(StoredProcedures.InsertEntity, connection);
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    // Assuming TEntity has properties corresponding to table columns
-                    PropertyInfo[] properties = typeof(TEntity).GetProperties();
-                    foreach (PropertyInfo property in properties)
-                    {
-                        command.Parameters.AddWithValue($"@{property.Name}", property.GetValue(entity));
-                    }
-
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while inserting the entity into the database. {ex.Message}");
-            }
-        }
-
-        public void Update<TEntity>(TEntity entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

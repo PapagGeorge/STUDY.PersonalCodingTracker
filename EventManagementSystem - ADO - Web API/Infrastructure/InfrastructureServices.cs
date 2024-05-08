@@ -12,7 +12,8 @@ namespace Infrastructure
         {
             var databaseConfiguration = (DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection");
             services.AddScoped<IGenericRepository, GenericRepository>();
-            services.AddSingleton(databaseConfiguration);
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<DatabaseConfiguration>();
 
             return services;    
         }

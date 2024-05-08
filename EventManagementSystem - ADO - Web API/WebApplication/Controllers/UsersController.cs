@@ -47,28 +47,25 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult InsertUser(UserDTO userRequest)
+        public IActionResult NewUser(UserDTO newUser)
         {
             try
             {
-
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest("Not all information were provided in order to add new User");
                 }
 
-                User newUser = new User()
+                var user = new User()
                 {
-                    FullName = userRequest.FullName,
-                    Email = userRequest.Email,
-                    MobilePhone = userRequest.MobilePhone,
-                    isDeleted = false
+                    FullName = newUser.FullName,
+                    Email = newUser.Email,
+                    MobilePhone = newUser.MobilePhone
                 };
 
-                _crudService.Insert<User>(newUser);
+                _crudService.AddNewUser(user);
 
-                return CreatedAtAction(nameof(GetUserById), new { userId = newUser.UserId }, newUser);
-
+                return CreatedAtAction(nameof(GetUserById), new { userId = user.UserId }, user);
             }
             catch (Exception ex)
             {
@@ -76,12 +73,13 @@ namespace WebApplication.Controllers
             }
         }
 
+
         [HttpDelete("{userId}")]
         public IActionResult SoftDeleteUser(int userId)
         {
             try
             {
-                _crudService.SoftDelete<Event>("Users", userId);
+                _crudService.SoftDelete<Event>("Users", userId, "isDeleted");
                 return Ok("User deleted successfully");
             }
             catch (Exception ex)

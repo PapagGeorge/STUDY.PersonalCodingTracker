@@ -1,15 +1,18 @@
 using Application.Interfaces;
 using System.Collections;
+using Domain.Entities;
 
 namespace Application
 {
     public class CrudService : ICrudService
     {
         private readonly IGenericRepository _genRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CrudService(IGenericRepository genRepository)
+        public CrudService(IGenericRepository genRepository, IUserRepository userRepository)
         {
             _genRepository = genRepository;
+            _userRepository = userRepository;
         }
         public IEnumerable GetAll<TEntity>(string tableName)
         {
@@ -37,16 +40,31 @@ namespace Application
             }
         }
 
-        public void Insert<TEntity>(TEntity entity)
+
+        public void SoftDelete<TEntity>(string tableName, int id, string columnName)
         {
             try
             {
-                _genRepository.Insert<TEntity>(entity);
+                _genRepository.SoftDelete<TEntity>(id, tableName, columnName);
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while inserting new object to database. {ex.Message}");
+                throw new Exception($"An error occurred while performing soft delete to an object. {ex.Message}");
             }
         }
+
+        public void AddNewUser(User newUser)
+        {
+            try
+            {
+                _userRepository.AddUser(newUser);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        
     }
 }

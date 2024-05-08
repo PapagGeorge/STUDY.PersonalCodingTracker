@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories
         private readonly DatabaseConfiguration _dataBaseConfiguration;
         public BaseRepository(DatabaseConfiguration dataBaseConfiguration)
         {
-            _dataBaseConfiguration = dataBaseConfiguration;
+            _databaseConfiguration = databaseConfiguration;
         }
 
         protected SqlConnection GetSqlConnection()

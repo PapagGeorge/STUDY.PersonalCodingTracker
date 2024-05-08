@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using System.Data.SqlClient;
 using Infrastructure.Constants;
 using System.Data;

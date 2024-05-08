@@ -46,43 +46,13 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult InsertRegistration(RegistrationDTO registrationRequest)
-        {
-            try
-            {
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                Registration newRegistration = new Registration()
-                {
-                    EventId = registrationRequest.EventId,
-                    UserId = registrationRequest.UserId,
-                    RegistrationDateTime = DateTime.Now,
-                    Status = "Pending",
-                    isDeleted = false
-                };
-
-                _crudService.Insert<Registration>(newRegistration);
-
-                return CreatedAtAction(nameof(GetRegistrationById), new { registrationId = newRegistration.RegistrationId }, newRegistration);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpDelete("{registrationId}")]
         public IActionResult SoftDeleteRegistration(int registrationId)
         {
             try
             {
-                _crudService.SoftDelete<Registration>("Registrations", registrationId);
+                _crudService.SoftDelete<Registration>("Registrations", registrationId, "isDeleted");
                 return Ok("Registration deleted successfully");
             }
             catch (Exception ex)

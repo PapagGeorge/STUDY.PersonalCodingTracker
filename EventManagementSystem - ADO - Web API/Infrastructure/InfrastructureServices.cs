@@ -10,7 +10,8 @@ namespace Infrastructure
         public static IServiceCollection InfraServices(this IServiceCollection services)
         {
             services.AddScoped<IGenericRepository, GenericRepository>();
-            services.AddScoped<DataBaseConfiguration>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<DatabaseConfiguration>();
 
             return services;    
         }

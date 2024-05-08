@@ -47,38 +47,13 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult InsertAttendanceRecord(AttendanceDTO attendanceRequest)
-        {
-            try
-            {
-                if(!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                Attendance attendance = new Attendance()
-                {
-                    EventId = attendanceRequest.EventId,
-                    UserId = attendanceRequest.UserId,
-                    AttendanceDateTime = DateTime.Now,
-                    isDeleted = false
-                };
-
-                _crudService.Insert<Attendance>(attendance);
-                return CreatedAtAction(nameof(GetAttendanceRecordById), new {id = attendance.AttendanceId }, attendance);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpDelete("{attendanceId}")]
         public IActionResult SoftDeleteAttendanceRecord(int attendanceId)
         {
             try
             {
-                _crudService.SoftDelete<Attendance>("Attendance", attendanceId);
+                _crudService.SoftDelete<Attendance>("Attendance", attendanceId, "isDeleted");
                 return Ok("Attendance record deleted successfully");
             }
             catch (Exception ex)

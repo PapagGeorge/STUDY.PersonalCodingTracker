@@ -45,45 +45,13 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult InsertEvent(EventDTO EventRequest)
-        {
-            try
-            {
-                
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                Event newEvent = new Event()
-                {
-                    Description = EventRequest.Description,
-                    StartDate = EventRequest.StartDate,
-                    EndDate = EventRequest.EndDate,
-                    Location = EventRequest.Location,
-                    OrganizerId = EventRequest.OrganizerId,
-                    Capacity = EventRequest.Capacity,
-                    isDeleted = false
-                };
-
-                _crudService.Insert<Event>(newEvent);
-
-                return CreatedAtAction(nameof(GetEventById), new { eventId = newEvent.EventId }, newEvent);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpDelete("{eventId}")]
         public IActionResult SoftDeleteEvent(int eventId)
         {
             try
             {
-                _crudService.SoftDelete<Event>("Events", eventId);
+                _crudService.SoftDelete<Event>("Events", eventId, "isDeleted");
                 return Ok("Event deleted successfully");
             }
             catch (Exception ex)

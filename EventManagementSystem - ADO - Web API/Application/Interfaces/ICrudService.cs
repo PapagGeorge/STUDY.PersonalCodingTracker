@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿using Domain.Entities;
+using System.Collections;
 
 namespace Application.Interfaces
 {
     public interface ICrudService
     {
         IEnumerable GetAll<TEntity>(string tableName);
-        void SoftDelete<TEntity>(string tableName, int primaryKeyValue);
+        void SoftDelete<TEntity>(string tableName, int id, string columnName);
         TEntity GetById<TEntity>(int id, string tableName, string columnName);
-        void Insert<TEntity>(TEntity entity);
+        void AddNewUser(User newUser);
     }
 }

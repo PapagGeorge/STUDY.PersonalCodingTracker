@@ -46,6 +46,41 @@ namespace WebApplication.Controllers
             }
         }
 
+        [HttpPost("Bulk-Insert")]
+        public IActionResult BulkInsertRegistrations(IEnumerable<RegistrationDTO> registrations)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Information provided for buld insert registrations is not valid");
+                }
+
+                List<Registration> registrationList = new List<Registration>();
+                
+                foreach(var registration in registrations)
+                {
+                    var newRegistration = new Registration()
+                    {
+                        EventId = registration.EventId,
+                        UserId = registration.UserId,
+                        RegistrationDateTime = DateTime.Now,
+                        Status = "Pending",
+                        isDeleted = false
+                    };
+                    registrationList.Add(newRegistration);
+                }
+
+                _crudService.BulkInsertRegistrations(registrationList);
+
+                return Ok("Registrations added successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         [HttpDelete("{registrationId}")]
         public IActionResult SoftDeleteRegistration(int registrationId)

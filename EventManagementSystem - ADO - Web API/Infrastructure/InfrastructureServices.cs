@@ -13,6 +13,7 @@ namespace Infrastructure
             var databaseConfiguration = (DatabaseConfiguration)ConfigurationManager.GetSection("DatabaseConfigurationSection");
             services.AddScoped<IGenericRepository, GenericRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRegistrationRepository, RegistrationRepository>();
             services.AddScoped<DatabaseConfiguration>();
 
             return services;    

@@ -8,11 +8,14 @@ namespace Application
     {
         private readonly IGenericRepository _genRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IRegistrationRepository _registrationRepository;
 
-        public CrudService(IGenericRepository genRepository, IUserRepository userRepository)
+        public CrudService(IGenericRepository genRepository, IUserRepository userRepository,
+            IRegistrationRepository registrationRepository)
         {
             _genRepository = genRepository;
             _userRepository = userRepository;
+            _registrationRepository = registrationRepository;
         }
         public IEnumerable GetAll<TEntity>(string tableName)
         {
@@ -70,6 +73,18 @@ namespace Application
             try
             {
                 _userRepository.BulkInsertUsers(users);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void BulkInsertRegistrations(IEnumerable<Registration> registrations)
+        {
+            try
+            {
+                _registrationRepository.BulkInsertRegistrations(registrations);
             }
             catch (Exception ex)
             {

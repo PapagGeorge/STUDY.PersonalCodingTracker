@@ -8,7 +8,7 @@ namespace WebApplication.DTO_s
         public int EventId { get; set; }
         [Required]
         public int UserId { get; set; }
-        [Required]
-        public DateTime RegistrationDateTime { get; set; }
+        
+
     }
 }

@@ -10,5 +10,6 @@ namespace Application.Interfaces
         TEntity GetById<TEntity>(int id, string tableName, string columnName);
         void AddNewUser(User newUser);
         void BulkInsertUsers(IEnumerable<User> users);
+        void BulkInsertRegistrations(IEnumerable<Registration> registrations);
     }
 }

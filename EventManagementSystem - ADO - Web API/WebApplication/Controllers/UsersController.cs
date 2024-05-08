@@ -23,7 +23,7 @@ namespace WebApplication.Controllers
         {
             try
             {
-                IEnumerable users = _crudService.GetAll<User>("dbo.Users");
+                IEnumerable users = _crudService.GetAll<User>("Users");
                 return Ok(users);
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace WebApplication.Controllers
                     newUser.FullName = user.FullName;
                     newUser.Email = user.Email;
                     newUser.MobilePhone = user.MobilePhone;
-                    newUser.isDeleted = false;
+                    
 
                     newUsers.Add(newUser);
                 }

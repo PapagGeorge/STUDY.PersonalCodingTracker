@@ -25,5 +25,9 @@
         #region BulkInsertUsers
         public const string BulkInsertUsers = "spBulkInsertUsers";
         #endregion
+
+        #region BulkInsertRegistrations
+        public const string BulkInsertRegistrations = "spBulkInsertRegistrations";
+        #endregion
     }
 }

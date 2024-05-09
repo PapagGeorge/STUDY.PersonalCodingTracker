@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClient and JSON Serialization", "HttpClient and JSON Serialization\HttpClient and JSON Serialization.csproj", "{5CDCC335-15CA-4B24-A34B-67ADE2B11544}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CDCC335-15CA-4B24-A34B-67ADE2B11544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CDCC335-15CA-4B24-A34B-67ADE2B11544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CDCC335-15CA-4B24-A34B-67ADE2B11544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CDCC335-15CA-4B24-A34B-67ADE2B11544}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49E20D90-1CAC-45C4-BE71-B7AE86C65E42}
+	EndGlobalSection
+EndGlobal

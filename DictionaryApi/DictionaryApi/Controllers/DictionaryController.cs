@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using Domain;
+using DictionaryApi.DTOs;
 
 namespace DictionaryApi.Controllers
 {
@@ -16,35 +18,35 @@ namespace DictionaryApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDefinition(string term)
+public async Task<IActionResult> GetDefinition(string term)
+{
+    try
+    {
+        var responseBody = await _urbanDictionaryService.GetDefinitionAsync(term);
+
+        var options = new JsonSerializerOptions()
         {
-            try
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        var definitionList = JsonSerializer.Deserialize<DefinitionList>(responseBody, options);
+        var definitionDtoList = new List<DefinitionDTO>();
+
+        foreach(var item in definitionList.DefinitionModelList)
+        {
+            var definitionDto = new DefinitionDTO()
             {
-                var responseBody = await _urbanDictionaryService.GetDefinitionAsync(term);
-
-                var options = new JsonSerializerOptions()
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                };
-
-                var definitionList = JsonSerializer.Deserialize<DefinitionList>(responseBody, options);
-                var definitionDtoList = new List<DefinitionDTO>();
-
-                foreach(var item in definitionList.DefinitionModelList)
-                {
-                    var definitionDto = new DefinitionDTO()
-                    {
-                        Author = item.Author,
-                        Definition = item.Definition,
-                        Example = item.Example,
-                        ThumbsUp = item.ThumbsUp,
-                        ThumbsDown = item.ThumbsDown
-                    };
-                    
-                    definitionDtoList.Add(definitionDto);
-                }
-                return Ok(definitionDtoList);
-            }
+                Author = item.Author,
+                Definition = item.Definition,
+                Example = item.Example,
+                ThumbsUp = item.ThumbsUp,
+                ThumbsDown = item.ThumbsDown
+            };
+            
+            definitionDtoList.Add(definitionDto);
+        }
+        return Ok(definitionDtoList);
+    }
             catch (Exception ex)
             {
                 

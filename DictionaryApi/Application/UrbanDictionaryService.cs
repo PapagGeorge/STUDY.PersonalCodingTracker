@@ -7,16 +7,16 @@ namespace Application
 {
     public class UrbanDictionaryService : IUrbanDictionaryService
     {
-        private readonly HttpClient _httpClient;
+        //private readonly HttpClient _httpClient;
 
-        public UrbanDictionaryService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        //public UrbanDictionaryService(HttpClient httpClient)
+        //{
+        //    _httpClient = httpClient;
+        //}
 
         public async Task <string> GetDefinitionAsync(string term)
         {
-
+            using var _httpClient = new HttpClient();
             var url = $"https://mashape-community-urban-dictionary.p.rapidapi.com/define?term={term}";
 
             _httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", "866172a449mshf79acb8d04add64p16bbaejsnd43b5b49eec5");

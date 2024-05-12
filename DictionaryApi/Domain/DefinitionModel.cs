@@ -1,28 +1,39 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Domain
 {
     public class DefinitionModel
     {
+
         [JsonPropertyName("definition")]
-        public string Definition { get; init; }
+        public string Definition { get; set; }
+
         [JsonPropertyName("permalink")]
-        public string Permalink { get; init; }
+        public string Permalink { get; set; }
+
         [JsonPropertyName("thumbs_up")]
-        public int ThumbsUp { get; init; }
+        public int ThumbsUp { get; set; }
+
         [JsonPropertyName("author")]
-        public string Author { get; init; }
+        public string Author { get; set; }
+
         [JsonPropertyName("word")]
-        public string Word { get; init; }
+        public string Word { get; set; }
+
         [JsonPropertyName("defid")]
-        public long DefId { get; init; }
+        public long DefId { get; set; }
+
         [JsonPropertyName("current_vote")]
-        public string CurrentVote { get; init; }
+        public string CurrentVote { get; set; }
+
         [JsonPropertyName("written_on")]
-        public DateTime WrittenOn { get; init; }
+        public DateTime WrittenOn { get; set; }
+
         [JsonPropertyName("example")]
-        public string Example { get; init; }
+        public string Example { get; set; }
+
         [JsonPropertyName("thumbs_down")]
-        public int ThumbsDown { get; init; }
-  }
+        public int ThumbsDown { get; set; }
+    }
 }
+

@@ -29,5 +29,9 @@
         #region BulkInsertRegistrations
         public const string BulkInsertRegistrations = "spBulkInsertRegistrations";
         #endregion
+
+        #region InsertEvent
+        public const string InsertEvent = "spInsertEvent";
+        #endregion
     }
 }

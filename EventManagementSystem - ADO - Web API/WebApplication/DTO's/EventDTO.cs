@@ -16,8 +16,6 @@ namespace WebApplication.DTO_s
         public int OrganizerId { get; set; }
         [Required]
         public int Capacity { get; set; }
-        [Required]
-        public DateTime CreatedDateTime { get; set; }
-
+        
     }
 }

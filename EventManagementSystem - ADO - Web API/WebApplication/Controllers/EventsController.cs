@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
 using WebApplication.DTO_s;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication.Controllers
 {
@@ -16,6 +17,8 @@ namespace WebApplication.Controllers
         {
             _crudService = crudService;
         }
+
+
 
         [HttpGet]
         public IActionResult GetAllEvents()
@@ -46,6 +49,7 @@ namespace WebApplication.Controllers
         }
 
 
+
         [HttpDelete("{eventId}")]
         public IActionResult SoftDeleteEvent(int eventId)
         {
@@ -59,5 +63,41 @@ namespace WebApplication.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost]
+        public IActionResult AddNewEvent([FromBody] EventDTO newEvent)
+        {
+            try
+            {
+
+                
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Not all information for the new event were provided properly");
+                }
+
+                Event eventToAdd = new Event()
+                {
+                    Description = newEvent.Description,
+                    StartDate = newEvent.StartDate,
+                    EndDate = newEvent.EndDate,
+                    Location = newEvent.Location,
+                    OrganizerId = newEvent.OrganizerId,
+                    Capacity = newEvent.Capacity
+                };
+
+                _crudService.AddNewEvent(eventToAdd);
+
+                return CreatedAtAction(nameof(GetEventById), new { eventId = eventToAdd.EventId }, eventToAdd);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+
+
     }
 }

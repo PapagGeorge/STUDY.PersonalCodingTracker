@@ -14,6 +14,7 @@ namespace Infrastructure
             services.AddScoped<IGenericRepository, GenericRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRegistrationRepository, RegistrationRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<DatabaseConfiguration>();
 
             return services;    

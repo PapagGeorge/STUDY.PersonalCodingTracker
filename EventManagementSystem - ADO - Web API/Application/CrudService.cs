@@ -9,13 +9,15 @@ namespace Application
         private readonly IGenericRepository _genRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRegistrationRepository _registrationRepository;
+        private readonly IEventRepository _eventRepository;
 
         public CrudService(IGenericRepository genRepository, IUserRepository userRepository,
-            IRegistrationRepository registrationRepository)
+            IRegistrationRepository registrationRepository, IEventRepository eventRepository)
         {
             _genRepository = genRepository;
             _userRepository = userRepository;
             _registrationRepository = registrationRepository;
+            _eventRepository = eventRepository;
         }
         public IEnumerable GetAll<TEntity>(string tableName)
         {
@@ -90,6 +92,16 @@ namespace Application
             {
                 throw;
             }
+        }
+
+        public void AddNewEvent(Event newEvent)
+        {
+            _eventRepository.AddNewEvent(newEvent);
+        }
+
+        public void AddNewAttendance(Attendance newAttendance)
+        {
+            throw new NotImplementedException();
         }
     }
 }

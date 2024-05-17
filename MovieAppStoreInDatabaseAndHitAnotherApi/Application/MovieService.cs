@@ -11,7 +11,7 @@ namespace Application
         {
             _movieRepository = movieRepository;
         }
-        public async Task<Movie> GetMovieByIdsAsync(string movieId)
+        public async Task<Movie> GetMovieByIdAsync(string movieId)
         {
             return await _movieRepository.GetMovieByIdAsync(movieId);
         }

@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface IMovieService
     {
-        Task<Movie> GetMovieByIdsAsync(string movieId);
+        Task<Movie> GetMovieByIdAsync(string movieId);
     }
 }

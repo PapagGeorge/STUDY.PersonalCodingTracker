@@ -15,6 +15,7 @@ namespace Presentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddServices();
+            builder.Services.InfraServices();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

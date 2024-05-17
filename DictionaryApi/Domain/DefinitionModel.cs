@@ -24,5 +24,5 @@ namespace Domain
         public string Example { get; init; }
         [JsonPropertyName("thumbs_down")]
         public int ThumbsDown { get; init; }
-    }
+  }
 }

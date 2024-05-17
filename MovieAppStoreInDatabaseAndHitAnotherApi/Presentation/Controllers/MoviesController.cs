@@ -7,11 +7,11 @@ namespace Presentation.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        [HttpGet("{ImdbId}")]
-        public IActionResult GetMovieByImdbId(string ImdbId)
-        {
+        //[HttpGet("{ImdbId}")]
+        //public IActionResult GetMovieByImdbId(string ImdbId)
+        //{
 
-        }
+        //}
 
 
     }

@@ -13,48 +13,51 @@ namespace Infrastructure.Repositories
         {
             
         }
-        public Movie GetMovieByImdbId(int id)
+        public async Task <Movie> GetMovieByIdAsync(string movieId)
         {
             using (var connection = GetSqlConnection())
             {
                 var command = new SqlCommand(StoredProcedures.GetMoviesByImdbId, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@ImdbId", id);
+                command.Parameters.AddWithValue("@ImdbId", movieId);
 
-                var reader = command.ExecuteReader();
-
-                Movie movie = null;
-                if (reader.Read())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    movie = new Movie
+                    Movie movie = null;
+                    if (await reader.ReadAsync())
                     {
-                        Title = reader["Title"].ToString(),
-                        Year = Convert.ToInt32(reader["Year"]),
-                        Rated = reader["Rated"].ToString(),
-                        Released = reader["Released"].ToString(),
-                        Runtime = reader["Runtime"].ToString(),
-                        Genre = reader["Genre"].ToString(),
-                        Director = reader["Director"].ToString(),
-                        Writer = reader["Writer"].ToString(),
-                        Actors = reader["Actors"].ToString(),
-                        Plot = reader["Plot"].ToString(),
-                        Language = reader["Language"].ToString(),
-                        Country = reader["Country"].ToString(),
-                        Awards = reader["Awards"].ToString(),
-                        Poster = reader["Poster"].ToString(),
-                        Metascore = Convert.ToInt32(reader["Metascore"]),
-                        ImdbRating = Convert.ToDouble(reader["ImdbRating"]),
-                        ImdbVotes = Convert.ToInt32(reader["ImdbVotes"]),
-                        ImdbID = reader["ImdbID"].ToString(),
-                        Type = reader["Type"].ToString(),
-                        DVD = reader["DVD"].ToString(),
-                        BoxOffice = reader["BoxOffice"].ToString(),
-                        Production = reader["Production"].ToString(),
-                        Website = reader["Website"].ToString(),
-                        Response = Convert.ToBoolean(reader["Response"])
-                    };
+                        movie = new Movie
+                        {
+                            Title = reader["Title"].ToString(),
+                            Year = Convert.ToInt32(reader["Year"]),
+                            Rated = reader["Rated"].ToString(),
+                            Released = reader["Released"].ToString(),
+                            Runtime = reader["Runtime"].ToString(),
+                            Genre = reader["Genre"].ToString(),
+                            Director = reader["Director"].ToString(),
+                            Writer = reader["Writer"].ToString(),
+                            Actors = reader["Actors"].ToString(),
+                            Plot = reader["Plot"].ToString(),
+                            Language = reader["Language"].ToString(),
+                            Country = reader["Country"].ToString(),
+                            Awards = reader["Awards"].ToString(),
+                            Poster = reader["Poster"].ToString(),
+                            Metascore = Convert.ToInt32(reader["Metascore"]),
+                            ImdbRating = Convert.ToDouble(reader["ImdbRating"]),
+                            ImdbVotes = Convert.ToInt32(reader["ImdbVotes"]),
+                            ImdbID = reader["ImdbID"].ToString(),
+                            Type = reader["Type"].ToString(),
+                            DVD = reader["DVD"].ToString(),
+                            BoxOffice = reader["BoxOffice"].ToString(),
+                            Production = reader["Production"].ToString(),
+                            Website = reader["Website"].ToString(),
+                            Response = Convert.ToBoolean(reader["Response"])
+                        };
+                    }
+                    return movie;
                 }
-                return movie;
+
+                    
             }
         }
 

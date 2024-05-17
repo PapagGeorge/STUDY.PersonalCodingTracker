@@ -11,5 +11,7 @@ namespace Application.Interfaces
         void AddNewUser(User newUser);
         void BulkInsertUsers(IEnumerable<User> users);
         void BulkInsertRegistrations(IEnumerable<Registration> registrations);
+        void AddNewEvent(Event newEvent);
+        void AddNewAttendance(Attendance newAttendance);
     }
 }

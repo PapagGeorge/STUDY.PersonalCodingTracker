@@ -9,5 +9,9 @@
         #region GetMoviesByTitle
         public const string GetMoviesByTitle = "spGetMoviesByTitle";
         #endregion
+
+        #region AddNewMovie
+        public const string AddNewMovie = "spAddNewMovie";
+        #endregion
     }
 }

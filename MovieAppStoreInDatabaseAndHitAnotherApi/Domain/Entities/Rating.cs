@@ -1,8 +1,12 @@
-﻿namespace Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Entities
 {
     public class Rating
     {
-        public string Source { get; set; }
-        public string Value { get; set; }
+        [JsonPropertyName("Source")]
+        public string Source { get; init; }
+        [JsonPropertyName("Value")]
+        public string Value { get; init; }
     }
 }

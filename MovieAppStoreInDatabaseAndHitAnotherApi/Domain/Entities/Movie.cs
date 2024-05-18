@@ -1,31 +1,58 @@
-﻿namespace Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Entities
 {
     public class Movie
     {
-        public string Title { get; set; }
-        public int Year { get; set; }
-        public string Rated { get; set; }
-        public string Released { get; set; }
-        public string Runtime { get; set; }
-        public string Genre { get; set; }
-        public string Director { get; set; }
-        public string Writer { get; set; }
-        public string Actors { get; set; }
-        public string Plot { get; set; }
-        public string Language { get; set; }
-        public string Country { get; set; }
-        public string Awards { get; set; }
-        public string Poster { get; set; }
-        public List<Rating> Ratings { get; set; }
-        public int Metascore { get; set; }
-        public double ImdbRating { get; set; }
-        public int ImdbVotes { get; set; }
-        public string ImdbID { get; set; }
-        public string Type { get; set; }
-        public string DVD { get; set; }
-        public string BoxOffice { get; set; }
-        public string Production { get; set; }
-        public string Website { get; set; }
-        public bool Response { get; set; }
+        [JsonPropertyName("Title")]
+        public string Title { get; init; }
+        [JsonPropertyName("Year")]
+        public string Year { get; init; }
+        [JsonPropertyName("Rated")]
+        public string Rated { get; init; }
+        [JsonPropertyName("Released")]
+        public string Released { get; init; }
+        [JsonPropertyName("Runtime")]
+        public string Runtime { get; init; }
+        [JsonPropertyName("Genre")]
+        public string Genre { get; init; }
+        [JsonPropertyName("Director")]
+        public string Director { get; init; }
+        [JsonPropertyName("Writer")]
+        public string Writer { get; init; }
+        [JsonPropertyName("Actor")]
+        public string Actors { get; init; }
+        [JsonPropertyName("Plot")]
+        public string Plot { get; init; }
+        [JsonPropertyName("Language")]
+        public string Language { get; init; }
+        [JsonPropertyName("Country")]
+        public string Country { get; init; }
+        [JsonPropertyName("Awards")]
+        public string Awards { get; init; }
+        [JsonPropertyName("Poster")]
+        public string Poster { get; init; }
+        [JsonPropertyName("Ratings")]
+        public List<Rating> Ratings { get; init; }
+        [JsonPropertyName("Metascore")]
+        public string Metascore { get; init; }
+        [JsonPropertyName("imdbRating")]
+        public string ImdbRating { get; init; }
+        [JsonPropertyName("imdbVotes")]
+        public string ImdbVotes { get; init; }
+        [JsonPropertyName("imdbID")]
+        public string ImdbID { get; init; }
+        [JsonPropertyName("Type")]
+        public string Type { get; init; }
+        [JsonPropertyName("DVD")]
+        public string DVD { get; init; }
+        [JsonPropertyName("BoxOffice")]
+        public string BoxOffice { get; init; }
+        [JsonPropertyName("Production")]
+        public string Production { get; init; }
+        [JsonPropertyName("Website")]
+        public string Website { get; init; }
+        [JsonPropertyName("Response")]
+        public string Response { get; init; }
     }
 }

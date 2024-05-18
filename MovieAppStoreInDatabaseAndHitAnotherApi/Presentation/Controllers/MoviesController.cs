@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
 using Application;
+using Application.Interfaces;
 
 namespace Presentation.Controllers
 {
@@ -10,27 +12,23 @@ namespace Presentation.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly IMovieService _movieService;
-        private readonly IOMDbAccess _oMDbAccess;
-        public MoviesController(IMovieService movieService, IOMDbAccess oMDbAccess)
+        public MoviesController(IMovieService movieService)
         {
             _movieService = movieService;
-            _oMDbAccess = oMDbAccess;
         }
 
-        //}
 
-        [HttpGet("OMBd/{ImdbId}")]
-        public async Task<IActionResult> GetMovieByImdbIdFromOMBd(string ImdbId)
+        [HttpGet("{ImdbId}")]
+        public async Task<IActionResult> GetMovieByImdbId(string ImdbId)
         {
             try
             {
-                Movie movie = new Movie();
-                movie = await _oMDbAccess.GetMovieByImdbIdAsync(ImdbId);
+                var movie = await _movieService.GetMovieByIdAsync(ImdbId);
 
-                if(movie == null)
+                if (movie == null)
                 {
-                    return BadRequest("Movie was not found");
-                }    
+                    return NotFound();
+                }
 
                 return Ok(movie);
             }

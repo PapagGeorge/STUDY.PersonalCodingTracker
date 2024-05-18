@@ -8,9 +8,9 @@ namespace Application
     {
         private readonly HttpClient _httpClient;
 
-        public OMDbAccess(HttpClient httpClient)
+        public OMDbAccess(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient();
         }
         public async Task<Movie> GetMovieByImdbIdAsync(string movieId)
         {

@@ -1,6 +1,12 @@
 ﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< Updated upstream
+=======
+using Domain.Entities;
+using Application;
+using Application.Interfaces;
+>>>>>>> Stashed changes
 
 namespace Presentation.Controllers
 {

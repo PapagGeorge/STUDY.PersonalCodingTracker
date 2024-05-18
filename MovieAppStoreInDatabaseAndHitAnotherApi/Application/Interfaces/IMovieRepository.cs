@@ -6,6 +6,7 @@ namespace Application.Interfaces
     {
         IEnumerable<Movie> GetMoviesByTitle(string title);
         Task<Movie> GetMovieByIdAsync(string movieId);
+        Task AddNewMovieAsync(Movie movie);
 
     }
 }

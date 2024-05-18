@@ -14,7 +14,7 @@ namespace Application
             _movieRepository = movieRepository;
             _memoryCache = memoryCache;
         }
-        public async Task<Movie> GetMovieByIdsAsync(string movieId)
+        public async Task<Movie> GetMovieByIdAsync(string movieId)
         {
             var result = _memoryCache.Get<Movie>("movie");
 

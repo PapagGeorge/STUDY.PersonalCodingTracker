@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-<<<<<<< Updated upstream
-=======
 using Domain.Entities;
 using Application;
 using Application.Interfaces;
->>>>>>> Stashed changes
 
 namespace Presentation.Controllers
 {
@@ -13,11 +10,32 @@ namespace Presentation.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        //[HttpGet("{ImdbId}")]
-        //public IActionResult GetMovieByImdbId(string ImdbId)
-        //{
+        private readonly IMovieService _movieService;
+        public MoviesController(IMovieService movieService)
+        {
+            _movieService = movieService;
+        }
 
-        //}
+
+        [HttpGet("{ImdbId}")]
+        public async Task<IActionResult> GetMovieByImdbId(string ImdbId)
+        {
+            try
+            {
+                var movie = await _movieService.GetMovieByIdAsync(ImdbId);
+
+                if (movie == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(movie);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
 
     }

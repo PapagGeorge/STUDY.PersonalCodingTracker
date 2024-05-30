@@ -28,8 +28,10 @@ namespace Assignment.Api
                 containerBuilder.RegisterModule(new ApplicationModule());
 
             });
-            
-            
+
+            builder.Services.AddDistributedMemoryCache();
+
+
 
             var app = builder.Build();
 

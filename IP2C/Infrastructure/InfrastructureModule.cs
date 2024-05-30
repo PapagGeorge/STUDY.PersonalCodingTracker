@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Infrastructure.DatabaseContext;
 using Infrastructure.Repositories;
 using Application.Interfaces;
+using Infrastructure.UnitOfWorkStructure;
 
 namespace Infrastructure
 {
@@ -33,6 +34,7 @@ namespace Infrastructure
             }).AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<AssignmentRepository>().As<IAssignmentRepository>();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
         }
     }
 }

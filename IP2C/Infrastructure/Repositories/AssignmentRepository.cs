@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Models;
 using Infrastructure.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
     public class AssignmentRepository : IAssignmentRepository
@@ -22,6 +23,48 @@ namespace Infrastructure.Repositories
 
             return query.FirstOrDefault();
                         
+        }
+
+        public async Task<int> InsertCountryAsync(Country country)
+        {
+            
+
+            await _context.Countries.AddAsync(country);
+            await _context.SaveChangesAsync();
+
+            return country.Id;
+        }
+
+        public async Task<Country?> GetCountryByCodes(WebServiceResponse webServiceResponse)
+        {
+            if(webServiceResponse == null)
+            {
+                throw new ArgumentNullException(nameof(webServiceResponse));
+            }
+
+            var query = from country in _context.Countries
+                        where country.TwoLetterCode == webServiceResponse.TwoLetterCode
+                        && country.ThreeLetterCode == webServiceResponse.ThreeLetterCode
+                        select country;
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task InsertIpAddress(int countryId, string ipAddress)
+        {
+            if(countryId == 0)
+            {
+                throw new ArgumentNullException(nameof(countryId));
+            }
+
+            if(string.IsNullOrWhiteSpace(ipAddress))
+            {
+                throw new ArgumentNullException(nameof(ipAddress));
+            }
+
+            IpAddress addressToAdd = IpAddress.Create(countryId, ipAddress, DateTime.UtcNow, DateTime.UtcNow);
+            await _context.IpAddresses.AddAsync(addressToAdd);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace Application
                 .Where(t => t.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
                 .SingleInstance();
+
+            
         }
     }
 }

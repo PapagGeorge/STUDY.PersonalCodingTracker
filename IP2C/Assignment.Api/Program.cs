@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Infrastructure;
 using Application;
 
+
 namespace Assignment.Api
 {
     public class Program
@@ -23,7 +24,9 @@ namespace Assignment.Api
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
             {
                 containerBuilder.RegisterModule(new InfrastructureModule(builder.Configuration));
+
                 containerBuilder.RegisterModule(new ApplicationModule());
+
             });
 
             builder.Services.AddDistributedMemoryCache();

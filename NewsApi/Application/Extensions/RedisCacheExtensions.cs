@@ -1,0 +1,39 @@
+﻿using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
+
+namespace Application.Extensions
+{
+    public static class RedisCacheExtensions
+    {
+        public static async Task SetRecordAsync<T>(this IDistributedCache cache,
+            string recordId,
+            T data,
+            TimeSpan? absoluteExpireTime,
+            TimeSpan? slidingExpireTime)
+        {
+            var options = new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(10),
+                SlidingExpiration = slidingExpireTime ?? TimeSpan.FromMinutes(5)
+            };
+
+            var jsonData = JsonSerializer.Serialize(data);
+            await cache.SetStringAsync(recordId, jsonData, options, default);
+        }
+
+        public static async Task<T?> GetRecordAsync<T>(this IDistributedCache cache,
+        string recordId,
+        JsonSerializerOptions options)
+        {
+            var jsonData = await cache.GetStringAsync(recordId);
+            if (jsonData == null)
+            {
+                return default;
+            }
+
+            return JsonSerializer.Deserialize<T>(jsonData, options);
+        }
+    }
+
+    
+}

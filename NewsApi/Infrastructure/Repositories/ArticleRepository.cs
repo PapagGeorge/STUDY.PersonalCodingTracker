@@ -18,6 +18,47 @@ namespace Infrastructure.Repositories
             return articles;
         }
 
-        
+        public async Task InsertArticlesAsync(ICollection<Article> articles)
+        {
+            if(articles is null)
+            {
+                throw new ArgumentNullException(nameof(articles));
+            }
+
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    foreach (var article in articles)
+                    {
+                        var existingArticle = await _dbContext.Articles
+                            .FirstOrDefaultAsync(a => a.Url == article.Url);
+
+                        if (existingArticle == null)
+                        {
+                            await _dbContext.Articles.AddAsync(article);
+                        }
+                        else
+                        {
+                            existingArticle.Author = article.Author;
+                            existingArticle.Title = article.Title;
+                            existingArticle.Description = article.Description;
+                            existingArticle.PublishedAt = article.PublishedAt;
+                            existingArticle.UrlToImage = article.UrlToImage;
+                            existingArticle.Content = article.Content;
+
+                            _dbContext.Articles.Update(existingArticle);
+                        }
+                    }
+                    await _dbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+        }
     }
 }

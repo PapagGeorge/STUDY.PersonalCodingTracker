@@ -8,13 +8,13 @@ namespace Application.Extensions
         public static async Task SetRecordAsync<T>(this IDistributedCache cache,
             string recordId,
             T data,
-            TimeSpan? absoluteExpireTime,
-            TimeSpan? slidingExpireTime)
+            TimeSpan? absoluteExpireTime = null
+            )
         {
             var options = new DistributedCacheEntryOptions()
             {
                 AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(10),
-                SlidingExpiration = slidingExpireTime ?? TimeSpan.FromMinutes(5)
+                
             };
 
             var jsonData = JsonSerializer.Serialize(data);

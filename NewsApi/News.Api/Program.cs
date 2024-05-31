@@ -1,6 +1,8 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Infrastructure;
+using Application;
+
 namespace News.Api
 {
     public class Program
@@ -21,7 +23,10 @@ namespace News.Api
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
             {
                 containerBuilder.RegisterModule(new InfrastructureModule(builder.Configuration));
+                containerBuilder.RegisterModule(new ApplicationModule());
             });
+
+            builder.Services.AddDistributedMemoryCache();
 
             var app = builder.Build();
 

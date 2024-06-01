@@ -1,24 +1,28 @@
 ﻿using Application.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using Domain.Models;
 using Application.Extensions;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Application.Services
 {
     public class ArticleService : IArticleService
     {
-        public const string baseUrl = "https://newsapi.org/v2/top-headlines?country=gr";
+        public const string BaseUrl = "https://newsapi.org/v2/top-headlines";
         public const string ApiKey = "5e666310837a4d05ab612db16657b36e";
         private readonly IArticleRepository _articleRepository;
         private readonly IDistributedCache _cache;
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient; //IhttpClient todo
+        
 
         public ArticleService(IArticleRepository articleRepository, IDistributedCache cache, HttpClient httpClient)
         {
             _articleRepository = articleRepository;
             _cache = cache;
             _httpClient = httpClient;
+            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
+            
+
         }
 
         public async Task<ICollection<Article>> GetLatestArticles()
@@ -67,20 +71,22 @@ namespace Application.Services
 
         private async Task<ICollection<Article>> FetchAndCacheLatestArticlesFromApiAsync()
         {
-            // Replace with your actual API URL
-            var apiUrl = $"{baseUrl}&from={DateTime.UtcNow.AddDays(-1):yyyy-MM-dd}&to={DateTime.UtcNow:yyyy-MM-dd}&apiKey={ApiKey}";
+
+            var apiUrl = $"https://newsapi.org/v2/top-headlines?country=gr&apiKey=5e666310837a4d05ab612db16657b36e"; //todo
+            
+
             var response = await _httpClient.GetStringAsync(apiUrl);
             var articlesResponse = JsonSerializer.Deserialize<NewsResponse>(response, GetJsonSerializerOptions());
 
             if (articlesResponse != null && articlesResponse.Status == "ok" && articlesResponse.Articles.Any())
             {
-                // Cache each article individually
+                
                 foreach (var article in articlesResponse.Articles)
                 {
                     await CacheArticleAsync(article);
                 }
 
-                // Cache the entire collection of latest articles
+                
                 await _cache.SetRecordAsync("latest_articles", articlesResponse.Articles);
                 return articlesResponse.Articles;
             }
@@ -102,10 +108,12 @@ namespace Application.Services
             return await _cache.GetRecordAsync<Article>(cacheKey, GetJsonSerializerOptions());
         }
 
-        public static JsonSerializerOptions GetJsonSerializerOptions()
+        private static JsonSerializerOptions GetJsonSerializerOptions()
         {
-            return new JsonSerializerOptions();
+            return new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
         }
     }
 }
-

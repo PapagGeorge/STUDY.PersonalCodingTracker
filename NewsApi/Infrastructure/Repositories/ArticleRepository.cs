@@ -13,9 +13,20 @@ namespace Infrastructure.Repositories
         }
         public async Task<ICollection<Article>> GetLatestArticlesAsync()
         {
-            List<Article> articles = await _dbContext.Articles
-                .Where(article => article.PublishedAt > DateTime.UtcNow.Subtract(TimeSpan.FromHours(24))).ToListAsync();
-            return articles;
+            try
+            {
+                var oneDayAgo = DateTime.UtcNow.AddDays(-2);
+                List<Article> articles = await _dbContext.Articles
+                .Where(a => a.PublishedAt >= oneDayAgo)
+                .ToListAsync();
+
+                return articles;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public async Task InsertArticlesAsync(ICollection<Article> articles)

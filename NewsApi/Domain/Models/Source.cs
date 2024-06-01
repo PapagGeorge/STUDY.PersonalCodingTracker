@@ -2,18 +2,9 @@
 {
     public class Source
     {
-        public int Id { get; set; }
+        /*public string Id { get; set; } */// Primary key
+        
+        public string Id { get; set; } // This can be nullable, corresponding to the `id` field in the API
         public string Name { get; set; }
-
-        public Source(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
-        public static Source Create(int id, string name)
-        {
-            return new Source(id, name);
-        }
     }
 }

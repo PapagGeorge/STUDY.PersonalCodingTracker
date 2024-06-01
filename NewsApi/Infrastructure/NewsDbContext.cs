@@ -11,5 +11,21 @@ namespace Infrastructure
         {
             
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Article>()
+                .HasOne(a => a.Source)
+                .WithMany()
+                .HasForeignKey(a => a.SourceId);
+
+            modelBuilder.Entity<Source>()
+                .Property(s => s.Id)
+                .IsRequired(false);
+
+            
+            modelBuilder.Entity<Article>().ToTable("Articles");
+            modelBuilder.Entity<Source>().ToTable("Sources");
+        }
     }
 }

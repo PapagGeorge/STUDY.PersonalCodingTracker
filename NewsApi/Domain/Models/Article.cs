@@ -1,34 +1,17 @@
-﻿namespace Domain.Models
+﻿
+namespace Domain.Models
 {
     public class Article
     {
-        public int ArticleId { get; set; }
-        public Source Source { get; set; }
-        public string Author { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Url { get; set; }
-        public string UrlToImage { get; set; }
+        public int Id { get; set; }
+        public string Author { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public string UrlToImage { get; set; } = string.Empty;
         public DateTime PublishedAt { get; set; }
-        public string Content { get; set; }
-
-        public Article(Source source, string author, string title, string description, string url, string urlToImage,
-            DateTime publishedAt, string content)
-        {
-            Source = source;
-            Author = author;
-            Title = title;
-            Description = description;
-            Url = url;
-            UrlToImage = urlToImage;
-            PublishedAt = publishedAt;
-            Content = content;
-        }
-
-        public static Article Create(Source source, string author, string title, string description, string url, string urlToImage,
-            DateTime publishedAt, string content)
-        {
-            return new Article(source, author, title, description, url, urlToImage, publishedAt, content);
-        }
+        public string Content { get; set; } = string.Empty;
+        public int SourceId { get; set; }
+        public Source Source { get; set; } = new();
     }
 }

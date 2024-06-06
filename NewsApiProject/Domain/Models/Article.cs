@@ -23,7 +23,5 @@ namespace Domain.Models
         public DateTime PublishedAt { get; init; }
         [JsonPropertyName("content")]
         public string Content { get; init; }
-        public Source Source { get; init; }
-        public NewsApiResponse NewsApiResponse { get; set; }
     }
 }

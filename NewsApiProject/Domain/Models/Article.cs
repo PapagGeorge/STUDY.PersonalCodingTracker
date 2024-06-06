@@ -1,5 +1,7 @@
-﻿namespace Domain.Models
-    using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Models
+    
 {
     public class Article
     {

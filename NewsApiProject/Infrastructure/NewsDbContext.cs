@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 
-namespace Infrastructure.NewsDbContext
+namespace Infrastructure
 {
     public class NewsDbContext : DbContext
     {
@@ -10,7 +10,7 @@ namespace Infrastructure.NewsDbContext
 
         public NewsDbContext(DbContextOptions<NewsDbContext> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -6,7 +6,10 @@ namespace Domain.Models
     public class Article
     {
         public int ArticleId { get; init; } // Primary key for the database
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
         public int SourceId { get; init; } //foreign key referencing source table
+        [JsonPropertyName("name")]
         public string SourceName { get; set; }
         public int NewsApiResponseId { get; init; } //foreign key referencing NewsResponse table
         [JsonPropertyName("author")]
@@ -23,5 +26,7 @@ namespace Domain.Models
         public DateTime PublishedAt { get; init; }
         [JsonPropertyName("content")]
         public string Content { get; init; }
+        public NewsApiResponse NewsApiResponse { get; init; }
+        public Source Source { get; set; }
     }
 }

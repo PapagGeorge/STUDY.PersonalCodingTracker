@@ -14,7 +14,7 @@ namespace Infrastructure
         {
             _dbContext = dbContext;
         }
-        public async Task<NewsApiResponse> GetApiResponse(string keyword)
+        public async Task<NewsApiResponse> GetApiResponseAsync(string keyword)
         {
             var newsApiResponse = await (from a in _dbContext.NewsApiResponses
                                          join b in _dbContext.Articles
@@ -28,7 +28,6 @@ namespace Infrastructure
                                              Articles = a.Articles.Select(article => new Article
                                              {
                                                  ArticleId = article.ArticleId,
-                                                 Id = article.Id,
                                                  SourceId = article.SourceId,
                                                  SourceName = article.SourceName,
                                                  NewsApiResponseId = article.NewsApiResponseId,

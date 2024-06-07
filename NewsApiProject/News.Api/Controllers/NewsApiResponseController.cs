@@ -10,21 +10,21 @@ namespace News.Api.Controllers
     [ApiController]
     public class NewsApiResponseController : ControllerBase
     {
-        private readonly INewsApiResponseRepository _newsApiResponseRepository;
+        private readonly INewsService _newsService;
 
-        public NewsApiResponseController(INewsApiResponseRepository newsApiResponseRepository)
+        public NewsApiResponseController(INewsService newsService)
         {
-            _newsApiResponseRepository = newsApiResponseRepository;
+            _newsService = newsService;
         }
+
         [HttpGet("{keyword}")]
-        public ActionResult<NewsApiResponse> GetNewsByKeyword(string keyword)
+        public async Task<ActionResult<NewsApiResponse>> GetNewsByKeyword(string keyword)
         {
             if (keyword.IsNullOrEmpty())
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
-
-            var response = _newsApiResponseRepository.GetApiResponse(keyword);
+            var response = await _newsService.GetNewsApiResponse(keyword);
             return Ok(response);
         }
     }

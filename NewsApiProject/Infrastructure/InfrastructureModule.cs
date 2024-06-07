@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Application.Interfaces;
+using Application.Services;
 
 namespace Infrastructure
 {
@@ -14,6 +14,8 @@ namespace Infrastructure
 
             services.AddDbContext<NewsDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<INewsApiResponseRepository, NewsApiResponseRepository>();
+            services.AddScoped<INewsService, NewsService>();
+            services.AddHttpClient<INewsApiClient, NewsApiClient>();
             return services;
             }
     }

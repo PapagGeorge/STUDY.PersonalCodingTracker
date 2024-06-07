@@ -5,13 +5,7 @@ namespace Domain.Models
 {
     public class Article
     {
-        public int ArticleId { get; init; } // Primary key for the database
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-        public int SourceId { get; init; } //foreign key referencing source table
-        [JsonPropertyName("name")]
-        public string SourceName { get; set; }
-        public int NewsApiResponseId { get; init; } //foreign key referencing NewsResponse table
+        public int ArticleId { get; init; } // Database primary key, not needed in JSON
         [JsonPropertyName("author")]
         public string Author { get; init; }
         [JsonPropertyName("title")]
@@ -26,7 +20,15 @@ namespace Domain.Models
         public DateTime PublishedAt { get; init; }
         [JsonPropertyName("content")]
         public string Content { get; init; }
+
+        // These properties are for database use only and should not be deserialized
+        public int SourceId { get; init; }
+        public string SourceName { get; set; }
+        public int NewsApiResponseId { get; init; }
         public NewsApiResponse NewsApiResponse { get; init; }
+
+        // This property maps the nested source object in JSON
+        [JsonPropertyName("source")]
         public Source Source { get; set; }
     }
 }

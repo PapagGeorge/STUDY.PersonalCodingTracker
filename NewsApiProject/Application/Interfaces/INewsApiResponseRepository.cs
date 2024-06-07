@@ -5,6 +5,6 @@ namespace Application.Interfaces
 {
     public interface INewsApiResponseRepository
     {
-        Task<NewsApiResponse> GetApiResponse(string keyword);
+        Task<NewsApiResponse> GetApiResponseAsync(string keyword);
     }
 }

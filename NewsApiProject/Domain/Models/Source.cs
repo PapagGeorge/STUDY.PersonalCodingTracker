@@ -1,12 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
     public class Source
     {
-        public int Id { get; set; } // Database primary key, not needed in JSON
+        [Key]
+        [Column("Unique")]
+        public int Unique { get; set; } // Database primary key, not needed in JSON
         [JsonPropertyName("id")]
-        public string SourceId { get; set; }
+        public string? SourceId { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; }
 

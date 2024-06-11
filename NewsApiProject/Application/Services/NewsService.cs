@@ -24,6 +24,7 @@ namespace Application.Services
             newsApiResponse = await _newsApiClient.GetNewsAsync(keyword);
             if (newsApiResponse != null)
             {
+                await _newsApiResponseRepository.SetNewsAsync(newsApiResponse);
                 return newsApiResponse;
             }
 

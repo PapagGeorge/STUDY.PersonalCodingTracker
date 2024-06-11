@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces
 {
-    public interface INewsApiClient
+    public interface INewsApiClientRepository
     {
         Task<NewsApiResponse> GetNewsAsync(string keyword);
     }

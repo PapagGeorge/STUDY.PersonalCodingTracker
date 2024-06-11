@@ -1,12 +1,11 @@
 ﻿using Application.Interfaces;
 using Domain.DTO;
 using Domain.Models;
-using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
-    internal class NewsApiResponseRepository : INewsApiResponseRepository
+    internal class NewsApiResponseRepository : INewsRepository
     {
         private readonly NewsDbContext _dbContext;
 
@@ -14,7 +13,7 @@ namespace Infrastructure
         {
             _dbContext = dbContext;
         }
-        public async Task<NewsApiResponse> GetApiResponseAsync(string keyword)
+        public async Task<NewsApiResponse> GetNewsAsync(string keyword)
         {
             var newsApiResponse = await (from a in _dbContext.NewsApiResponses
                                          join b in _dbContext.Articles
@@ -43,6 +42,11 @@ namespace Infrastructure
 
             return newsApiResponse;
 
+        }
+
+        public Task SetNewsAsync(NewsApiResponse newNews)
+        {
+            throw new NotImplementedException();
         }
     }
 }

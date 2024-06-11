@@ -3,16 +3,16 @@ using System.Text.Json;
 using Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
-    public class NewsApiClient : INewsApiClient
+    public class NewsApiClientRepository : INewsApiClientRepository
     {
         private const string BaseUrl = "https://newsapi.org/v2/everything";
         private const string ApiKey = "5e666310837a4d05ab612db16657b36e";
         private readonly HttpClient _httpClient;
-        private readonly ILogger<NewsApiClient> _logger;
+        private readonly ILogger<NewsApiClientRepository> _logger;
 
-        public NewsApiClient(HttpClient httpClient, ILogger<NewsApiClient> logger)
+        public NewsApiClientRepository(HttpClient httpClient, ILogger<NewsApiClientRepository> logger)
         {
             _httpClient = httpClient;
             _logger = logger;

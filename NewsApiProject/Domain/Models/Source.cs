@@ -12,7 +12,7 @@ namespace Domain.Models
         [JsonPropertyName("id")]
         public string? SourceId { get; set; }
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         // Collection navigation property for related articles
         public ICollection<Article> Articles { get; set; }

@@ -3,7 +3,7 @@
     public class StoredProcedures
     {
         #region InsertNewsApiResponse
-        public const string InsertNewsApiResponse = "SpInsertNewsApiResponse";
+        public const string InsertNewsApiResponse = "InsertNewsApiResponse";
         #endregion
 
         #region InsertArticle
@@ -11,7 +11,7 @@
         #endregion
 
         #region InsertSource
-        public const string InsertSource = "SpInsertSource";
+        public const string InsertSource = "InsertSource";
         #endregion
     }
 }

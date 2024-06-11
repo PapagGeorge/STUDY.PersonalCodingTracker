@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Data;
 using System.Data.SqlClient;
 using Infrastructure.Constants;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Infrastructure.Repositories
 {
@@ -54,9 +55,8 @@ namespace Infrastructure.Repositories
                 var transaction = connection.BeginTransaction();
                 try
                 {
-                    await SetNewsApiResponseAsync(connection, transaction, newNews);
-                    await SetArticlesAsync(connection, transaction, newNews);
-                    await SetSourceAsync(connection, transaction, newNews);
+                    int newsApiResponseId = await InsertNewsApiResponseAsync(connection, transaction, newNews);
+                    await InsertArticlesAsync(connection, transaction, newNews, newsApiResponseId);
 
                     transaction.Commit();
                 }
@@ -68,32 +68,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task SetArticlesAsync(SqlConnection connection, SqlTransaction transaction, NewsApiResponse newNews)
-        {
-            using (var command = new SqlCommand(StoredProcedures.InsertArticle, connection, transaction))
-            {
-                var articles = newNews.Articles.ToList();
-
-                foreach (var article in articles)
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Author", article.Author);
-                    command.Parameters.AddWithValue("@Title", article.Title);
-                    command.Parameters.AddWithValue("@Description", article.Description);
-                    command.Parameters.AddWithValue("@Url", article.Url);
-                    command.Parameters.AddWithValue("@UrlToImage", article.UrlToImage);
-                    command.Parameters.AddWithValue("@PublishedAt", article.PublishedAt);
-                    command.Parameters.AddWithValue("@Content", article.Content);
-                    command.Parameters.AddWithValue("@SourceId", article.SourceId);
-                    command.Parameters.AddWithValue("@SourceName", article.SourceName);
-                    command.Parameters.AddWithValue("@NewsApiResponseId", article.NewsApiResponseId);
-
-                    command.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-        public async Task SetNewsApiResponseAsync(SqlConnection connection, SqlTransaction transaction, NewsApiResponse newNews)
+        private async Task<int> InsertNewsApiResponseAsync(SqlConnection connection, SqlTransaction transaction, NewsApiResponse newNews)
         {
             using (var command = new SqlCommand(StoredProcedures.InsertNewsApiResponse, connection, transaction))
             {
@@ -101,26 +76,65 @@ namespace Infrastructure.Repositories
                 command.Parameters.AddWithValue("@Status", newNews.Status);
                 command.Parameters.AddWithValue("@TotalResults", newNews.TotalResults);
 
-                command.ExecuteNonQueryAsync();
+                var newsApiResponseIdParam = new SqlParameter("@NewsApiResponseId", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(newsApiResponseIdParam);
+
+                await command.ExecuteNonQueryAsync();
+
+                return (int)newsApiResponseIdParam.Value;
             }
         }
 
-        public async Task SetSourceAsync(SqlConnection connection, SqlTransaction transaction, NewsApiResponse newNews)
+        private async Task InsertArticlesAsync(SqlConnection connection, SqlTransaction transaction, NewsApiResponse newNews, int newsApiResponseId)
         {
-            using (var command = new SqlCommand(StoredProcedures.InsertSource, connection, transaction))
+            foreach (var article in newNews.Articles)
             {
-                var articles = newNews.Articles.ToList();
+                // Insert source and get the Unique (SourceId)
+                int sourceId = await InsertSourceAsync(connection, transaction, article.Source);
 
-                foreach (var article in articles)
+                // Insert article with SourceId and NewsApiResponseId
+                using (var command = new SqlCommand(StoredProcedures.InsertArticle, connection, transaction))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@SourceId", article.SourceId);
-                    command.Parameters.AddWithValue("@Name", article.SourceName);
+                    command.Parameters.AddWithValue("@Author", article.Author ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Title", article.Title ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Description", article.Description ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Url", article.Url ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@UrlToImage", article.UrlToImage ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@PublishedAt", article.PublishedAt ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Content", article.Content ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@SourceId", sourceId);
+                    command.Parameters.AddWithValue("@SourceName", article.Source.Name ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@NewsApiResponseId", newsApiResponseId);
 
-                    command.ExecuteNonQueryAsync();
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }
+
+        private async Task<int> InsertSourceAsync(SqlConnection connection, SqlTransaction transaction, Source source)
+        {
+            using (var command = new SqlCommand(StoredProcedures.InsertSource, connection, transaction))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@SourceId", source.SourceId ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Name", source.Name);
+
+                var uniqueParam = new SqlParameter("@Unique", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(uniqueParam);
+
+                await command.ExecuteNonQueryAsync();
+
+                return (int)uniqueParam.Value;
+            }
+        }
+
     }
 
 }

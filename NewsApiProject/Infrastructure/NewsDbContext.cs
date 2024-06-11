@@ -25,6 +25,9 @@ namespace Infrastructure
                 .HasOne(a => a.NewsApiResponse)
                 .WithMany(n => n.Articles)
                 .HasForeignKey(a => a.NewsApiResponseId);
+
+            modelBuilder.Entity<Article>()
+                .HasKey(a => a.ArticleId);
         }
 
     }

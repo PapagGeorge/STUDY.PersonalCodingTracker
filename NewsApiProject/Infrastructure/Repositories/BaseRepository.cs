@@ -5,13 +5,6 @@ namespace Infrastructure.Repositories
 {
     public abstract class BaseRepository
     {
-        private readonly DatabaseConfiguration _databaseConfiguration;
-
-        protected BaseRepository(DatabaseConfiguration databaseConfiguration)
-        {
-            _databaseConfiguration = databaseConfiguration;
-        }
-
         protected SqlConnection GetSqlConnection()
         {
             var dbConfiguration = ConfigurationManager.GetSection("DatabaseConfigurationSection") as DatabaseConfiguration;

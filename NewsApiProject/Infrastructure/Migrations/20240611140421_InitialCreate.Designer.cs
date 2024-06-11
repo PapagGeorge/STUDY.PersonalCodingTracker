@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    [Migration("20240607185010_UpdateSourcePropery")]
-    partial class UpdateSourcePropery
+    [Migration("20240611140421_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,23 +112,23 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.Source", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Unique")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Unique");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Unique"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
 
-                    b.Property<string>("SourceKind")
-                        .IsRequired()
+                    b.Property<string>("SourceId")
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Unique");
 
                     b.ToTable("Sources");
 

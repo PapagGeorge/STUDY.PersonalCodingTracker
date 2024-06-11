@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 
 namespace Infrastructure
 {
-    internal class DatabaseConfiguration
+    public class DatabaseConfiguration : ConfigurationSection
     {
+        [ConfigurationProperty("connectionString")]
+        public string ConnectionString
+        {
+            get => this["connectionString"].ToString() ?? string.Empty;
+            set => this["connectionString"] = value;
+        }
     }
 }

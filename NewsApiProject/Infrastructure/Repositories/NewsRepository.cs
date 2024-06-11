@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    internal class NewsApiResponseRepository : INewsRepository
+    internal class NewsRepository : INewsRepository
     {
         private readonly NewsDbContext _dbContext;
 
-        public NewsApiResponseRepository(NewsDbContext dbContext)
+        public NewsRepository(NewsDbContext dbContext)
         {
             _dbContext = dbContext;
         }

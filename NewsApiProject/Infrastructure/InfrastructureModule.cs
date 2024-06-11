@@ -14,7 +14,7 @@ namespace Infrastructure
             var connectionString = configuration.GetConnectionString("MsSql");
 
             services.AddDbContext<NewsDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<INewsRepository, NewsApiResponseRepository>();
+            services.AddScoped<INewsRepository, NewsRepository>();
             services.AddScoped<INewsService, NewsService>();
             services.AddHttpClient<INewsApiClientRepository, NewsApiClientRepository>();
             return services;

@@ -1,11 +1,15 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
     
 {
     public class Article
     {
-        public int ArticleId { get; init; } // Database primary key, not needed in JSON
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ArticleId { get; set; }
         [JsonPropertyName("author")]
         public string Author { get; init; }
         [JsonPropertyName("title")]

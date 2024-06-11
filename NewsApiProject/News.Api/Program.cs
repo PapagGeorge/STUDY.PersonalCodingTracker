@@ -1,5 +1,5 @@
 using Infrastructure;
-
+using Application;
 
 namespace News.Api
 {
@@ -21,6 +21,7 @@ namespace News.Api
                 .Build();
 
             builder.Services.AddInfrastructureServices(configuration);
+            builder.Services.AddServices();
 
             var app = builder.Build();
 

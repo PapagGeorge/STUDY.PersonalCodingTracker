@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Application.Interfaces;
+using Application.Services;
+using Infrastructure.Repositories;
 
 namespace Infrastructure
 {
@@ -13,6 +14,9 @@ namespace Infrastructure
             var connectionString = configuration.GetConnectionString("MsSql");
 
             services.AddDbContext<NewsDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<INewsRepository, NewsApiResponseRepository>();
+            services.AddScoped<INewsService, NewsService>();
+            services.AddHttpClient<INewsApiClientRepository, NewsApiClientRepository>();
             return services;
             }
     }

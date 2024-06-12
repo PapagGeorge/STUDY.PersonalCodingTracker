@@ -22,6 +22,11 @@ namespace News.Api
 
             builder.Services.AddInfrastructureServices(configuration);
             builder.Services.AddServices();
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetSection("Redis")["Configuration"];
+                options.InstanceName = builder.Configuration.GetSection("Redis")["InstanceName"];
+            });
 
             var app = builder.Build();
 

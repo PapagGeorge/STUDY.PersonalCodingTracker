@@ -9,11 +9,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Infrastructure.Repositories
 {
-    public class NewsRepository : BaseRepository, INewsRepository
+    public class NewsDataRepository : BaseRepository, INewsDataRepository
     {
         private readonly NewsDbContext _dbContext;
 
-        public NewsRepository(NewsDbContext dbContext)
+        public NewsDataRepository(NewsDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             var newsApiResponse = await (from a in _dbContext.NewsApiResponses
                                          join b in _dbContext.Articles
                                          on a.NewsApiResponseId equals b.NewsApiResponseId
-                                         where EF.Functions.Like(b.Title, $"%{keyword}%") || EF.Functions.Like(b.Content, $"%{keyword}%")
+                                         where b.Title.Contains(keyword) || b.Content.Contains(keyword)
                                          select new NewsApiResponse
                                          {
                                              NewsApiResponseId = a.NewsApiResponseId,

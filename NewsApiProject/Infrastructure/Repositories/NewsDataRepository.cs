@@ -19,33 +19,50 @@ namespace Infrastructure.Repositories
         }
         public async Task<NewsApiResponse> GetNewsAsync(string keyword)
         {
-            var newsApiResponse = await (from a in _dbContext.NewsApiResponses
-                                         join b in _dbContext.Articles
-                                         on a.NewsApiResponseId equals b.NewsApiResponseId
-                                         where b.Title.Contains(keyword) || b.Content.Contains(keyword)
-                                         select new NewsApiResponse
-                                         {
-                                             NewsApiResponseId = a.NewsApiResponseId,
-                                             Status = a.Status,
-                                             TotalResults = a.TotalResults,
-                                             Articles = a.Articles.Select(article => new Article
-                                             {
-                                                 ArticleId = article.ArticleId,
-                                                 SourceId = article.SourceId,
-                                                 SourceName = article.SourceName,
-                                                 NewsApiResponseId = article.NewsApiResponseId,
-                                                 Author = article.Author,
-                                                 Title = article.Title,
-                                                 Description = article.Description,
-                                                 Url = article.Url,
-                                                 UrlToImage = article.UrlToImage,
-                                                 PublishedAt = article.PublishedAt,
-                                                 Content = article.Content
-                                             }).ToList()
-                                         }).FirstOrDefaultAsync();
+            // Generate a unique ID for the combined NewsApiResponse based on the keyword
+            var uniqueResponseId = GenerateUniqueResponseId(keyword);
+
+            // Fetch articles that match the keyword
+            var articles = await _dbContext.Articles
+                .Where(a => a.Title.Contains(keyword) || a.Content.Contains(keyword))
+                .Select(a => new Article
+                {
+                    ArticleId = a.ArticleId,
+                    SourceId = a.SourceId,
+                    SourceName = a.SourceName,
+                    NewsApiResponseId = a.NewsApiResponseId,
+                    Author = a.Author,
+                    Title = a.Title,
+                    Description = a.Description,
+                    Url = a.Url,
+                    UrlToImage = a.UrlToImage,
+                    PublishedAt = a.PublishedAt,
+                    Content = a.Content
+                })
+                .ToListAsync();
+
+            if (!articles.Any())
+            {
+                return null; // No matching articles found
+            }
+
+            // Construct the combined NewsApiResponse
+            var newsApiResponse = new NewsApiResponse
+            {
+                NewsApiResponseId = uniqueResponseId,
+                Status = "ok", // Assuming status ok if articles found
+                TotalResults = articles.Count,
+                Articles = articles
+            };
 
             return newsApiResponse;
+        }
 
+        private int GenerateUniqueResponseId(string keyword)
+        {
+            // Generate a hash code from the keyword to use as a unique ID
+            // Note: In a real-world application, you might want a more robust way of generating unique IDs
+            return keyword.GetHashCode();
         }
 
         public async Task SetNewsAsync(NewsApiResponse newNews)

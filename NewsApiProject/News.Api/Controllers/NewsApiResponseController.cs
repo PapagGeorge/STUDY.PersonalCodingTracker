@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Interfaces;
+using Infrastructure.Constants;
 
 namespace News.Api.Controllers
 {
@@ -24,8 +25,21 @@ namespace News.Api.Controllers
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
+
+            if (!TechnicalKeywords.IsValid(keyword))
+            {
+                return BadRequest("Invalid keyword. Please provide a valid technical keyword.");
+            }
+
             var response = await _newsService.GetNewsApiResponse(keyword);
             return Ok(response);
+        }
+
+        [HttpGet("valid-keywords")]
+        public ActionResult<IEnumerable<string>> GetValidKeywords()
+        {
+            var validKeywords = TechnicalKeywords.GetAll();
+            return Ok(validKeywords);
         }
     }
 }

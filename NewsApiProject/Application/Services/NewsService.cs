@@ -7,16 +7,13 @@ namespace Application.Services
 {
     public class NewsService : INewsService
     {
-        private readonly INewsRepository _newsApiResponseRepository;
-        private readonly INewsApiClientRepository _newsApiClient;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _distributedCache;
 
-        public NewsService(INewsRepository newsApiResponseRepository,
-            INewsApiClientRepository newsApiClient,
+        public NewsService(IUnitOfWork unitOfWork,
             IDistributedCache distributedCache)
         {
-            _newsApiResponseRepository = newsApiResponseRepository;
-            _newsApiClient = newsApiClient;
+            _unitOfWork = unitOfWork;
             _distributedCache = distributedCache;
         }
         public async Task<NewsApiResponse> GetNewsApiResponse(string keyword)
@@ -28,18 +25,19 @@ namespace Application.Services
                 return cacheResponse;
             }
 
-            var newsApiResponse = await _newsApiResponseRepository.GetNewsAsync(keyword);
+            var newsApiResponse = await _unitOfWork.NewsDataRepository.GetNewsAsync(keyword);
             if (newsApiResponse != null)
             {
                 await _distributedCache.SetRecordAsync(keyword, newsApiResponse);
                 return newsApiResponse;
             }
 
-            newsApiResponse = await _newsApiClient.GetNewsAsync(keyword);
+            newsApiResponse = await _unitOfWork.NewsApiClientRepository.GetNewsAsync(keyword);
 
             if (newsApiResponse != null)
             {
-                await _newsApiResponseRepository.SetNewsAsync(newsApiResponse);
+                await _unitOfWork.NewsDataRepository.SetNewsAsync(newsApiResponse);
+                
                 await _distributedCache.SetRecordAsync(keyword, newsApiResponse);
             }
 

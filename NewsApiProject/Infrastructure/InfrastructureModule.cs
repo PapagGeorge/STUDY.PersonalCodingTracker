@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Repositories;
+using Infrastructure.UnitOfWorkStructure;
 
 namespace Infrastructure
 {
@@ -13,7 +14,8 @@ namespace Infrastructure
         {
             var connectionString = configuration.GetConnectionString("MsSql");
             services.AddDbContext<NewsDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<INewsRepository, NewsRepository>();
+            services.AddScoped<INewsDataRepository, NewsDataRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddHttpClient<INewsApiClientRepository, NewsApiClientRepository>();
             return services;
             }

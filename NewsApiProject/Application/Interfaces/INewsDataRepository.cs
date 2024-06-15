@@ -3,7 +3,7 @@ using Domain.Models;
 
 namespace Application.Interfaces
 {
-    public interface INewsRepository
+    public interface INewsDataRepository
     {
         Task<NewsApiResponse> GetNewsAsync(string keyword);
         Task SetNewsAsync(NewsApiResponse newNews);

@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
         }
         public async Task<NewsApiResponse> GetNewsAsync(string keyword)
         {
-            var url = $"{BaseUrl}?q={keyword}&apiKey={ApiKey}";
+            var url = $"{BaseUrl}?q=\"{keyword}\"&apiKey={ApiKey}";
             _logger.LogInformation($"Fetching news from URL: {url}", url);
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);

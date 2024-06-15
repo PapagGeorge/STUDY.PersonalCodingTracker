@@ -1,11 +1,9 @@
 ﻿using Application.Interfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Data;
 using System.Data.SqlClient;
 using Infrastructure.Constants;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Infrastructure.Repositories
 {
@@ -24,7 +22,7 @@ namespace Infrastructure.Repositories
 
             // Fetch articles that match the keyword
             var articles = await _dbContext.Articles
-                .Where(a => a.Title.Contains(keyword) || a.Content.Contains(keyword))
+                .Where(a => a.Title.Contains(keyword) || a.Content.Contains(keyword) || a.Description.Contains(keyword))
                 .Select(a => new Article
                 {
                     ArticleId = a.ArticleId,
@@ -73,8 +71,15 @@ namespace Infrastructure.Repositories
                 try
                 {
                     int newsApiResponseId = await InsertNewsApiResponseAsync(connection, transaction, newNews);
-                    await InsertArticlesAsync(connection, transaction, newNews, newsApiResponseId);
 
+                    foreach(var article in newNews.Articles)
+                    {
+                        if(!await ArticleExistsAsync(connection, transaction, article.Url))
+                        {
+                            await InsertArticlesAsync(connection, transaction, newNews, newsApiResponseId);
+                        }
+                    }
+                    
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -152,8 +157,22 @@ namespace Infrastructure.Repositories
             }
         }
 
-    }
+        private async Task<bool> ArticleExistsAsync(SqlConnection connection, SqlTransaction transaction, string url)
+        {
+            using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection, transaction))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Url", url);
+                var count = (int)await command.ExecuteScalarAsync();
 
+                return count > 0;
+            }
+        }
+    }
 }
+  
+
+
+
 
 

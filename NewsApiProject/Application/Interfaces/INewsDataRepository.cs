@@ -1,5 +1,6 @@
 ﻿using Domain.DTO;
 using Domain.Models;
+using System.Data.SqlClient;
 
 namespace Application.Interfaces
 {

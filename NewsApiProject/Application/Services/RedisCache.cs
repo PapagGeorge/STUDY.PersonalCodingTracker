@@ -13,8 +13,8 @@ namespace Application.Services
         {
             var options = new DistributedCacheEntryOptions()
             {
-                AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(10),
-                SlidingExpiration = slidingExpireTime ?? TimeSpan.FromMinutes(5)
+                AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(1),
+                SlidingExpiration = slidingExpireTime ?? TimeSpan.FromMinutes(1)
             };
 
             var jsonData = JsonSerializer.Serialize(data);

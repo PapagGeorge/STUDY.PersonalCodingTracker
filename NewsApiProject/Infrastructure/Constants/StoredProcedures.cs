@@ -13,5 +13,9 @@
         #region InsertSource
         public const string InsertSource = "InsertSource";
         #endregion
+
+        #region ArticleExists
+        public const string ArticleExists = "SpArticleExists";
+        #endregion
     }
 }

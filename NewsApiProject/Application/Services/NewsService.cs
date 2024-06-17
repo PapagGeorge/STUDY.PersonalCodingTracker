@@ -16,32 +16,39 @@ namespace Application.Services
             _unitOfWork = unitOfWork;
             _distributedCache = distributedCache;
         }
-        public async Task<NewsApiResponse> GetNewsApiResponse(string keyword)
+        public async Task<NewsApiResponse> GetNewsApiResponse(string keyword, bool forceRefresh = false)
         {
-            var cacheResponse = await _distributedCache.GetRecordAsync<NewsApiResponse>(keyword, GetJsonSerializerOptions());
-
-            if (cacheResponse != null)
+            if (forceRefresh == false)
             {
-                return cacheResponse;
+                var cacheResponse = await _distributedCache.GetRecordAsync<NewsApiResponse>(keyword, GetJsonSerializerOptions());
+
+                if (cacheResponse != null)
+                {
+                    return cacheResponse;
+                }
+
+                var newsApiResponse = await _unitOfWork.NewsDataRepository.GetNewsAsync(keyword);
+                if (newsApiResponse != null)
+                {
+                    await _distributedCache.SetRecordAsync(keyword, newsApiResponse);
+                    return newsApiResponse;
+                }
+            }
+            
+            var newsApiClientResponse = await _unitOfWork.NewsApiClientRepository.GetNewsAsync(keyword);
+
+            if (newsApiClientResponse != null)
+            {
+                SaveNewsApiResponse(newsApiClientResponse);
             }
 
-            var newsApiResponse = await _unitOfWork.NewsDataRepository.GetNewsAsync(keyword);
-            if (newsApiResponse != null)
-            {
-                await _distributedCache.SetRecordAsync(keyword, newsApiResponse);
-                return newsApiResponse;
-            }
+            return newsApiClientResponse; 
+        }
 
-            newsApiResponse = await _unitOfWork.NewsApiClientRepository.GetNewsAsync(keyword);
-
-            if (newsApiResponse != null)
-            {
-                await _unitOfWork.NewsDataRepository.SetNewsAsync(newsApiResponse);
-                
-                await _distributedCache.SetRecordAsync(keyword, newsApiResponse);
-            }
-
-            return newsApiResponse; 
+        public async Task SaveNewsApiResponse(NewsApiResponse newsApiResponse)
+        {
+            await _unitOfWork.NewsDataRepository.SetNewsAsync(newsApiResponse);
+            await _distributedCache.SetRecordAsync(newsApiResponse.NewsApiResponseId.ToString(), newsApiResponse);
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()

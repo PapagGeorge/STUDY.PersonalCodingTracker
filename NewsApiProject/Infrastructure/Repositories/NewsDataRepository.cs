@@ -114,25 +114,28 @@ namespace Infrastructure.Repositories
         {
             foreach (var article in newNews.Articles)
             {
-                // Insert source and get the Unique (SourceId)
-                int sourceId = await InsertSourceAsync(connection, transaction, article.Source);
-
-                // Insert article with SourceId and NewsApiResponseId
-                using (var command = new SqlCommand(StoredProcedures.InsertArticle, connection, transaction))
+                if(!await ArticleExists(connection, transaction, article.Url))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Author", article.Author ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@Title", article.Title ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@Description", article.Description ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@Url", article.Url ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@UrlToImage", article.UrlToImage ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@PublishedAt", article.PublishedAt ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@Content", article.Content ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SourceId", sourceId);
-                    command.Parameters.AddWithValue("@SourceName", article.Source.Name ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@NewsApiResponseId", newsApiResponseId);
+                    // Insert source and get the Unique (SourceId)
+                    int sourceId = await InsertSourceAsync(connection, transaction, article.Source);
 
-                    await command.ExecuteNonQueryAsync();
+                    // Insert article with SourceId and NewsApiResponseId
+                    using (var command = new SqlCommand(StoredProcedures.InsertArticle, connection, transaction))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Author", article.Author ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Title", article.Title ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Description", article.Description ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Url", article.Url ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@UrlToImage", article.UrlToImage ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@PublishedAt", article.PublishedAt ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@Content", article.Content ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@SourceId", sourceId);
+                        command.Parameters.AddWithValue("@SourceName", article.Source.Name ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@NewsApiResponseId", newsApiResponseId);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
             }
         }
@@ -157,20 +160,22 @@ namespace Infrastructure.Repositories
             }
         }
 
-        private async Task<bool> ArticleExistsAsync(SqlConnection connection, SqlTransaction transaction, string url)
+
+        private async Task<bool> ArticleExists(SqlConnection connection, SqlTransaction transaction, string url)
         {
-            using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection, transaction))
+            using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Url", url);
-                var count = (int)await command.ExecuteScalarAsync();
+                int result = (int)command.ExecuteScalar();
 
-                return count > 0;
+                return result >= 1;
             }
         }
+
     }
-}
-  
+
+          
 
 
 

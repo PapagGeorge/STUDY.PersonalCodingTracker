@@ -10,6 +10,8 @@ namespace Application
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<INewsService, NewsService>();
+            services.AddHostedService<NewsUpdateService>();
+
             return services;
         }
     }

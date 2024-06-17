@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Interfaces;
-using Infrastructure.Constants;
+using Domain.TechnicalKeywords;
 
 namespace News.Api.Controllers
 {

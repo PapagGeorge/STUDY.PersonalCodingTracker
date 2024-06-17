@@ -1,6 +1,12 @@
-﻿namespace Infrastructure.Constants
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.TechnicalKeywords
 {
-    public static class TechnicalKeywords
+    public class TechnicalKeywords
     {
         public const string ArtificialIntelligence = "Artificial Intelligence";
         public const string Blockchain = "Blockchain";

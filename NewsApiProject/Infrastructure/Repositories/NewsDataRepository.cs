@@ -72,14 +72,14 @@ namespace Infrastructure.Repositories
                 {
                     int newsApiResponseId = await InsertNewsApiResponseAsync(connection, transaction, newNews);
 
-                    foreach(var article in newNews.Articles)
+                    foreach (var article in newNews.Articles)
                     {
-                        if(!await ArticleExistsAsync(connection, transaction, article.Url))
+                        if (!await ArticleExistsAsync(connection, transaction, article.Url))
                         {
                             await InsertArticlesAsync(connection, transaction, newNews, newsApiResponseId);
                         }
                     }
-                    
+
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -114,7 +114,7 @@ namespace Infrastructure.Repositories
         {
             foreach (var article in newNews.Articles)
             {
-                if(!await ArticleExists(connection, transaction, article.Url))
+                if (!await ArticleExistsAsync(connection, transaction, article.Url))
                 {
                     // Insert source and get the Unique (SourceId)
                     int sourceId = await InsertSourceAsync(connection, transaction, article.Source);
@@ -161,7 +161,7 @@ namespace Infrastructure.Repositories
         }
 
 
-        private async Task<bool> ArticleExists(SqlConnection connection, SqlTransaction transaction, string url)
+        private async Task<bool> ArticleExistsAsync(SqlConnection connection, SqlTransaction transaction, string url)
         {
             using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection))
             {
@@ -174,6 +174,7 @@ namespace Infrastructure.Repositories
         }
 
     }
+}
 
           
 

@@ -5,11 +5,11 @@ namespace Infrastructure.Repositories
 {
     public abstract class BaseRepository
     {
-        protected SqlConnection GetSqlConnection()
+        protected async Task<SqlConnection> GetSqlConnectionAsync()
         {
             var dbConfiguration = ConfigurationManager.GetSection("DatabaseConfigurationSection") as DatabaseConfiguration;
             var connection = new SqlConnection(dbConfiguration.ConnectionString);
-            connection.Open();
+            await connection.OpenAsync();
             return connection;
         }
     }

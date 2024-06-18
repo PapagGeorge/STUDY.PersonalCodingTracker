@@ -21,7 +21,7 @@ namespace Application.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("News Update Service is starting");
-            _timer = new Timer(UpdateNews, null, TimeSpan.Zero, TimeSpan.FromHours(24));
+            _timer = new Timer(UpdateNews, null, TimeSpan.Zero, TimeSpan.FromMinutes(3));
             return Task.CompletedTask;
         }
 

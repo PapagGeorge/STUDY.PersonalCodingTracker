@@ -11,7 +11,7 @@ namespace Application
         {
             services.AddScoped<INewsService, NewsService>();
             services.AddHostedService<NewsUpdateService>();
-
+            
             return services;
         }
     }

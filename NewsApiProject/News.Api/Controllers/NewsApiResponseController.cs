@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using Application.Interfaces;
 using Domain.TechnicalKeywords;
+using Domain.DTO;
 
 namespace News.Api.Controllers
 {
@@ -31,10 +32,42 @@ namespace News.Api.Controllers
                 return BadRequest("Invalid keyword. Please provide a valid technical keyword.");
             }
 
-            var response = await _newsService.GetNewsApiResponse(keyword);
-            return Ok(response);
-        }
+            try
+            {
+                var response = await _newsService.GetNewsApiResponse(keyword);
 
+                if (response == null)
+                {
+                    return NotFound("No news found for the given keyword.");
+                }
+
+                var articlesDtoList = response.Articles.Select(article => new ArticleDto
+                {
+                    Author = article.Author,
+                    Title = article.Title,
+                    Description = article.Description,
+                    Url = article.Url,
+                    UrlToImage = article.UrlToImage,
+                    PublishedAt = article.PublishedAt,
+                    Content = article.Content,
+                    SourceName = article.SourceName
+                }).ToList();
+
+                var responseDto = new NewsApiResponseDto
+                {
+                    Status = response.Status,
+                    TotalResults = response.TotalResults,
+                    Articles = articlesDtoList
+                };
+
+                return Ok(responseDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error. Please try again later.");
+            }
+        }
+    
         [HttpGet("valid-keywords")]
         public ActionResult<IEnumerable<string>> GetValidKeywords()
         {

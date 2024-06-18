@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
                     Url = a.Url,
                     UrlToImage = a.UrlToImage,
                     PublishedAt = a.PublishedAt,
-                    Content = a.Content
+                    Content = a.Content,
                 })
                 .ToListAsync();
 

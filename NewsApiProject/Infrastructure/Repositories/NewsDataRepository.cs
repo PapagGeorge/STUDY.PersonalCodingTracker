@@ -59,13 +59,12 @@ namespace Infrastructure.Repositories
         private int GenerateUniqueResponseId(string keyword)
         {
             // Generate a hash code from the keyword to use as a unique ID
-            // Note: In a real-world application, you might want a more robust way of generating unique IDs
             return keyword.GetHashCode();
         }
 
         public async Task SetNewsAsync(NewsApiResponse newNews)
         {
-            using (var connection = GetSqlConnection())
+            using (var connection = await GetSqlConnectionAsync())
             {
                 var transaction = connection.BeginTransaction();
                 try
@@ -74,13 +73,18 @@ namespace Infrastructure.Repositories
 
                     foreach (var article in newNews.Articles)
                     {
+                        if (string.IsNullOrEmpty(article.Url))
+                        {
+                            continue;
+                        }
+
                         if (!await ArticleExistsAsync(connection, transaction, article.Url))
                         {
                             await InsertArticlesAsync(connection, transaction, newNews, newsApiResponseId);
                         }
                     }
 
-                    transaction.Commit();
+                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
@@ -114,6 +118,7 @@ namespace Infrastructure.Repositories
         {
             foreach (var article in newNews.Articles)
             {
+
                 if (!await ArticleExistsAsync(connection, transaction, article.Url))
                 {
                     // Insert source and get the Unique (SourceId)
@@ -163,11 +168,11 @@ namespace Infrastructure.Repositories
 
         private async Task<bool> ArticleExistsAsync(SqlConnection connection, SqlTransaction transaction, string url)
         {
-            using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection))
+            using (var command = new SqlCommand(StoredProcedures.ArticleExists, connection, transaction))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Url", url);
-                int result = (int)command.ExecuteScalar();
+                int result = (int)await command.ExecuteScalarAsync();
 
                 return result >= 1;
             }
@@ -175,10 +180,3 @@ namespace Infrastructure.Repositories
 
     }
 }
-
-          
-
-
-
-
-

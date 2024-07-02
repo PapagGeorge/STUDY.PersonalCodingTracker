@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models.NewsApiModels;
 using Application.Interfaces;
+using Domain.Models.WeatherBitApi;
 
 namespace API_Aggregation.Controllers
 {
@@ -9,24 +10,49 @@ namespace API_Aggregation.Controllers
     [ApiController]
     public class ApiAggregationController : ControllerBase
     {
-        private readonly INewsService _newsService;
+        private readonly IWeatherService _weatherService;
 
-        public ApiAggregationController(INewsService newsService)
+        public ApiAggregationController(IWeatherService weatherService)
         {
-            _newsService = newsService;
+            _weatherService = weatherService;
         }
 
+        //[HttpGet]
+        //public async Task<ActionResult<NewsApiResponse>> GetNews(string keyword)
+        //{
+        //    if (string.IsNullOrEmpty(keyword))
+        //    {
+        //        return BadRequest("Keyword cannot be null or empty");
+        //    }
+
+        //    try
+        //    {
+        //        var response = await _newsService.GetNewsApiResponseAsync(keyword);
+
+        //        if (response == null)
+        //        {
+        //            return NotFound("No news found for the given keyword.");
+        //        }
+
+        //        return Ok(response);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+        //}
+
         [HttpGet]
-        public async Task<ActionResult<NewsApiResponse>> GetNews(string keyword)
+        public async Task<ActionResult<WeatherData>> GetWeather(string countryCode, string cityName)
         {
-            if (string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
 
             try
             {
-                var response = await _newsService.GetNewsApiResponseAsync(keyword);
+                var response = await _weatherService.GetWeatherApiResponseAsync(countryCode, cityName);
 
                 if (response == null)
                 {
@@ -35,7 +61,7 @@ namespace API_Aggregation.Controllers
 
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }

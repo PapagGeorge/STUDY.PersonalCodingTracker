@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Models.NewsApiModels;
 using Application.Interfaces;
 using Domain.Models.WeatherBitApi;
+using Domain.Models.AggregateModel;
 
 namespace API_Aggregation.Controllers
 {
@@ -10,11 +11,11 @@ namespace API_Aggregation.Controllers
     [ApiController]
     public class ApiAggregationController : ControllerBase
     {
-        private readonly IWeatherService _weatherService;
+        private readonly IAggregateService _aggregateService;
 
-        public ApiAggregationController(IWeatherService weatherService)
+        public ApiAggregationController(IAggregateService aggregateService)
         {
-            _weatherService = weatherService;
+            _aggregateService = aggregateService;
         }
 
         //[HttpGet]
@@ -42,17 +43,42 @@ namespace API_Aggregation.Controllers
         //    }
         //}
 
+        //[HttpGet]
+        //public async Task<ActionResult<WeatherData>> GetWeather(string countryCode, string cityName)
+        //{
+        //    if (string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
+        //    {
+        //        return BadRequest("Keyword cannot be null or empty");
+        //    }
+
+        //    try
+        //    {
+        //        var response = await _weatherService.GetWeatherApiResponseAsync(countryCode, cityName);
+
+        //        if (response == null)
+        //        {
+        //            return NotFound("No news found for the given keyword.");
+        //        }
+
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        //    }
+        //}
+
         [HttpGet]
-        public async Task<ActionResult<WeatherData>> GetWeather(string countryCode, string cityName)
+        public async Task<ActionResult<AggregateModel>> GetAggregate(string keyword, string countryCode, string cityName)
         {
-            if (string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
+            if (string.IsNullOrEmpty(keyword) && string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
 
             try
             {
-                var response = await _weatherService.GetWeatherApiResponseAsync(countryCode, cityName);
+                var response = await _aggregateService.GetAggregateData(keyword, countryCode, cityName);
 
                 if (response == null)
                 {

@@ -10,6 +10,7 @@ namespace Application
         {
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IWeatherService, WeatherService>();
+            services.AddScoped<IAggregateService, AggregateService>();
 
             return services;
         }

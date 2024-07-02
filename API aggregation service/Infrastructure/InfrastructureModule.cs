@@ -11,6 +11,7 @@ namespace Infrastructure
         {
             services.AddScoped<INewsApiClient, NewsApiClient>();
             services.AddScoped<IWeatherApiClient, WeatherApiClient>();
+            services.AddScoped<IAstronomyPictureClient, AstronomyPictureClient>();
             services.AddHttpClient();
 
             return services;

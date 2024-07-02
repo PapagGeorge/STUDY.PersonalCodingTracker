@@ -69,16 +69,17 @@ namespace API_Aggregation.Controllers
         //}
 
         [HttpGet]
-        public async Task<ActionResult<AggregateModel>> GetAggregate(string keyword, string countryCode, string cityName)
+        public async Task<ActionResult<AggregateModel>> GetAggregate(string newsKeyword, string countryCode, string cityName, string startDate = null,
+            string endDate = null, string sortBy = "date", bool ascending = true)
         {
-            if (string.IsNullOrEmpty(keyword) && string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
+            if (string.IsNullOrEmpty(newsKeyword) && string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
 
             try
             {
-                var response = await _aggregateService.GetAggregateData(keyword, countryCode, cityName);
+                var response = await _aggregateService.GetAggregateData(newsKeyword, countryCode, cityName, startDate, endDate, sortBy, ascending);
 
                 if (response == null)
                 {

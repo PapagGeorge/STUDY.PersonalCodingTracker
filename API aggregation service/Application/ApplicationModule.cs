@@ -11,6 +11,7 @@ namespace Application
             services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IWeatherService, WeatherService>();
             services.AddScoped<IAggregateService, AggregateService>();
+            services.AddScoped<IAstronomyPictureService, AstronomyPictureService>();
 
             return services;
         }

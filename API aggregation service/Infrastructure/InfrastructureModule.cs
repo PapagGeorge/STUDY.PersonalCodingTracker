@@ -10,6 +10,7 @@ namespace Infrastructure
         public static IServiceCollection InfraServices(this IServiceCollection services)
         {
             services.AddScoped<INewsApiClient, NewsApiClient>();
+            services.AddScoped<IWeatherApiClient, WeatherApiClient>();
             services.AddHttpClient();
 
             return services;

@@ -41,7 +41,20 @@ namespace Infrastructure.Repositories
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                var astronomyPictureResponse = JsonSerializer.Deserialize<IEnumerable<AstronomyPicture>>(json, options);
+                IEnumerable<AstronomyPicture> astronomyPictureResponse;
+
+                if (json.TrimStart().StartsWith("{"))
+                {
+                    var singleItem = JsonSerializer.Deserialize<AstronomyPicture>(json, options);
+                    astronomyPictureResponse = new List<AstronomyPicture> { singleItem };
+                }
+
+                else
+                {
+                    // JSON is an array
+                    astronomyPictureResponse = JsonSerializer.Deserialize<IEnumerable<AstronomyPicture>>(json, options);
+                }
+
                 return astronomyPictureResponse;
             }
 

@@ -1,19 +1,29 @@
 ﻿using Application.Interfaces;
 using Domain.Models.NewsApiModels;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Application.Services
 {
     public class NewsService : INewsService
     {
         private readonly INewsApiClient _newsApiClient;
+        private readonly IDistributedCache _distributedCache;
 
-        public NewsService(INewsApiClient newsApiClient)
+        public NewsService(INewsApiClient newsApiClient, IDistributedCache distributedCache)
         {
             _newsApiClient = newsApiClient;
+            _distributedCache = distributedCache;
         }
         public async Task<NewsApiResponse> GetNewsApiResponseAsync(string keyword, string sortBy, bool ascending = true)
         {
-            var newsApiClientResponse = await _newsApiClient.GetNewsAsync(keyword);
+            var newsApiClientResponse = await _distributedCache.GetRecordAsync<NewsApiResponse>(keyword, GetJsonSerializerOptions());
+
+            if(newsApiClientResponse == null)
+            {
+                newsApiClientResponse = await _newsApiClient.GetNewsAsync(keyword);
+                await _distributedCache.SetRecordAsync(keyword, newsApiClientResponse);
+            }
 
             if (newsApiClientResponse.Articles != null)
             {
@@ -34,6 +44,14 @@ namespace Application.Services
                 }
             }
             return newsApiClientResponse;
+        }
+
+        private static JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            return new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
         }
     }
 }

@@ -18,6 +18,12 @@ namespace API_Aggregation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetSection("Redis")["Configuration"];
+                options.InstanceName = builder.Configuration.GetSection("Redis")["InstanceName"];
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

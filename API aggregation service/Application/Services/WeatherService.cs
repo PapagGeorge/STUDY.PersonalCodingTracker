@@ -35,5 +35,26 @@ namespace Application.Services
 
             return weatherApiClientResponse;
         }
+
+        private static string GetCacheKey(bool ascending, string sortBy)
+        {
+            var keyParts = new List<string>();
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                keyParts.Add($"sortBy_{sortBy}");
+            }
+
+            keyParts.Add($"asc_{ascending}");
+
+            if (keyParts.Count == 0)
+            {
+                return "default_weather_cache_key";
+            }
+
+            var cacheKey = string.Join("_", keyParts);
+
+            return cacheKey;
+        }
     }
 }

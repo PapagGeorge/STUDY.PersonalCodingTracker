@@ -69,8 +69,8 @@ namespace API_Aggregation.Controllers
         //}
 
         [HttpGet]
-        public async Task<ActionResult<AggregateModel>> GetAggregate(string newsKeyword, string countryCode, string cityName, string startDate = null,
-            string endDate = null, string sortBy = "date", bool ascending = true)
+        public async Task<ActionResult<AggregateModel>> GetAggregate(string newsKeyword, string countryCode, string cityName, string startDateAstronomyPicture = null,
+            string endDateAstronomyPicture = null, string sortByAstronomyPicture = "date", bool ascendingAstronomyPicture = true, string sortByNews = "date", bool ascendingNews = true)
         {
             if (string.IsNullOrEmpty(newsKeyword) && string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
             {
@@ -79,7 +79,7 @@ namespace API_Aggregation.Controllers
 
             try
             {
-                var response = await _aggregateService.GetAggregateData(newsKeyword, countryCode, cityName, startDate, endDate, sortBy, ascending);
+                var response = await _aggregateService.GetAggregateData(newsKeyword, countryCode, cityName, startDateAstronomyPicture, endDateAstronomyPicture, sortByAstronomyPicture, ascendingAstronomyPicture, sortByNews, ascendingNews);
 
                 if (response == null)
                 {

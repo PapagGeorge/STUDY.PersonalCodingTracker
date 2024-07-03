@@ -18,7 +18,7 @@ namespace Application.Services
         }
         public async Task<AggregateModel> GetAggregateData(string newsKeyword, string countryCode, string cityName, string startDate = null,
             string endDate = null, string sortByAstronomyPictures = "date", bool ascendingAstronomyPictures = true,
-            string sortByNews = "date", bool ascendingNews = true)
+            string sortByNews = "author", bool ascendingNews = true)
         {
             var newsApiResponse = await _newsService.GetNewsApiResponseAsync(newsKeyword, sortByNews, ascendingNews);
             var weatherApiResponse = await _weatherService.GetWeatherApiResponseAsync(countryCode, cityName);

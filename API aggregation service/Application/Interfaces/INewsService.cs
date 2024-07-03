@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface INewsService
     {
-        Task<NewsApiResponse> GetNewsApiResponseAsync(string keyword, string sortBy = "date", bool ascending = true);
+        Task<NewsApiResponse> GetNewsApiResponseAsync(string keyword, string sortBy, bool ascending = true);
     }
 }

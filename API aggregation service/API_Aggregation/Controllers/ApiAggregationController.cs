@@ -69,17 +69,17 @@ namespace API_Aggregation.Controllers
         //}
 
         [HttpGet]
-        public async Task<ActionResult<AggregateModel>> GetAggregate(string newsKeyword, string countryCode, string cityName, string startDateAstronomyPicture = null,
-            string endDateAstronomyPicture = null, string sortByAstronomyPicture = "date", bool ascendingAstronomyPicture = true, string sortByNews = "date", bool ascendingNews = true)
+        public async Task<ActionResult<AggregateModel>> GetAggregate(string newsKeyword, string sortByNews, string weatherCountryCode, string weatherCityName, string startDateAstronomyPicture = null,
+            string endDateAstronomyPicture = null, string sortByAstronomyPicture = "date", bool ascendingAstronomyPicture = true, bool ascendingNews = true)
         {
-            if (string.IsNullOrEmpty(newsKeyword) && string.IsNullOrEmpty(countryCode) && string.IsNullOrEmpty(cityName))
+            if (string.IsNullOrEmpty(newsKeyword) && string.IsNullOrEmpty(weatherCountryCode) && string.IsNullOrEmpty(weatherCityName))
             {
                 return BadRequest("Keyword cannot be null or empty");
             }
 
             try
             {
-                var response = await _aggregateService.GetAggregateData(newsKeyword, countryCode, cityName, startDateAstronomyPicture, endDateAstronomyPicture, sortByAstronomyPicture, ascendingAstronomyPicture, sortByNews, ascendingNews);
+                var response = await _aggregateService.GetAggregateData(newsKeyword, weatherCountryCode, weatherCityName, startDateAstronomyPicture, endDateAstronomyPicture, sortByAstronomyPicture, ascendingAstronomyPicture, sortByNews, ascendingNews);
 
                 if (response == null)
                 {

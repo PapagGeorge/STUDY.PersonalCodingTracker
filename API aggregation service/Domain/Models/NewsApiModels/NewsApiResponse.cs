@@ -5,10 +5,10 @@ namespace Domain.Models.NewsApiModels
     public class NewsApiResponse
     {
         [JsonPropertyName("status")]
-        public string? Status { get; init; }
+        public string? Status { get; set; }
         [JsonPropertyName("totalResults")]
-        public int? TotalResults { get; init; }
+        public int? TotalResults { get; set; }
         [JsonPropertyName("articles")]
-        public List<Article> Articles { get; init; }
+        public List<Article> Articles { get; set; }
     }
 }

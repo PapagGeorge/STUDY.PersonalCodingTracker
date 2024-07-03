@@ -16,12 +16,16 @@ namespace Application.Services
             _weatherService = weatherService;
             _astronomyPictureService = astronomyPictureService;
         }
-        public async Task<AggregateModel> GetAggregateData(string newsKeyword, string countryCode, string cityName, string startDate = null,
-            string endDate = null, string sortByAstronomyPictures = "date", bool ascendingAstronomyPictures = true,
-            string sortByNews = "author", bool ascendingNews = true)
+        public async Task<AggregateModel> GetAggregateData(string newsKeyword, bool weatherTempAscending, string sortByTemp = "temperature",
+            string startDate = null,
+            string endDate = null,
+            string sortByAstronomyPictures = "date",
+            bool ascendingAstronomyPictures = true,
+            string sortByNews = "author",
+            bool ascendingNews = true)
         {
             var newsApiResponse = await _newsService.GetNewsApiResponseAsync(newsKeyword, sortByNews, ascendingNews);
-            var weatherApiResponse = await _weatherService.GetWeatherApiResponseAsync(countryCode, cityName);
+            var weatherApiResponse = await _weatherService.GetWeatherApiResponseAsync(weatherTempAscending, sortByTemp);
             var astronomyPictureResponse = await _astronomyPictureService.GetAstronomyPictures(startDate, endDate, sortByAstronomyPictures, ascendingAstronomyPictures);
 
             var aggregateModel = new AggregateModel

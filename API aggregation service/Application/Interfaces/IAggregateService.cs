@@ -4,8 +4,12 @@ namespace Application.Interfaces
 {
     public interface IAggregateService
     {
-        Task<AggregateModel> GetAggregateData(string newsKeyword, string countryCode, string cityName, string startDate = null,
-            string endDate = null, string sortByAstronomyPictures = "date", bool ascendingAstronomyPictures = true,
-            string sortByNews = "author", bool ascendingNews = true);
+        Task<AggregateModel> GetAggregateData(string newsKeyword, bool weatherTempAscending, string sortByTemp = "temperature",
+            string startDate = null,
+            string endDate = null,
+            string sortByAstronomyPictures = "date",
+            bool ascendingAstronomyPictures = true,
+            string sortByNews = "author",
+            bool ascendingNews = true);
     }
 }

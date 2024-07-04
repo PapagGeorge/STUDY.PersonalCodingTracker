@@ -17,33 +17,53 @@ namespace Application.Services
         }
         public async Task<NewsApiResponse> GetNewsApiResponseAsync(string keyword, string sortBy, bool ascending = true)
         {
-            var newsApiClientResponse = await _distributedCache.GetRecordAsync<NewsApiResponse>(keyword, GetJsonSerializerOptions());
-
-            if(newsApiClientResponse == null)
+            try
             {
-                newsApiClientResponse = await _newsApiClient.GetNewsAsync(keyword);
-                await _distributedCache.SetRecordAsync(keyword, newsApiClientResponse);
-            }
+                //Attempt to fetch cached response
+                var newsApiClientResponse = await _distributedCache.GetRecordAsync<NewsApiResponse>(keyword, GetJsonSerializerOptions());
 
-            if (newsApiClientResponse.Articles != null)
-            {
-                if (sortBy == "author")
+                if (newsApiClientResponse == null)
                 {
-                    newsApiClientResponse.Articles = ascending
-                        ? newsApiClientResponse.Articles.OrderBy(a => a.Author).ThenBy(x => x.PublishedAt).ToList()
-                        : newsApiClientResponse.Articles.OrderBy(a => a.Author).ThenByDescending(x => x.PublishedAt).ToList();
+                    //fetch from API if not in cache
+                    newsApiClientResponse = await _newsApiClient.GetNewsAsync(keyword);
 
+                    if(newsApiClientResponse == null)
+                    {
+                        newsApiClientResponse = CreateDefaultNewsApiResponse();
+                    }
+                    else
+                    {
+                        //Handle case where API or fallback mechanism didn't return valid data
+                        await _distributedCache.SetRecordAsync(keyword, newsApiClientResponse);
+                    }
                 }
 
-                if (sortBy == "date")
+                //Sort Articles
+                if (newsApiClientResponse.Articles != null)
                 {
-                    newsApiClientResponse.Articles = ascending
-                        ? newsApiClientResponse.Articles.OrderBy(a => a.PublishedAt).ToList()
-                        : newsApiClientResponse.Articles.OrderByDescending(a => a.PublishedAt).ToList();
+                    if (sortBy == "author")
+                    {
+                        newsApiClientResponse.Articles = ascending
+                            ? newsApiClientResponse.Articles.OrderBy(a => a.Author).ThenBy(x => x.PublishedAt).ToList()
+                            : newsApiClientResponse.Articles.OrderBy(a => a.Author).ThenByDescending(x => x.PublishedAt).ToList();
 
+                    }
+
+                    if (sortBy == "date")
+                    {
+                        newsApiClientResponse.Articles = ascending
+                            ? newsApiClientResponse.Articles.OrderBy(a => a.PublishedAt).ToList()
+                            : newsApiClientResponse.Articles.OrderByDescending(a => a.PublishedAt).ToList();
+
+                    }
                 }
+
+                return newsApiClientResponse;
             }
-            return newsApiClientResponse;
+            catch(Exception ex)
+            {
+                return CreateDefaultNewsApiResponse();
+            }  
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
@@ -51,6 +71,16 @@ namespace Application.Services
             return new JsonSerializerOptions()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+        }
+
+        private NewsApiResponse CreateDefaultNewsApiResponse()
+        {
+            return new NewsApiResponse
+            {
+                Status = "error",
+                TotalResults = 0,
+                Articles = new List<Article>()
             };
         }
     }

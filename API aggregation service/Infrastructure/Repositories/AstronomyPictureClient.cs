@@ -3,6 +3,9 @@ using Application.Interfaces;
 using System;
 using Domain.Models.NewsApiModels;
 using System.Text.Json;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Wrap;
 
 namespace Infrastructure.Repositories
 {
@@ -11,10 +14,22 @@ namespace Infrastructure.Repositories
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "https://api.nasa.gov/planetary/apod?";
         private const string ApiKey = "2yjMsve0FNfscrra6y4QnqFn1ObuDkrE5Fb73n5k";
+        private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
 
         public AstronomyPictureClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
+
+            //Define retry policy: Retry up to 3 times with exponential backoff
+            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+            //Define circuit breaker policy: Break circuit after 3 concecutive failures, for 30 seconds
+            var circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.IsSuccessStatusCode)
+                .CircuitBreakerAsync(3, TimeSpan.FromSeconds(30));
+
+            //Combine retry and circuit breaker policies
+            _retryAndBreakerPolicy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
         }
         public async Task<IEnumerable<AstronomyPicture>> GetAstronomyPicturesAsync(string startDate = null, string endDate = null)
         {
@@ -30,7 +45,20 @@ namespace Infrastructure.Repositories
             }
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await _httpClient.SendAsync(request);
+
+            HttpResponseMessage response;
+            try
+            {
+                response = await _retryAndBreakerPolicy.ExecuteAsync(() => _httpClient.SendAsync(request));
+            }
+            catch (BrokenCircuitException)
+            {
+                throw new Exception("Circuit breaker is open. Unable to fetch news from the API");
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"An error occured while fetching news from the API, {ex}");
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -51,7 +79,6 @@ namespace Infrastructure.Repositories
 
                 else
                 {
-                    // JSON is an array
                     astronomyPictureResponse = JsonSerializer.Deserialize<IEnumerable<AstronomyPicture>>(json, options);
                 }
 
@@ -60,7 +87,7 @@ namespace Infrastructure.Repositories
 
             else
             {
-                throw new Exception("Unable to fetch news from the API");
+                throw new Exception($"Failed to fetch astronomy pictures from API. Statuc code: {response.StatusCode}");
             }
         }
     }

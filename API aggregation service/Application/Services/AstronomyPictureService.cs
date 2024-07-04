@@ -17,19 +17,32 @@ namespace Application.Services
         }
         public async Task<IEnumerable<AstronomyPicture>> GetAstronomyPictures(string startDate = null, string endDate = null, string sortBy = "date", bool ascending = true)
         {
+            //Attempt to fetch cached response
             var content = await _distributedCache.GetRecordAsync <IEnumerable<AstronomyPicture>>(GetCacheKey(startDate, endDate, sortBy, ascending), GetJsonSerializerOptions());
 
             if(content == null)
             {
+                //Fetch from API if not in cache
                 content = await _astronomyPictureClient.GetAstronomyPicturesAsync(startDate, endDate);
-                await _distributedCache.SetRecordAsync(GetCacheKey(startDate, endDate, sortBy, ascending), content);
+
+                if(content == null)
+                {
+                    //Handle case where API or fallback mechanisms didn't return valid data
+                    content = new List<AstronomyPicture> { CreateDefaultAstronomyPictureResponse() };
+                }
+                else
+                {
+                    await _distributedCache.SetRecordAsync(GetCacheKey(startDate, endDate, sortBy, ascending), content);
+                }
             }
             
-            if(sortBy == "date")
+            if(content != null)
             {
-                content = ascending ? content.OrderBy(item => item.Date) : content.OrderByDescending(item => item.Date);
+                if (sortBy == "date")
+                {
+                    content = ascending ? content.OrderBy(item => item.Date) : content.OrderByDescending(item => item.Date);
+                }
             }
-
             return content;
         }
 
@@ -68,6 +81,20 @@ namespace Application.Services
             var cacheKey = string.Join("_", keyParts);
 
             return cacheKey;
+        }
+
+        private AstronomyPicture CreateDefaultAstronomyPictureResponse()
+        {
+            return new AstronomyPicture
+            {
+                Date = DateTime.MinValue,
+                Explanation = "Error: No data available",
+                HdUrl = string.Empty,
+                MediaType = "error",
+                ServiceVersion = string.Empty,
+                Title = "Error",
+                Url = string.Empty
+            };
         }
 
     }

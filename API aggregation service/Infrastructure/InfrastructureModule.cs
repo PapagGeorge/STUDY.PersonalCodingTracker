@@ -12,6 +12,7 @@ namespace Infrastructure
             services.AddScoped<INewsApiClient, NewsApiClient>();
             services.AddScoped<IWeatherApiClient, WeatherApiClient>();
             services.AddScoped<IAstronomyPictureClient, AstronomyPictureClient>();
+            services.AddSingleton<IRequestStatisticsRepository,  RequestStatisticsRepository>();
             services.AddHttpClient();
 
             return services;

@@ -4,6 +4,7 @@ using Domain.Models.NewsApiModels;
 using Application.Interfaces;
 using Domain.Models.WeatherBitApi;
 using Domain.Models.AggregateModel;
+using Domain.Models.RequestStatistics;
 
 namespace API_Aggregation.Controllers
 {
@@ -12,10 +13,12 @@ namespace API_Aggregation.Controllers
     public class ApiAggregationController : ControllerBase
     {
         private readonly IAggregateService _aggregateService;
+        private readonly IRequestStatisticsService _requestStatisticsService;
 
-        public ApiAggregationController(IAggregateService aggregateService)
+        public ApiAggregationController(IAggregateService aggregateService, IRequestStatisticsService requestStatisticsService)
         {
             _aggregateService = aggregateService;
+            _requestStatisticsService = requestStatisticsService;
         }
 
         
@@ -44,6 +47,20 @@ namespace API_Aggregation.Controllers
                 return Ok(response);
             }
             catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("request-statistics")]
+        public ActionResult<ApiRequestStatistics> GetStatistics()
+        {
+            try
+            {
+                var result = _requestStatisticsService.GetRequestStatistics();
+                return Ok(result);
+            }
+            catch(Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }

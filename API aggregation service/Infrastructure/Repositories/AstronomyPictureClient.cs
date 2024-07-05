@@ -6,6 +6,8 @@ using System.Text.Json;
 using Polly;
 using Polly.CircuitBreaker;
 using Polly.Wrap;
+using System.Diagnostics;
+using Domain.Models.RequestStatistics;
 
 namespace Infrastructure.Repositories
 {
@@ -15,8 +17,9 @@ namespace Infrastructure.Repositories
         private const string BaseUrl = "https://api.nasa.gov/planetary/apod?";
         private const string ApiKey = "2yjMsve0FNfscrra6y4QnqFn1ObuDkrE5Fb73n5k";
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
+        private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public AstronomyPictureClient(HttpClient httpClient)
+        public AstronomyPictureClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
         {
             _httpClient = httpClient;
 
@@ -30,9 +33,12 @@ namespace Infrastructure.Repositories
 
             //Combine retry and circuit breaker policies
             _retryAndBreakerPolicy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
+
+            _requestStatisticsRepository = requestStatisticsRepository;
         }
         public async Task<IEnumerable<AstronomyPicture>> GetAstronomyPicturesAsync(string startDate = null, string endDate = null)
         {
+            var stopwatch = Stopwatch.StartNew();
             string url;
 
             if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
@@ -58,6 +64,17 @@ namespace Infrastructure.Repositories
             catch(Exception ex)
             {
                 throw new Exception($"An error occured while fetching news from the API, {ex}");
+            }
+            finally
+            {
+                stopwatch.Stop();
+                _requestStatisticsRepository.AddRequestStatistic(new RequestStatistic
+                {
+                    ApiName = "AstronomyApi",
+                    ResponseTime = stopwatch.ElapsedMilliseconds,
+                    Timestamp = DateTime.UtcNow
+                });
+
             }
 
             if (response.IsSuccessStatusCode)

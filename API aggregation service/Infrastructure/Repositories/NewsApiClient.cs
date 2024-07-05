@@ -4,6 +4,9 @@ using System.Text.Json;
 using Polly;
 using Polly.CircuitBreaker;
 using Polly.Wrap;
+using System.Diagnostics;
+using Domain.Models.RequestStatistics;
+
 
 namespace Infrastructure.Repositories
 {
@@ -13,8 +16,9 @@ namespace Infrastructure.Repositories
         private const string ApiKey = "5e666310837a4d05ab612db16657b36e";
         private readonly HttpClient _httpClient;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
+        private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public NewsApiClient(HttpClient httpClient)
+        public NewsApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
         {
             _httpClient = httpClient;
 
@@ -28,10 +32,14 @@ namespace Infrastructure.Repositories
 
             //Combine retry and circuit breaker policies
             _retryAndBreakerPolicy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
+
+            _requestStatisticsRepository = requestStatisticsRepository;
         }
 
         public async Task<NewsApiResponse> GetNewsAsync(string keyword)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var url = $"{BaseUrl}?q=\"{keyword}\"&apiKey={ApiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -50,6 +58,17 @@ namespace Infrastructure.Repositories
             catch(Exception ex)
             {
                 throw new Exception("An error occured while fetching news from the API", ex);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                _requestStatisticsRepository.AddRequestStatistic(new RequestStatistic
+                {
+                    ApiName = "NewsApi",
+                    ResponseTime = stopwatch.ElapsedMilliseconds,
+                    Timestamp = DateTime.UtcNow
+                });
+                
             }
 
             if (response.IsSuccessStatusCode)

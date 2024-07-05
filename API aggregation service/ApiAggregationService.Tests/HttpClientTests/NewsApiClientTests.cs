@@ -16,13 +16,16 @@ namespace ApiAggregationService.Tests.HttpClientTests
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private HttpClient _httpClient;
         private INewsApiClient _newsApiClient;
+        private IRequestStatisticsRepository requestStatisticsRepository;
 
         [SetUp]
         public void Setup()
         {
+            var requestStatisticsRepositoryMock = new Mock<IRequestStatisticsRepository>();
+            requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
             _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _newsApiClient = new NewsApiClient(_httpClient);
+            _newsApiClient = new NewsApiClient(_httpClient, requestStatisticsRepository);
         }
 
         [Test]

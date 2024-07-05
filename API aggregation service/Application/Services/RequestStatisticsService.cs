@@ -25,8 +25,8 @@ namespace Application.Services
                 var totalRequests = apiGroup.Count();
 
                 var fastRequests = apiGroup.Where(stat => stat.ResponseTime < 100).ToList();
-                var averageRequests = apiGroup.Where(stat => stat.ResponseTime >= 100 && stat.ResponseTime <= 200).ToList();
-                var slowRequests = apiGroup.Where(stat => stat.ResponseTime > 200).ToList();
+                var averageRequests = apiGroup.Where(stat => stat.ResponseTime >= 100 && stat.ResponseTime < 200).ToList();
+                var slowRequests = apiGroup.Where(stat => stat.ResponseTime >= 200).ToList();
 
                 var fastAverageTime = fastRequests.Any() ? fastRequests.Average(stat => stat.ResponseTime) : 0;
                 var averageAverageTime = averageRequests.Any() ? averageRequests.Average(stat => stat.ResponseTime) : 0;

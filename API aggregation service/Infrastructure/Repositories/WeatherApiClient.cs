@@ -5,6 +5,9 @@ using System.Text.Json;
 using Polly;
 using Polly.Wrap;
 using Polly.CircuitBreaker;
+using System.Diagnostics;
+using Domain.Models.RequestStatistics;
+
 
 namespace Infrastructure.Repositories
 {
@@ -14,8 +17,9 @@ namespace Infrastructure.Repositories
         private const string ApiKey = "c969571a57e44642be74e4a2373949bd";
         private readonly HttpClient _httpClient;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
+        private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public WeatherApiClient(HttpClient httpClient)
+        public WeatherApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
         {
             _httpClient = httpClient;
 
@@ -29,9 +33,13 @@ namespace Infrastructure.Repositories
 
             //Combine retry and circuit breaker policies
             _retryAndBreakerPolicy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
+
+            _requestStatisticsRepository = requestStatisticsRepository;
         }
         public async Task<WeatherData> GetWeatherAsync(string countryCode, string cityName)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var url = $"{BaseUrl}?&city={cityName}&country={countryCode}&key={ApiKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -50,6 +58,16 @@ namespace Infrastructure.Repositories
             catch(Exception ex)
             {
                 throw new Exception("An error occured while fetching news from the API", ex);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                _requestStatisticsRepository.AddRequestStatistic(new RequestStatistic
+                {
+                    ApiName = "WeatherApi",
+                    ResponseTime = stopwatch.ElapsedMilliseconds,
+                    Timestamp = DateTime.UtcNow
+                });
             }
 
             if (response.IsSuccessStatusCode)

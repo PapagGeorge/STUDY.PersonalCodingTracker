@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Repositories;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Infrastructure

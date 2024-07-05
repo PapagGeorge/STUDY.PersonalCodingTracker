@@ -8,19 +8,22 @@ using Polly.CircuitBreaker;
 using Polly.Wrap;
 using System.Diagnostics;
 using Domain.Models.RequestStatistics;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Repositories
 {
     public class AstronomyPictureClient : IAstronomyPictureClient
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "https://api.nasa.gov/planetary/apod?";
-        private const string ApiKey = "2yjMsve0FNfscrra6y4QnqFn1ObuDkrE5Fb73n5k";
+        private readonly string BaseUrl;
+        private readonly string ApiKey;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
         private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public AstronomyPictureClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
+        public AstronomyPictureClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository, IConfiguration configuration)
         {
+            BaseUrl = configuration["ApiSettings:NasaApiBaseUrl"];
+            ApiKey = configuration["ApiSettings:NasaApiKey"];
             _httpClient = httpClient;
 
             //Define retry policy: Retry up to 3 times with exponential backoff

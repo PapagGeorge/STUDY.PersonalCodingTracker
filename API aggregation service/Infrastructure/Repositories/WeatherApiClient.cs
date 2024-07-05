@@ -7,20 +7,23 @@ using Polly.Wrap;
 using Polly.CircuitBreaker;
 using System.Diagnostics;
 using Domain.Models.RequestStatistics;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Infrastructure.Repositories
 {
     public class WeatherApiClient : IWeatherApiClient
     {
-        private const string BaseUrl = "http://api.weatherbit.io/v2.0/current";
-        private const string ApiKey = "c969571a57e44642be74e4a2373949bd";
+        private readonly string BaseUrl;
+        private readonly string ApiKey;
         private readonly HttpClient _httpClient;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
         private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public WeatherApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
+        public WeatherApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository, IConfiguration configuration)
         {
+            BaseUrl = configuration["ApiSettings:WeatherBitUrl"];
+            ApiKey = configuration["ApiSettings:WeatherBitApiKey"];
             _httpClient = httpClient;
 
             //Define retry policy: Retry up to 3 times with exponential backoff

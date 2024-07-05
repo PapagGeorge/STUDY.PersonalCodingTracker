@@ -6,20 +6,23 @@ using Polly.CircuitBreaker;
 using Polly.Wrap;
 using System.Diagnostics;
 using Domain.Models.RequestStatistics;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Infrastructure.Repositories
 {
     public class NewsApiClient : INewsApiClient
     {
-        private const string BaseUrl = "https://newsapi.org/v2/everything";
-        private const string ApiKey = "5e666310837a4d05ab612db16657b36e";
+        private readonly string BaseUrl;
+        private readonly string ApiKey;
         private readonly HttpClient _httpClient;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _retryAndBreakerPolicy;
         private readonly IRequestStatisticsRepository _requestStatisticsRepository;
 
-        public NewsApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository)
+        public NewsApiClient(HttpClient httpClient, IRequestStatisticsRepository requestStatisticsRepository, IConfiguration configuration)
         {
+            BaseUrl = configuration["ApiSettings:NewsApiBaseUrl"];
+            ApiKey = configuration["ApiSettings:NewsApiKey"];
             _httpClient = httpClient;
 
             //Define retry policy: Retry up to 3 times with exponential backoff

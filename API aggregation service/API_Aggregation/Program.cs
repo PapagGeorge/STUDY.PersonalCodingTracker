@@ -1,5 +1,6 @@
 using Infrastructure;
 using Application;
+using Microsoft.Extensions.Configuration;
 
 namespace API_Aggregation
 {

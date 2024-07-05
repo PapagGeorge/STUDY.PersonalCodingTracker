@@ -16,13 +16,17 @@ namespace ApiAggregationService.Tests.HttpClientTests
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private HttpClient _httpClient;
         private IAstronomyPictureClient _astronomyApiClient;
+        private IRequestStatisticsRepository requestStatisticsRepository;
+
 
         [SetUp]
         public void Setup()
         {
+            var requestStatisticsRepositoryMock = new Mock<IRequestStatisticsRepository>();
+            requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
             _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _astronomyApiClient = new AstronomyPictureClient(_httpClient);
+            _astronomyApiClient = new AstronomyPictureClient(_httpClient, requestStatisticsRepository);
         }
 
         [Test]

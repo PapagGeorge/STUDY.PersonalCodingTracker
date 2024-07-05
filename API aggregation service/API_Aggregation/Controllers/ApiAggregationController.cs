@@ -38,7 +38,7 @@ namespace API_Aggregation.Controllers
 
                 if (response == null)
                 {
-                    return NotFound("No news found for the given keyword.");
+                    return NotFound("No results found.");
                 }
 
                 return Ok(response);

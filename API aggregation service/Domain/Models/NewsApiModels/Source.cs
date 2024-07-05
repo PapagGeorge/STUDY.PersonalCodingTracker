@@ -7,8 +7,8 @@ namespace Domain.Models.NewsApiModels
     public class Source
     {
         [JsonPropertyName("id")]
-        public string? SourceId { get; set; }
+        public string SourceId { get; set; }
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
     }
 }

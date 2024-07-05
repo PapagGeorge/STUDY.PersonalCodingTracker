@@ -24,9 +24,18 @@ namespace Application.Services
             string sortByNews = "author",
             bool ascendingNews = true)
         {
-            var newsApiResponse = await _newsService.GetNewsApiResponseAsync(newsKeyword, sortByNews, ascendingNews);
-            var weatherApiResponse = await _weatherService.GetWeatherApiResponseAsync(weatherTempAscending, sortByTemp);
-            var astronomyPictureResponse = await _astronomyPictureService.GetAstronomyPictures(startDate, endDate, sortByAstronomyPictures, ascendingAstronomyPictures);
+            // Start all tasks concurrently
+            var newsTask = _newsService.GetNewsApiResponseAsync(newsKeyword, sortByNews, ascendingNews);
+            var weatherTask = _weatherService.GetWeatherApiResponseAsync(weatherTempAscending, sortByTemp);
+            var astronomyPictureTask = _astronomyPictureService.GetAstronomyPictures(startDate, endDate, sortByAstronomyPictures, ascendingAstronomyPictures);
+
+            // Wait for all tasks to complete
+            await Task.WhenAll(newsTask, weatherTask, astronomyPictureTask);
+
+            // Retrieve the results
+            var newsApiResponse = await newsTask;
+            var weatherApiResponse = await weatherTask;
+            var astronomyPictureResponse = await astronomyPictureTask;
 
             var aggregateModel = new AggregateModel
             {

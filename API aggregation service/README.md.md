@@ -38,7 +38,7 @@ The API Aggregation Service consolidates data from multiple external APIs and pr
    ```sh
    dotnet restore
 
-3. Install Docker and Start Redis. Ensure Docker is installed and running on your system. Then, start a Redis container using the following command:
+3. Install Docker [here](https://www.docker.com/products/docker-desktop). and Start Redis. Ensure Docker is installed and running on your system. Then, start a Redis container using the following command:
    ```sh 
    docker run --name my-redis -d redis
 ## Configuration

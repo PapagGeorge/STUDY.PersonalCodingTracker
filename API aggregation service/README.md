@@ -258,7 +258,7 @@ The application contains comprehensive unit tests using NUnit to ensure the reli
 **Arrange-Act-Assert:** Each test follows the Arrange-Act-Assert pattern to clearly separate the setup, execution, and validation phases. Expected behavior is verified using assertions from NUnit (Assert methods), ensuring that methods return expected results, interact with dependencies as intended, and handle exceptions appropriately.
 
 ## Architecture
-The structure of the application adheres to the principles of **Clean Architecture**, emphasizing code decoupling and **Dependency Injection** for code decoupling, improved modularity, scalability and testability.
+The structure of the application adheres to the principles of **Clean Architecture** and **SOLID Principles**, emphasizing **Dependency Injection** for code decoupling, improved modularity, scalability and testability.
 
 **Layers:**
 

@@ -62,11 +62,11 @@ namespace Infrastructure.Repositories
             }
             catch (BrokenCircuitException)
             {
-                throw new Exception("Circuit breaker is open. Unable to fetch news from the API");
+                return null; // Return null if circuit breaker is open
             }
             catch(Exception ex)
             {
-                throw new Exception($"An error occured while fetching news from the API, {ex}");
+                return null; // Return null for any other exceptions
             }
             finally
             {
@@ -107,7 +107,7 @@ namespace Infrastructure.Repositories
 
             else
             {
-                throw new Exception($"Failed to fetch astronomy pictures from API. Statuc code: {response.StatusCode}");
+                return null; // Return null if Status Code not Successfull
             }
         }
     }

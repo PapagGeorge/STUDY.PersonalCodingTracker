@@ -7,6 +7,7 @@ using System.Net;
 using System.Text.Json;
 using Application.Interfaces;
 using Domain.Models.AstronomyPictureModel;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiAggregationService.Tests.HttpClientTests
 {
@@ -16,17 +17,34 @@ namespace ApiAggregationService.Tests.HttpClientTests
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private HttpClient _httpClient;
         private IAstronomyPictureClient _astronomyApiClient;
-        private IRequestStatisticsRepository requestStatisticsRepository;
+        private IRequestStatisticsRepository _requestStatisticsRepository;
+        private IConfiguration _configuration;
 
 
         [SetUp]
         public void Setup()
         {
+            // Mocking IConfiguration
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(config => config["ApiSettings:NasaApiBaseUrl"]).Returns("https://api.nasa.gov/planetary/apod?");
+            configurationMock.Setup(config => config["ApiSettings:NasaApiKey"]).Returns("test_api_key");
+            _configuration = configurationMock.Object;
+
+            // Mocking IRequestStatisticsRepository
             var requestStatisticsRepositoryMock = new Mock<IRequestStatisticsRepository>();
-            requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+            _requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
+
+            // Mocking HttpMessageHandler
+            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            _httpMessageHandlerMock.Protected()
+                .Setup("Dispose", ItExpr.IsAny<bool>())
+                .Verifiable();
+
+            // Initialize HttpClient
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _astronomyApiClient = new AstronomyPictureClient(_httpClient, requestStatisticsRepository);
+
+            // Creating an instance of AstronomyPictureClient with mocks
+            _astronomyApiClient = new AstronomyPictureClient(_httpClient, _requestStatisticsRepository, _configuration);
         }
 
         [Test]
@@ -86,13 +104,16 @@ namespace ApiAggregationService.Tests.HttpClientTests
                 )
                 .ThrowsAsync(new BrokenCircuitException());
 
-            //Act & Assert
-            Assert.ThrowsAsync<Exception>(async () => await _astronomyApiClient.GetAstronomyPicturesAsync(), "Circuit Breaker is open. Unable to fetch news from the API.");
+            // Act
+            var result = await _astronomyApiClient.GetAstronomyPicturesAsync();
+
+            // Assert
+            Assert.IsNull(result);
 
         }
 
         [Test]
-        public void GetAstronomyPicturesAsync_ShouldThrowException_WhenApiCallFails()
+        public async Task GetAstronomyPicturesAsync_ShouldThrowException_WhenApiCallFails()
         {
             // Arrange
             _httpMessageHandlerMock.Protected()
@@ -106,8 +127,11 @@ namespace ApiAggregationService.Tests.HttpClientTests
                     StatusCode = HttpStatusCode.InternalServerError
                 });
 
-            // Act & Assert
-            Assert.ThrowsAsync<Exception>(async () => await _astronomyApiClient.GetAstronomyPicturesAsync(), "An error occured while fetching news from the API");
+            // Act
+            var result = await _astronomyApiClient.GetAstronomyPicturesAsync();
+
+            // Assert
+            Assert.IsNull(result);
         }
 
         [TearDown]

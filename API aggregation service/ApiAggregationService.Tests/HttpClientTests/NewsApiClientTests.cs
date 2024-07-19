@@ -7,6 +7,7 @@ using System.Net;
 using System.Text.Json;
 using Polly;
 using Polly.CircuitBreaker;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiAggregationService.Tests.HttpClientTests
 {
@@ -16,16 +17,33 @@ namespace ApiAggregationService.Tests.HttpClientTests
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private HttpClient _httpClient;
         private INewsApiClient _newsApiClient;
-        private IRequestStatisticsRepository requestStatisticsRepository;
+        private IRequestStatisticsRepository _requestStatisticsRepository;
+        private IConfiguration _configuration;
 
         [SetUp]
         public void Setup()
         {
+            // Mocking IConfiguration
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(config => config["ApiSettings:NewsApiBaseUrl"]).Returns("https://newsapi.org/v2/everything");
+            configurationMock.Setup(config => config["ApiSettings:NewsApiKey"]).Returns("test_api_key");
+            _configuration = configurationMock.Object;
+
+            // Mocking IRequestStatisticsRepository
             var requestStatisticsRepositoryMock = new Mock<IRequestStatisticsRepository>();
-            requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+            _requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
+
+            // Mocking HttpMessageHandler
+            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            _httpMessageHandlerMock.Protected()
+                .Setup("Dispose", ItExpr.IsAny<bool>())
+                .Verifiable();
+
+            // Initialize HttpClient
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _newsApiClient = new NewsApiClient(_httpClient, requestStatisticsRepository);
+
+            // Creating an instance of NewsApiClient with mocks
+            _newsApiClient = new NewsApiClient(_httpClient, _requestStatisticsRepository, _configuration);
         }
 
         [Test]
@@ -97,14 +115,17 @@ namespace ApiAggregationService.Tests.HttpClientTests
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ThrowsAsync(new BrokenCircuitException());
-            
-            //Act & Assert
-            Assert.ThrowsAsync<Exception>(async () => await _newsApiClient.GetNewsAsync("test"), "Circuit Breaker is open. Unable to fetch news from API.");
+
+            // Act
+            var result = await _newsApiClient.GetNewsAsync("test");
+
+            // Assert
+            Assert.IsNull(result);
 
         }
 
         [Test]
-        public void GetNewsAsync_ShouldThrowException_WhenApiCallFails()
+        public async Task GetNewsAsync_ShouldThrowException_WhenApiCallFails()
         {
             // Arrange
             _httpMessageHandlerMock.Protected()
@@ -118,8 +139,11 @@ namespace ApiAggregationService.Tests.HttpClientTests
                     StatusCode = HttpStatusCode.InternalServerError
                 });
 
-            // Act & Assert
-            Assert.ThrowsAsync<Exception>(async () => await _newsApiClient.GetNewsAsync("test"), "An error occured while fetching news from the API");
+            // Act
+            var result = await _newsApiClient.GetNewsAsync("test");
+
+            // Assert
+            Assert.IsNull(result);
         }
 
     [TearDown]

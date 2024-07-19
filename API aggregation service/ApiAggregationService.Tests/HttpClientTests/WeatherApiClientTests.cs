@@ -6,6 +6,7 @@ using Polly.CircuitBreaker;
 using System.Net;
 using System.Text.Json;
 using Domain.Models.WeatherBitApi;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiAggregationService.Tests.HttpClientTests
 {
@@ -15,16 +16,33 @@ namespace ApiAggregationService.Tests.HttpClientTests
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private HttpClient _httpClient;
         private IWeatherApiClient _weatherApiClient;
-        private IRequestStatisticsRepository requestStatisticsRepository;
+        private IRequestStatisticsRepository _requestStatisticsRepository;
+        private IConfiguration _configuration;
 
         [SetUp]
         public void Setup()
         {
+            // Mocking IConfiguration
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(config => config["ApiSettings:WeatherBitUrl"]).Returns("http://api.weatherbit.io/v2.0/current");
+            configurationMock.Setup(config => config["ApiSettings:WeatherBitApiKey"]).Returns("test_api_key");
+            _configuration = configurationMock.Object;
+
+            // Mocking IRequestStatisticsRepository
             var requestStatisticsRepositoryMock = new Mock<IRequestStatisticsRepository>();
-            requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+            _requestStatisticsRepository = requestStatisticsRepositoryMock.Object;
+
+            // Mocking HttpMessageHandler
+            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            _httpMessageHandlerMock.Protected()
+                .Setup("Dispose", ItExpr.IsAny<bool>())
+                .Verifiable();
+
+            // Initialize HttpClient
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _weatherApiClient = new WeatherApiClient(_httpClient, requestStatisticsRepository);
+
+            // Creating an instance of WeatherApiClient with mocks
+            _weatherApiClient = new WeatherApiClient(_httpClient, _requestStatisticsRepository, _configuration);
         }
 
         [Test]

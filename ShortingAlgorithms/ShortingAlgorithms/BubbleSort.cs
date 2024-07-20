@@ -3,7 +3,7 @@
     public static class BubbleSort
     {
         // Bubble Sort algorithm
-        public static List<int> BubbleShortNumbers(List<int> numbersToShort)
+        public static List<int> BubbleSortNumbers(List<int> numbersToShort)
         {
             int numbersToShortLength = numbersToShort.Count;
 

@@ -22,10 +22,12 @@
                         throw new ArgumentException("You should only insert numbers separated with commas");
                     }
                 }
-            }
-            catch
-            {
 
+                return integerList;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("An error occured");
             }
         }
     }

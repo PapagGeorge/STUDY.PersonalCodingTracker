@@ -1,6 +1,6 @@
 ﻿namespace ShortingAlgorithms
 {
-    public static class Sorter
+    public static class SortingHandler
     {
         public static string PickAlgorithm(Func<List<int>, List<int>> action)
         {

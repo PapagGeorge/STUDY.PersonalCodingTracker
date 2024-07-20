@@ -15,22 +15,22 @@ namespace ShortingAlgorithms
                 switch (userInput)
                 {
                     case 1:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.BubbleSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.BubbleSortNumbers);
                         break;
                     case 2:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.MergeSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.MergeSortNumbers);
                         break;
                     case 3:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.QuickSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.QuickSortNumbers);
                         break;
                     case 4:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.InsertionSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.InsertionSortNumbers);
                         break;
                     case 5:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.SelectionSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.SelectionSortNumbers);
                         break;
                     case 6:
-                        menuChoice = Sorter.PickAlgorithm(SortingFunctions.HeapSortNumbers);
+                        menuChoice = SortingHandler.PickAlgorithm(SortingFunctions.HeapSortNumbers);
                         break;
 
                     default:

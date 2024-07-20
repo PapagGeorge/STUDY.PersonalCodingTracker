@@ -2,7 +2,7 @@
 {
     public static class Sorter
     {
-        public static string SortingRobot(Func<List<int>, List<int>> action)
+        public static string PickAlgorithm(Func<List<int>, List<int>> action)
         {
             try
             {

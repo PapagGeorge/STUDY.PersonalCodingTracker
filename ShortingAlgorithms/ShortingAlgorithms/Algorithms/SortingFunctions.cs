@@ -1,6 +1,6 @@
 ﻿namespace ShortingAlgorithms.Algorithms
 {
-    public static class BubbleSort
+    public static class SortingFunctions
     {
         // Bubble Sort algorithm
         public static List<int> BubbleSortNumbers(List<int> numbersToShort)
@@ -23,6 +23,31 @@
             }
 
             return numbersToShort;
+        }
+
+        public static List<int> MergeSortNumbers(List<int> numbersToShort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<int> QuickSortNumbers(List<int> numbersToShort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<int> InsertionSortNumbers(List<int> numbersToShort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<int> SelectionSortNumbers(List<int> numbersToShort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<int> HeapSortNumbers(List<int> numbersToShort)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class StringToIntListConverter
     {
-        static List<int> ConvertStringToIntegerList(string str)
+        public static List<int> ConvertStringToIntegerList(string str)
         {
             string[] strArray = str.Replace(" ", "").Split(",");
             List<int> integerList = new List<int>();

@@ -1,4 +1,6 @@
-﻿namespace ShortingAlgorithms
+﻿using ShortingAlgorithms.Algorithms;
+
+namespace ShortingAlgorithms
 {
     internal class Program
     {

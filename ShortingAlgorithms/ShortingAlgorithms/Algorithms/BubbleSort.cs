@@ -1,4 +1,4 @@
-﻿namespace ShortingAlgorithms
+﻿namespace ShortingAlgorithms.Algorithms
 {
     public static class BubbleSort
     {

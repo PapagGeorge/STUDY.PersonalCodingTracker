@@ -30,6 +30,31 @@
             throw new NotImplementedException();
         }
 
+        private static List<int> Merge(List<int> left, List<int> right)
+        {
+            List<int> result = new List<int>();
+            int leftIndex = 0, rightIndex = 0;
+
+            while (leftIndex < left.Count && rightIndex < right.Count)
+            {
+                if (left[leftIndex] <= right[rightIndex])
+                {
+                    result.Add(left[leftIndex]);
+                    leftIndex++;
+                }
+                else
+                {
+                    result.Add(right[rightIndex]);
+                    rightIndex++;
+                }
+            }
+
+            result.AddRange(left.GetRange(leftIndex, left.Count - leftIndex));
+            result.AddRange(right.GetRange(rightIndex, right.Count - rightIndex));
+
+            return result;
+        }
+
         public static List<int> QuickSortNumbers(List<int> numbersToShort)
         {
             throw new NotImplementedException();

@@ -25,9 +25,17 @@
             return numbersToShort;
         }
 
-        public static List<int> MergeSortNumbers(List<int> numbersToShort)
+        //Merge Sort algorithm
+        public static List<int> MergeSortNumbers(List<int> numbersToSort)
         {
-            throw new NotImplementedException();
+            if (numbersToSort.Count <= 1)
+                return numbersToSort;
+
+            int middle = numbersToSort.Count / 2;
+            List<int> left = numbersToSort.GetRange(0, middle);
+            List<int> right = numbersToSort.GetRange(middle, numbersToSort.Count - middle);
+
+            return Merge(MergeSortNumbers(left), MergeSortNumbers(right));
         }
 
         private static List<int> Merge(List<int> left, List<int> right)

@@ -1,44 +1,49 @@
 ﻿namespace Generics_bubble_sort
 {
-    public static class Bubble <T>
+    public class Bubble <T> where T : IComparable<T>
     {
+        public T[] Array { get; set; }
 
-        public static T[] BubbleSortAscending<T>(T[] array) where T : IComparable<T>
+        public Bubble(T[] array)
         {
-            for (int i = 0; i < array.Length - 1; i++)
-            {
-                for (int j = 0; j < array.Length - i - 1; j++)
-                {
-                    if (array[j].CompareTo(array[j + 1]) > 0)
-                    {
-                        Swap<T>(array, j, j+1);
-                    }
-                }    
-            }
-            
-            return array;
+            Array = array;
         }
 
-        public static T[] BubbleSortDescending<T>(T[] array) where T : IComparable<T>
+        public T[] BubbleSortAscending()
         {
-            for (int i = 0; i < array.Length - 1; i++)
+            for (int i = 0; i < Array.Length - 1; i++)
             {
-                for (int j = 0; j < array.Length - i - 1; j++)
+                for (int j = 0; j < Array.Length - i - 1; j++)
                 {
-                    if (array[j].CompareTo(array[j + 1]) < 0)
+                    if (Array[j].CompareTo(Array[j + 1]) > 0)
                     {
-                        Swap(array, j, j + 1);
+                        Swap(j, j + 1);
                     }
                 }
             }
-            return array;
+            return Array;
         }
 
-        private static void Swap<T>(T[] arrayToSwap, int index1, int index2)
+        public T[] BubbleSortDescending()
         {
-            T temp = arrayToSwap[index1];
-            arrayToSwap[index1] = arrayToSwap[index2];
-            arrayToSwap[index2] = temp;
+            for (int i = 0; i < Array.Length - 1; i++)
+            {
+                for (int j = 0; j < Array.Length - i - 1; j++)
+                {
+                    if (Array[j].CompareTo(Array[j + 1]) < 0)
+                    {
+                        Swap(j, j + 1);
+                    }
+                }
+            }
+            return Array;
+        }
+
+        private void Swap(int index1, int index2)
+        {
+            T temp = Array[index1];
+            Array[index1] = Array[index2];
+            Array[index2] = temp;
         }
     }
 }

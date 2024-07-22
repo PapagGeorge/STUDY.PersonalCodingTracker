@@ -19,6 +19,8 @@
             bubbleCharacters.PrintArray();
             bubbleCharacters.BubbleSortDescending();
             bubbleCharacters.PrintArray();
+
+            Console.ReadLine();
         }
     }
 }

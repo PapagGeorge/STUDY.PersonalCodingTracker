@@ -39,6 +39,11 @@
             return Array;
         }
 
+        public void PrintArray()
+        {
+            Console.WriteLine(string.Join(", ", Array));
+        }
+
         private void Swap(int index1, int index2)
         {
             T temp = Array[index1];

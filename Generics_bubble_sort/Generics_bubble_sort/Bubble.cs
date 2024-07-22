@@ -9,7 +9,7 @@
             Array = array;
         }
 
-        public T[] BubbleSortAscending()
+        public void BubbleSortAscending()
         {
             for (int i = 0; i < Array.Length - 1; i++)
             {
@@ -21,10 +21,9 @@
                     }
                 }
             }
-            return Array;
         }
 
-        public T[] BubbleSortDescending()
+        public void BubbleSortDescending()
         {
             for (int i = 0; i < Array.Length - 1; i++)
             {
@@ -36,7 +35,6 @@
                     }
                 }
             }
-            return Array;
         }
 
         public void PrintArray()

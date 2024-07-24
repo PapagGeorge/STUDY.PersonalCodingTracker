@@ -4,8 +4,9 @@ namespace Application.Interfaces
 {
     public interface IUserRepository
     {
-        Task AddUser(User user);
-        Task<User> GetUser(Guid userId);
-        Task UpdateUser(Guid userId, User user);
+        Task AddUserAsync(User user);
+        Task<User> GetUserAsync(Guid userId);
+        Task UpdateUserAsync(Guid userId, User user);
+        Task<bool> UserExistsAsync(string userName, string email);
     }
 }

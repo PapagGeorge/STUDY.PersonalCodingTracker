@@ -1,21 +1,22 @@
 ﻿using Application.Interfaces;
 using Domain;
+using Domain.Models;
 
 namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public async Task AddUser(User user)
+        public Task AddUser(User user)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetUser(Guid userId)
+        public Task<User> GetUser(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task UpdateUser(Guid userId, User user)
+        public Task UpdateUser(Guid userId, User user)
         {
             throw new NotImplementedException();
         }

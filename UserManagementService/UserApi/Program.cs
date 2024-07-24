@@ -1,3 +1,6 @@
+using Infrastructure;
+using Microsoft.Extensions.Configuration;
+
 
 namespace UserApi
 {
@@ -13,6 +16,8 @@ namespace UserApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddInfraServices(builder.Configuration);
 
             var app = builder.Build();
 

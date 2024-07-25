@@ -1,4 +1,5 @@
 using Infrastructure;
+using Application;
 using Microsoft.Extensions.Configuration;
 
 
@@ -18,6 +19,13 @@ namespace UserApi
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddInfraServices(builder.Configuration);
+            builder.Services.AddServices();
+
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetSection("Redis")["Configuration"];
+                options.InstanceName = builder.Configuration.GetSection("Redis")["InstanceName"];
+            });
 
             var app = builder.Build();
 

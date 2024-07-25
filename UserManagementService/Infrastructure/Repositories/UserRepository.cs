@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
                 var user = await _context.Users.Where(u => u.UserId == userId).FirstOrDefaultAsync();
                 if (user == null)
                 {
-                    throw new KeyNotFoundException("User not found.");
+                    return null;
                 }
                 return user;
             }

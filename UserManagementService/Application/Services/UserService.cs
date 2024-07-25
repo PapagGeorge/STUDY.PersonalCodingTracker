@@ -1,6 +1,9 @@
 ﻿using Application.Interfaces;
 using Domain.Models;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Text.Json;
 
 namespace Application.Services
 {
@@ -8,10 +11,13 @@ namespace Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ILogger<UserService> _logger;
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+        private readonly IDistributedCache _distributedCache;
+
+        public UserService(IUserRepository userRepository, ILogger<UserService> logger, IDistributedCache distributedCache)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _distributedCache = distributedCache;
         }
         public async Task AddUserAsync(User user)
         {
@@ -41,30 +47,37 @@ namespace Application.Services
             }
         }
 
-        public Task<User> GetUserAsync(Guid userId)
+        public async Task<User> GetUserAsync(Guid userId)
         {
             try
             {
-                var user = _userRepository.GetUserAsync(userId);
+                var cacheKey = userId.ToString();
+                // Attempt to retrieve user from cache
+                var user = await _distributedCache.GetRecordAsync<User>(cacheKey, GetJsonSerializerOptions());
 
-                if (user == null)
+                if(user == null)
                 {
-                    _logger.LogWarning($"User with ID {userId} not found.");
-                    throw new KeyNotFoundException("User not found.");
+                    // User not in cache, fetch from repository
+                    user = await _userRepository.GetUserAsync(userId);
+
+                    if (user == null)
+                    {
+                        // User not found in repository, create a default user or handle accordingly
+                        user = CreateDefaultUser();
+                    }
+                    else
+                    {
+                        // Add user to cache
+                        await _distributedCache.SetRecordAsync(cacheKey, user);
+                    }
                 }
 
-                _logger.LogInformation($"User with ID {userId} retrieved successfully.");
                 return user;
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to retrieve user.");
-                throw new ApplicationException("User not found. Please check the user ID and try again.");
-            }
-            catch (ApplicationException ex)
-            {
-                _logger.LogError(ex, "Failed to retrieve user.");
-                throw new ApplicationException("Failed to retrieve user. Please try again later.");
+                _logger.LogError(ex, "An unexpected error occurred while retrieving user with ID {UserId}.", userId);
+                throw new ApplicationException("An unexpected error occurred. Please try again later.");
             }
         }
 
@@ -92,6 +105,25 @@ namespace Application.Services
                 _logger.LogError(ex, "An unexpected error occurred while updating the user.");
                 throw new ApplicationException("An unexpected error occurred. Please try again later.");
             }
+        }
+        private static JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            return new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+        }
+
+        private User CreateDefaultUser()
+        {
+            return new User
+            {
+                Username = "Error",
+                Email = "Error",
+                FullName = "Error",
+                DateOfBirth = DateTime.MinValue,
+                CreatedAt = DateTime.MinValue
+            };
         }
     }
 }

@@ -39,7 +39,8 @@ namespace UserApi.Controllers
                 // Map the newly created user to a DTO for the response
                 var userReadDto = _mapper.Map<UserReadDto>(newUser);
 
-                return CreatedAtAction(nameof(GetUserAsync), new { userId = newUser.UserId }, userReadDto);
+                _logger.LogInformation($"Returning CreatedAtAction with userId: {newUser.UserId}");
+                return Ok(userReadDto);
             }
             catch (Exception)
             {

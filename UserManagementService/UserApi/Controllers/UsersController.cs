@@ -32,8 +32,14 @@ namespace UserApi.Controllers
             try
             {
                 var newUser = _mapper.Map<User>(user);
+
+                // Add the user to the database
                 await _userService.AddUserAsync(newUser);
-                return Ok("User created");
+
+                // Map the newly created user to a DTO for the response
+                var userReadDto = _mapper.Map<UserReadDto>(newUser);
+
+                return CreatedAtAction(nameof(GetUserAsync), new { userId = newUser.UserId }, userReadDto);
             }
             catch (Exception)
             {
@@ -86,7 +92,10 @@ namespace UserApi.Controllers
 
                 var updatedUser = _mapper.Map<User>(user);
                 await _userService.UpdateUserAsync(userId, updatedUser);
-                return Ok("User updated successfully.");
+
+                // Map the newly created user to a DTO for the response
+                var userReadDto = _mapper.Map<UserReadDto>(updatedUser);
+                return Ok(userReadDto);
             }
             catch (Exception)
             {

@@ -20,6 +20,7 @@ namespace UserApi
 
             builder.Services.AddInfraServices(builder.Configuration);
             builder.Services.AddServices();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddStackExchangeRedisCache(options =>
             {

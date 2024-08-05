@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
+using Domain.Dtos;
 using Application.Interfaces;
+using AutoMapper;
 
 namespace UserApi.Controllers
 {
@@ -11,14 +13,16 @@ namespace UserApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILogger<UsersController> _logger;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, ILogger<UsersController> logger, IMapper mapper)
         {
             _userService = userService;
             _logger = logger;
+            _mapper = mapper;
         }
         [HttpPost]
-        public async Task<ActionResult> AddUserAsync(User user)
+        public async Task<ActionResult> AddUserAsync(UserCreateDto user)
         {
             if (user == null)
             {
@@ -27,7 +31,8 @@ namespace UserApi.Controllers
             }
             try
             {
-                await _userService.AddUserAsync(user);
+                var newUser = _mapper.Map<User>(user);
+                await _userService.AddUserAsync(newUser);
                 return Ok("User created");
             }
             catch (Exception)
@@ -38,7 +43,7 @@ namespace UserApi.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<User>> GetUserAsync(Guid userId)
+        public async Task<ActionResult<UserReadDto>> GetUserAsync(Guid userId)
         {
             if(userId == Guid.Empty)
             {
@@ -48,7 +53,7 @@ namespace UserApi.Controllers
             try
             {
                 var user = await _userService.GetUserAsync(userId);
-                return Ok(user);
+                return Ok(_mapper.Map<UserReadDto>(user));
             }
             catch (Exception)
             {
@@ -57,8 +62,8 @@ namespace UserApi.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateUserAsync(Guid userId, User user)
+        [HttpPut("{userId}")]
+        public async Task<ActionResult> UpdateUserAsync(Guid userId, UserUpdateDto user)
         {
             if(user == null)
             {
@@ -72,7 +77,15 @@ namespace UserApi.Controllers
             }
             try
             {
-                await _userService.UpdateUserAsync(userId, user);
+                var existingUser = await _userService.GetUserAsync(userId);
+                if (existingUser == null)
+                {
+                    _logger.LogWarning($"User with ID {userId} not found.");
+                    return NotFound("User not found.");
+                }
+
+                var updatedUser = _mapper.Map<User>(user);
+                await _userService.UpdateUserAsync(userId, updatedUser);
                 return Ok("User updated successfully.");
             }
             catch (Exception)

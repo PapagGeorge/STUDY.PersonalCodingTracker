@@ -76,7 +76,7 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unexpected error occurred while retrieving user with ID {UserId}.", userId);
+                _logger.LogError(ex, $"An unexpected error occurred while retrieving user with ID {userId}.", userId);
                 throw new ApplicationException("An unexpected error occurred. Please try again later.");
             }
         }

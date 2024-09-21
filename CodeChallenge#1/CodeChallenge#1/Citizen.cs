@@ -20,6 +20,11 @@
             }
         }
 
+        public Citizen(int age)
+        {
+            _age = age;
+        }
+
         public int CalculateTimesCitizenHasVoted()
         {
             if(!CanCitizenVote)

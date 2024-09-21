@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Citizen citizen = UserInterface.SetCitizenByUser();
+            UserInterface.PrintResult(citizen);
         }
     }
 }

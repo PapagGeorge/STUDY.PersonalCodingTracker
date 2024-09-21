@@ -16,7 +16,20 @@
         {
             get
             {
-                return _age - 19;
+                return _age - 18;
+            }
+        }
+
+        public int CalculateTimesCitizenHasVoted()
+        {
+            if(!CanCitizenVote)
+            {
+                Console.WriteLine("Citizen is underrage, thus hasn't ever voted yet.");
+                return 0;
+            }
+            else
+            {
+                return YearsCitizenIsEligibleToVote / 4;
             }
         }
     }
